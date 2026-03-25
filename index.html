@@ -61,13 +61,11 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .check-icon { position: absolute; top: 10px; left: 10px; width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(176,38,255,0.4); z-index: 2; }
 .direct-card.selected .check-icon { display: flex; }
 
-/* ป้ายสถานะมุมขวาบน */
 .card-status-pill { position: absolute; top: 8px; right: 8px; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2; display: flex; align-items: center; gap: 4px; }
 .status-dot-sm { width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse 1.5s infinite; }
 .c-status-ready { background: var(--success); }
 .c-status-empty { background: var(--danger); }
 
-/* ปุ่มเลือกระบบใต้ราคา */
 .sys-opts { display: flex; gap: 5px; justify-content: center; width: 100%; margin-top: 10px; flex-wrap: wrap; }
 .sys-btn { flex: 1; min-width: 30%; padding: 5px 2px; font-size: 10px; border-radius: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; color: #6b7280; cursor: pointer; transition: 0.2s; font-weight: 600; text-align: center; white-space: nowrap; }
 .sys-btn:hover { background: #e5e7eb; }
@@ -76,7 +74,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .direct-card-icon { width: 70px; height: 70px; margin: 15px auto 10px; border-radius: 15px; overflow: hidden; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f0; }
 .direct-card-icon img { width: 100%; height: 100%; object-fit: cover; pointer-events: none !important; user-select: none; }
 .direct-card-title { font-weight: 600; font-size: 14px; line-height: 1.2; margin-bottom: 5px; color: var(--text-dark); width: 100%; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.direct-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.direct-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; width: 100%; min-height: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; }
 .direct-card-price { font-size: 15px; font-weight: 700; color: var(--primary); margin-top: auto; }
 
 .variant-block { margin-bottom: 25px; }
@@ -204,7 +202,7 @@ textarea.admin-input { resize: vertical; }
       <form id="adminForm" onsubmit="saveProduct(event)">
         <input type="hidden" id="editId">
         <label class="admin-label">เลือกแท็บ:</label>
-        <select id="pTabTarget" class="admin-input" required></select>
+        <select id="pTabTarget" class="admin-input" required onchange="toggleAdminFieldsByTab()"></select>
 
         <label class="admin-label">สถานะสินค้า:</label>
         <select id="pStatus" class="admin-input">
@@ -215,21 +213,33 @@ textarea.admin-input { resize: vertical; }
         <label class="admin-label">ชื่อแอป / หมวดหมู่:</label>
         <input type="text" id="pCat" class="admin-input" placeholder="เช่น Netflix, Youtube Premium" required>
         
-        <label class="admin-label">รายละเอียดใต้ชื่อแอป:</label>
-        <textarea id="pCatDesc" class="admin-input" rows="2" placeholder="เช่น ✅ เปลี่ยนเมลได้"></textarea>
+        <div id="standardProductFields">
+            <label class="admin-label">รายละเอียดใต้ชื่อแอป:</label>
+            <textarea id="pCatDesc" class="admin-input" rows="2" placeholder="เช่น ✅ เปลี่ยนเมลได้"></textarea>
 
-        <label class="admin-label" style="color:#2563eb;">ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม เช่น ต่อเมลเดิม / สมัครใหม่):</label>
-        <input type="text" id="pVariant" class="admin-input" placeholder="เว้นว่างได้ ถ้าไม่อยากแยกกลุ่ม">
+            <label class="admin-label" style="color:#2563eb;">ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม เช่น ต่อเมลเดิม / สมัครใหม่):</label>
+            <input type="text" id="pVariant" class="admin-input" placeholder="เว้นว่างได้ ถ้าไม่อยากแยกกลุ่ม">
 
-        <label class="admin-label">ชื่อแพ็กเกจย่อย:</label>
-        <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, ถาวร" required>
+            <label class="admin-label">ชื่อแพ็กเกจย่อย:</label>
+            <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, ถาวร">
 
-        <label class="admin-label">ระบบที่รองรับ (ตัวเลือกใต้ราคา คั่นด้วยลูกน้ำ):</label>
-        <input type="text" id="pSystems" class="admin-input" placeholder="เช่น iOS, Android, Gmail (เว้นว่างได้)">
+            <label class="admin-label">ระบบที่รองรับ (ตัวเลือกใต้ราคา คั่นด้วยลูกน้ำ):</label>
+            <input type="text" id="pSystems" class="admin-input" placeholder="เช่น iOS, Android, Gmail (เว้นว่างได้)">
 
-        <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
-        <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
-        
+            <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
+            <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
+        </div>
+
+        <div id="appGameProductFields" style="display:none;">
+            <div style="border: 2px dashed #b026ff; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #faf5ff;">
+                <label class="admin-label" style="color: #b026ff; font-size: 14px; font-weight: bold;">🍎 ข้อความ (iOS):</label>
+                <textarea id="pIosDesc" class="admin-input" rows="3" placeholder="- แบบให้ร้านโหลดให้..."></textarea>
+                
+                <label class="admin-label" style="color: #10b981; font-size: 14px; font-weight: bold; margin-top:10px;">🤖 ข้อความ (Android):</label>
+                <textarea id="pAndroidDesc" class="admin-input" rows="3" placeholder="- โหลดผ่าน Play Store..."></textarea>
+            </div>
+        </div>
+
         <label class="admin-label">ราคา (บาท):</label>
         <input type="number" id="pPrice" class="admin-input" placeholder="ราคา" required>
         
@@ -355,9 +365,8 @@ let products = JSON.parse(localStorage.getItem('wandererProducts')) || [];
 let currentTab = "สินค้า"; 
 let cart = []; 
 let isAdminLoggedIn = false;
-let selectedSystems = {}; // เก็บระบบที่ลูกค้าเลือกไว้ของแต่ละสินค้าระหว่างที่ดูเว็บ
-
-let currentAdminCatTab = null; // สำหรับแยกแท็บในหน้าแก้สินค้า
+let selectedSystems = {}; 
+let currentAdminCatTab = null; 
 
 window.onload = async () => {
     await fetchFromServer(); 
@@ -390,8 +399,24 @@ window.onload = async () => {
 };
 
 function isAppGameTab(tabName) {
+    if (!tabName) return false;
     const name = tabName.toLowerCase();
     return name.includes('ios') || name.includes('androi');
+}
+
+// เช็คว่าต้องแสดงแบบฟอร์มไหน (ขึ้นอยู่กับว่าแอดมินเลือกแท็บอะไร)
+function toggleAdminFieldsByTab() {
+    const tabEl = document.getElementById('pTabTarget');
+    if(!tabEl) return;
+    const isAppTab = isAppGameTab(tabEl.value);
+    
+    if(isAppTab) {
+        document.getElementById('standardProductFields').style.display = 'none';
+        document.getElementById('appGameProductFields').style.display = 'block';
+    } else {
+        document.getElementById('standardProductFields').style.display = 'block';
+        document.getElementById('appGameProductFields').style.display = 'none';
+    }
 }
 
 function renderTabs() {
@@ -520,29 +545,21 @@ function switchAdminModalTab(tabId, btnElement) {
   btnElement.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
 }
 
-// ฟังก์ชันสำหรับจัดการการเลือกระบบปฏิบัติการบนการ์ด
+// ลูกค้ากดเลือกระบบปฏิบัติการบนการ์ดสินค้า
 function selectSystem(e, pId, sys) {
-    e.stopPropagation(); // ไม่ให้ไปทริกเกอร์กดเพิ่มลงตะกร้าเวลาเลือกแค่ตัวระบบ
+    e.stopPropagation(); 
     selectedSystems[pId] = sys;
-    
-    // อัปเดตข้อมูลในตะกร้าหากถูกเลือกไว้แล้ว
     let cartItem = cart.find(c => c.id === pId);
-    if (cartItem) {
-        cartItem.chosenSystem = sys;
-    }
+    if (cartItem) { cartItem.chosenSystem = sys; }
     
-    // โหลด UI ใหม่เพื่อแสดงความเปลี่ยนแปลง
     if(document.getElementById('productsView').style.display === 'block') {
         openCategory(document.getElementById('currentCategoryTitle').innerText);
-    } else {
-        renderCategories();
-    }
+    } else { renderCategories(); }
 }
 
 function renderCategories(tabName = currentTab) {
   const grid = document.getElementById('categoryGrid');
   const filtered = products.filter(p => p.tab === tabName);
-  
   const isDirectGrid = isAppGameTab(tabName);
 
   if (isDirectGrid) {
@@ -552,21 +569,27 @@ function renderCategories(tabName = currentTab) {
           const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
           
           const appName = p.cat; 
-          const appDesc = (p.name && p.name !== p.cat && p.name !== '-') ? p.name : (p.packDesc || ''); 
-
-          // สถานะมุมขวาบน
+          
           const statusClass = (p.status === 'empty') ? 'c-status-empty' : 'c-status-ready';
           const statusText = (p.status === 'empty') ? 'ไม่พร้อม' : 'พร้อม';
           const statusHtml = `<div class="card-status-pill ${statusClass}"><div class="status-dot-sm"></div>${statusText}</div>`;
 
-          // ระบบที่รองรับ
           let sysHtml = '';
+          let activeSys = 'iOS'; 
           if (p.systems && p.systems.length > 0) {
+              activeSys = selectedSystems[p.id] || (cart.find(c => c.id === p.id && c.chosenSystem) ? cart.find(c => c.id === p.id).chosenSystem : null) || p.systems[0];
               sysHtml = `<div class="sys-opts">` + p.systems.map(sys => {
-                  const isActive = (selectedSystems[p.id] === sys || (cart.find(c => c.id === p.id && c.chosenSystem === sys))) ? 'active' : '';
+                  const isActive = (activeSys === sys) ? 'active' : '';
                   return `<div class="sys-btn ${isActive}" onclick="selectSystem(event, '${p.id}', '${sys}')">${sys}</div>`;
               }).join('') + `</div>`;
           }
+
+          // แสดงข้อความใต้ชื่อแอปให้ตรงกับปุ่มระบบที่ลูกค้าเลือกไว้ (ดึงข้อมูลจากที่แอดมินกรอก)
+          let dynamicDesc = '';
+          if (activeSys === 'iOS') dynamicDesc = p.iosDesc || '';
+          else if (activeSys === 'Android') dynamicDesc = p.androidDesc || '';
+          
+          const appDesc = dynamicDesc ? dynamicDesc.replace(/\n/g, '<br>') : '<span style="color:#ccc;">-</span>';
 
           return `
           <div class="direct-card ${isSel}" onclick="toggleItem('${p.id}')">
@@ -634,19 +657,24 @@ async function saveProduct(e) {
   const id = document.getElementById('editId').value;
   
   const cleanIcon = document.getElementById('pIconUrl').value.replace(/<[^>]*>?/gm, '').trim();
+  const tabName = document.getElementById('pTabTarget').value;
+  const isAppTab = isAppGameTab(tabName);
 
   const newP = {
     id: id || 'p' + Date.now(),
-    tab: document.getElementById('pTabTarget').value,
+    tab: tabName,
     status: document.getElementById('pStatus').value,
     cat: document.getElementById('pCat').value.trim(),
-    catDesc: document.getElementById('pCatDesc').value.trim(), 
-    variant: document.getElementById('pVariant').value.trim(), 
-    name: document.getElementById('pName').value.trim(),
-    packDesc: document.getElementById('pPackDesc').value.trim(),
     price: parseInt(document.getElementById('pPrice').value),
     icon: cleanIcon,
-    systems: document.getElementById('pSystems').value.split(',').map(s=>s.trim()).filter(s=>s) // ดึงข้อมูลระบบแล้วแยกด้วยลูกน้ำ
+    // แยกลอจิกการบันทึกระหว่างแท็บทั่วไป กับ แท็บแอพเกม
+    catDesc: isAppTab ? '' : document.getElementById('pCatDesc').value.trim(), 
+    variant: isAppTab ? '' : document.getElementById('pVariant').value.trim(), 
+    name: isAppTab ? '-' : (document.getElementById('pName').value.trim() || '-'),
+    packDesc: isAppTab ? '' : document.getElementById('pPackDesc').value.trim(),
+    systems: isAppTab ? ['iOS', 'Android'] : document.getElementById('pSystems').value.split(',').map(s=>s.trim()).filter(s=>s),
+    iosDesc: isAppTab ? document.getElementById('pIosDesc').value.trim() : '',
+    androidDesc: isAppTab ? document.getElementById('pAndroidDesc').value.trim() : ''
   };
 
   if(id) { products[products.findIndex(p => p.id === id)] = newP; } else { products.push(newP); }
@@ -668,16 +696,23 @@ function editProduct(id) {
   if(p) {
     document.getElementById('editId').value = p.id;
     document.getElementById('pTabTarget').value = p.tab;
+    
+    // เรียกให้หน้าตาสลับฟอร์มก่อน แล้วค่อยดึงข้อมูลมาใส่
+    toggleAdminFieldsByTab();
+
     document.getElementById('pStatus').value = p.status || 'ready';
     document.getElementById('pCat').value = p.cat;
     document.getElementById('pCatDesc').value = p.catDesc || '';
     document.getElementById('pVariant').value = p.variant || ''; 
-    document.getElementById('pName').value = p.name;
+    document.getElementById('pName').value = p.name !== '-' ? p.name : '';
     document.getElementById('pPackDesc').value = p.packDesc || '';
     document.getElementById('pPrice').value = p.price;
     document.getElementById('pIconUrl').value = p.icon || '';
     document.getElementById('pSystems').value = (p.systems || []).join(', ');
     
+    document.getElementById('pIosDesc').value = p.iosDesc || '';
+    document.getElementById('pAndroidDesc').value = p.androidDesc || '';
+
     const preview = document.getElementById('pIconPreview');
     if (p.icon) { preview.src = p.icon; preview.style.display = 'block'; } else { preview.style.display = 'none'; }
     
@@ -689,10 +724,15 @@ function editProduct(id) {
 
 function cancelEdit() {
   document.getElementById('adminForm').reset();
-  document.getElementById('editId').value = ""; document.getElementById('pIconUrl').value = "";
+  // เคลียร์ค่าที่ซ่อนอยู่ด้วยเพื่อความชัวร์
+  document.getElementById('editId').value = ""; 
+  document.getElementById('pIconUrl').value = "";
+  document.getElementById('pIosDesc').value = "";
+  document.getElementById('pAndroidDesc').value = "";
   document.getElementById('pIconPreview').style.display = 'none';
   document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
   document.getElementById('cancelBtn').style.display = "none";
+  toggleAdminFieldsByTab();
 }
 
 function switchAdminCatTab(tabName) {
@@ -704,12 +744,10 @@ function renderAdminList() {
   if (!currentAdminCatTab && tabs.length > 0) currentAdminCatTab = tabs[0];
   if (tabs.length > 0 && !tabs.includes(currentAdminCatTab)) currentAdminCatTab = tabs[0];
 
-  // อัปเดตเมนูแยกแท็บแอดมิน
   document.getElementById('adminCategoryTabs').innerHTML = tabs.map(t => 
     `<button type="button" class="a-tab-btn ${currentAdminCatTab === t ? 'active' : ''}" onclick="switchAdminCatTab('${t}')">${t}</button>`
   ).join('');
 
-  // ฟิลเตอร์เฉพาะแท็บที่เลือก
   const filteredProducts = products.filter(p => p.tab === currentAdminCatTab);
   const sortedProducts = [...filteredProducts].sort((a, b) => a.cat.localeCompare(b.cat));
   
@@ -722,9 +760,10 @@ function renderAdminList() {
     html += grouped[cat].map(p => {
         const sDot = p.status === 'empty' ? '🔴' : '🟢';
         const sysTag = p.systems && p.systems.length > 0 ? `<br><span style="font-size:10px; background:#f3f4f6; padding:2px 4px; border-radius:4px; color:#4b5563;">${p.systems.join(', ')}</span>` : '';
+        const dispName = (p.name && p.name !== '-') ? p.name : 'สินค้าทั่วไป';
         return `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            ${sDot} <span style="font-weight:600; color:var(--primary);">${p.name}</span> 
+            ${sDot} <span style="font-weight:600; color:var(--primary);">${dispName}</span> 
             ${p.variant ? `<span style="font-size:11px; color:#ef4444; font-weight:bold;">[${p.variant}]</span>` : ''} 
             ${p.packDesc ? `<span style="font-size:11px; color:#6b7280;">(${p.packDesc})</span>` : ''} 
             <br><small style="color:#374151; font-weight:600;">฿${p.price}</small>
@@ -744,6 +783,7 @@ function renderAdminList() {
 function updateAdminTabUI() {
   document.getElementById('adminTabList').innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; background:#f8f9fa; padding:10px 15px; border-radius:8px; margin-top:5px; border:1px solid #eee;"><span style="font-weight:500;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; font-weight:bold; cursor:pointer;">ลบ</button></div>`).join('');
   document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join('');
+  toggleAdminFieldsByTab(); // สั่งให้เซ็ตฟอร์มตามแท็บเมื่อโหลดแอดมินเสร็จ
 }
 
 async function resetData() {
@@ -775,6 +815,9 @@ async function deleteProduct(id) {
 
 function showCategories() { document.getElementById('categoriesView').style.display='block'; document.getElementById('productsView').style.display='none'; }
 
+/* ==================================================
+   ตรรกะคำนวณโปรโมชั่นสุดคุ้ม (ขั้นบันได Greedy Logic)
+   ================================================== */
 function getCalculatedCart() {
     let appItems = []; let otherItems = [];
     cart.forEach(i => { if(isAppGameTab(i.tab)) appItems.push({...i}); else otherItems.push({...i}); });
@@ -791,10 +834,13 @@ function getCalculatedCart() {
         total += 3000; activePromos.push("เหมาทุกแอพ 164 แอพ 3,000฿");
     } else {
         let appsPromo = []; let ineligibleApps = [];
+        // คัดเฉพาะแอพราคา 20-25 เข้าเงื่อนไขโปร
         appItems.forEach(item => { if (item.price >= 20 && item.price <= 25) { appsPromo.push(item); } else { ineligibleApps.push(item); } });
 
+        // แอพที่แพง/ถูกกว่า ไม่เข้าโปร คิดราคาเต็ม
         ineligibleApps.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
 
+        // จัดเรียงแอพเข้าโปรจากแพงสุดไปถูกสุด ให้ลูกค้าคุ้มสุด
         appsPromo.sort((a, b) => b.price - a.price);
 
         let count = appsPromo.length; let idx = 0;
@@ -805,6 +851,7 @@ function getCalculatedCart() {
         while(idx + 8 <= count) { b8++; for(let i=0; i<8; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 80/8, isPromo: true, promoLabel: "โปร 8 แอพ"}); total += 80; }
         while(idx + 3 <= count) { b3++; for(let i=0; i<3; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 45/3, isPromo: true, promoLabel: "โปร 3 แอพ"}); total += 45; }
         
+        // กฎพิเศษ: ถ้าเหลือเศษ 2 แอพ และเป็นราคา 25฿ ทั้งคู่ คิดราคาโปร 45฿
         let remaining = count - idx;
         if (remaining === 2 && appsPromo[idx].price === 25 && appsPromo[idx+1].price === 25) {
             b2_25++;
@@ -842,7 +889,6 @@ function toggleItem(id) {
           alert("สินค้านี้ยังไม่พร้อมให้บริการ หรือ หมดชั่วคราวค่ะ");
           return;
       }
-      // ถ้าระบบรองรับมี แต่ลูกค้าไม่ได้กดเลือกก่อน ให้ดึงอันแรกมาใส่แทนอัตโนมัติ
       let chosenSys = selectedSystems[id] || (p.systems && p.systems.length > 0 ? p.systems[0] : null);
       if (chosenSys) selectedSystems[id] = chosenSys;
 
@@ -874,11 +920,12 @@ function openCartSummary() {
     }
 
     let sysText = item.chosenSystem ? `<span style="background:var(--primary); color:white; padding:1px 5px; border-radius:4px; font-size:10px;">${item.chosenSystem}</span>` : '';
+    let dispName = (item.name && item.name !== '-') ? item.name : '';
     
     html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px;">
        <div style="flex: 1;">
          <span style="font-weight: 600;">${index + 1}. ${item.cat}</span> ${sysText}<br>
-         <span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}</span>
+         <span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${dispName} ${item.packDesc ? `(${item.packDesc})` : ''}</span>
        </div>
        <div style="font-weight: bold; text-align:right;">${priceDisplay}</div>
     </div>`; 
@@ -906,7 +953,6 @@ function confirmCheckout() {
   let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
   let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
   
-  // แพทเทิร์นข้อความเฉพาะแท็บแอพ iOS/Android 
   if (appItems.length > 0 && otherItems.length === 0) {
       let appLines = appItems.map(i => {
           let appNameStr = (i.name && i.name !== i.cat && i.name !== '-') ? `${i.cat} ${i.name}` : i.cat;
@@ -915,9 +961,7 @@ function confirmCheckout() {
       }).join('\n'); 
 
       text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n✿  𓈒  รวมยอด    ꒰  ${calcInfo.total}฿  ꒱   ݂🎐♡\n${appLines}\n---------------------------\nรบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
-  } 
-  // แพทเทิร์นทั่วไป
-  else {
+  } else {
       text = "🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n"; 
       let isGameTopup = false; 
       calcInfo.items.forEach((item, index) => { 
@@ -926,8 +970,9 @@ function confirmCheckout() {
          else if (item.isPromo) priceStr = `ลดเหลือ (${item.promoLabel})`;
 
          let sysStr = item.chosenSystem ? `\n   ระบบที่เลือก: ${item.chosenSystem}` : '';
+         let dispName = (item.name && item.name !== '-') ? item.name : '';
 
-         text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}${sysStr}\n   ราคา: ${priceStr}\n`; 
+         text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${dispName} ${item.packDesc ? `(${item.packDesc})` : ''}${sysStr}\n   ราคา: ${priceStr}\n`; 
          if (item.tab === "เติมเกม") isGameTopup = true; 
       });
       text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${calcInfo.total} บาท*\n---------------------------\n`;
