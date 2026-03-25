@@ -601,7 +601,7 @@ function updateAdminTabUI() {
 }
 
 async function resetData() {
-  if(confirm("⚠️ คำเตือน: ข้อมูลทั้งหมดจะถูกลบเพื่อแก้ปัญหาฐานข้อมูลเต็ม ยืนยันหรือไม่?")) {
+  if(confirm("⚠️ ล้างระบบทั้งหมด ยืนยันหรือไม่?")) {
     localStorage.clear();
     await fetch(BIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY }, body: JSON.stringify({ shopInfo: {}, tabs: ["สินค้า"], products: [] }) });
     location.reload();
