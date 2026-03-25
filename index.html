@@ -16,7 +16,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 .hero { max-width: 1200px; margin: 0 auto 40px auto; background: linear-gradient(135deg, rgba(176,38,255,0.6) 0%, rgba(0,210,255,0.4) 100%); padding: 30px 20px 55px; text-align: center; position: relative; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
 
-/* Shop Status Pill */
 .shop-status-pill { position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 20; }
 .status-open { background: var(--success); }
 .status-closed { background: var(--danger); }
@@ -28,7 +27,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; cursor: pointer; user-select: none; }
 .hero-sub { font-size: 14px; color: rgba(255,255,255,0.9); }
 
-/* Tab System */
 .tab-container { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); display: flex; background: var(--bg-card); border-radius: 30px; padding: 5px; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.08); min-width: 280px; max-width: 90%; overflow-x: auto; scrollbar-width: none; }
 .tab-container::-webkit-scrollbar { display: none; }
 .tab-btn { padding: 10px 20px; border-radius: 25px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; background: transparent; color: var(--text-muted); white-space: nowrap; }
@@ -39,37 +37,43 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .tab-content.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Cards & UI */
 .info-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto 20px auto; }
 .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
 .info-row:last-child { border-bottom: none; }
 .sh { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
 .sh-line { width: 4px; height: 20px; background: var(--primary); border-radius: 2px; }
 
-/* Media Cover Area */
 .media-cover { max-width: 800px; margin: 0 auto 20px auto; padding: 0; position: relative; }
 .media-box { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.08); background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
 .media-box img, .media-box video { width: 100%; height: auto; border: none; object-fit: cover; pointer-events: none !important; user-select: none; }
 .media-box iframe { width: 100%; height: 100%; border: none; object-fit: cover; aspect-ratio: 16/9; }
 
-/* Category Grid */
 .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; justify-content: center; }
 .category-card { background: white; border-radius: 18px; padding: 20px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.2s; }
 .category-card:active { transform: scale(0.95); }
 .cat-icon-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 15px; overflow: hidden; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f0; }
 .cat-icon-wrapper img, .cat-icon-wrapper a { width: 100%; height: 100%; object-fit: cover; pointer-events: none !important; user-select: none; cursor: default; }
 
-/* Nested Package Variants */
+/* โหมดใหม่: Direct Card (กดติ๊กถูกได้เลย) */
+.direct-card { background: white; border-radius: 18px; padding: 15px 10px; text-align: center; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; }
+.direct-card:active { transform: scale(0.95); }
+.direct-card.selected { border-color: var(--primary); background: #faf5ff; }
+.check-icon { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(176,38,255,0.4); z-index: 2; }
+.direct-card.selected .check-icon { display: flex; }
+.direct-card-icon { width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 15px; overflow: hidden; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f0; }
+.direct-card-icon img { width: 100%; height: 100%; object-fit: cover; pointer-events: none !important; user-select: none; }
+.direct-card-title { font-weight: 600; font-size: 14px; line-height: 1.2; margin-bottom: 5px; color: var(--text-dark); width: 100%; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.direct-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.direct-card-price { font-size: 15px; font-weight: 700; color: var(--primary); margin-top: auto; }
+
 .variant-block { margin-bottom: 25px; }
 .variant-label { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 10px; padding-left: 8px; border-left: 4px solid var(--primary); display: flex; align-items: center; }
 .product-item { background: white; border-radius: 15px; padding: 15px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 .product-item.selected { border-color: var(--primary); background: #faf5ff; }
 
-/* Bottom Bar */
 .bottom-bar { position: fixed; bottom: 0; left: 50%; width: 100%; max-width: 1200px; background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); transform: translate(-50%, 100%); transition: 0.3s; z-index: 1000; }
 .bottom-bar.active { transform: translate(-50%, 0); }
 
-/* Admin Additions */
 .fab-wrapper { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1200px; pointer-events: none; z-index: 1001; }
 .fab-btn { position: absolute; right: 20px; bottom: 0; width: 55px; height: 55px; background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); cursor: pointer; transition: 0.2s; pointer-events: auto; }
 .fab-btn:active { transform: scale(0.9); }
@@ -125,7 +129,7 @@ textarea.admin-input { resize: vertical; }
 
   <div id="tab-products" class="tab-content active">
     <div id="categoriesView">
-      <div class="sh"><div class="sh-line"></div><h2>หมวดหมู่สินค้า</h2></div>
+      <div class="sh"><div class="sh-line"></div><h2>รายการสินค้า</h2></div>
       <div class="category-grid" id="categoryGrid"></div>
     </div>
     <div id="productsView" style="display:none; max-width:800px; margin:0 auto;">
@@ -190,7 +194,7 @@ textarea.admin-input { resize: vertical; }
         <select id="pTabTarget" class="admin-input" required></select>
         
         <label class="admin-label">ชื่อแอป / หมวดหมู่:</label>
-        <input type="text" id="pCat" class="admin-input" placeholder="เช่น Netflix, Youtube Premium" required>
+        <input type="text" id="pCat" class="admin-input" placeholder="เช่น Netflix, Youtube Premium, Goodnotes 6" required>
         
         <label class="admin-label">รายละเอียดใต้ชื่อแอป:</label>
         <textarea id="pCatDesc" class="admin-input" rows="2" placeholder="เช่น ✅ เปลี่ยนเมลได้"></textarea>
@@ -199,7 +203,7 @@ textarea.admin-input { resize: vertical; }
         <input type="text" id="pVariant" class="admin-input" placeholder="เว้นว่างได้ ถ้าไม่อยากแยกกลุ่ม">
 
         <label class="admin-label">ชื่อแพ็กเกจย่อย:</label>
-        <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, 3 เดือน" required>
+        <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, ถาวร" required>
 
         <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
         <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
@@ -330,7 +334,6 @@ window.onload = async () => {
     await fetchFromServer(); 
     renderShopInfo(); renderTabs(); renderCategories(); updateAdminTabUI(); renderAdminList();
     
-    // พรีวิวรูปลิงก์ในหน้าแอดมิน
     document.getElementById('pIconUrl').addEventListener('input', function() {
         const url = this.value;
         if(url) { document.getElementById('pIconPreview').src = url; document.getElementById('pIconPreview').style.display = 'block'; }
@@ -356,6 +359,12 @@ window.onload = async () => {
         } else { mPreview.style.display = 'none'; }
     });
 };
+
+// ดักจับชื่อแท็บ iOS/Android (ครอบคลุมทั้งพิมพ์ถูกและพิมพ์ผิด IOS-Androib)
+function isAppGameTab(tabName) {
+    const name = tabName.toLowerCase();
+    return name.includes('ios') || name.includes('androi');
+}
 
 function renderTabs() {
   const container = document.getElementById('tabBar');
@@ -461,7 +470,6 @@ async function saveShopInfo(e) {
   btn.innerText = "💾 บันทึกข้อมูลร้าน";
 }
 
-/* --- ล็อกอินแอดมิน --- */
 let tapCount = 0; let tapTimer;
 function handleAdminTap() {
   tapCount++; clearTimeout(tapTimer);
@@ -482,19 +490,40 @@ function switchAdminModalTab(tabId, btnElement) {
   btnElement.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
 }
 
-/* --- หมวดหมู่และสินค้า --- */
 function renderCategories(tabName = currentTab) {
   const grid = document.getElementById('categoryGrid');
   const filtered = products.filter(p => p.tab === tabName);
-  const uniqueCats = [...new Set(filtered.map(p => p.cat))];
   
-  grid.innerHTML = uniqueCats.map(cat => {
-    const p = filtered.find(x => x.cat === cat);
-    const icon = p.icon || '📦';
-    const iconHtml = icon.startsWith('data:image') || icon.startsWith('http') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
-    const catDesc = p.catDesc ? `<div style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">${p.catDesc.replace(/\n/g, '<br>')}</div>` : '';
-    return `<div class="category-card" onclick="openCategory('${cat}')"><div class="cat-icon-wrapper">${iconHtml}</div><div style="font-weight:600; font-size:15px; line-height:1.2;">${cat}</div>${catDesc}</div>`;
-  }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้า</p>';
+  const isDirectGrid = isAppGameTab(tabName);
+
+  if (isDirectGrid) {
+      grid.innerHTML = filtered.map(p => {
+          const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
+          const icon = p.icon || '📦';
+          const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
+          
+          const appName = p.cat; 
+          const appDesc = (p.name && p.name !== p.cat && p.name !== '-') ? p.name : (p.packDesc || ''); 
+
+          return `
+          <div class="direct-card ${isSel}" onclick="toggleItem('${p.id}')">
+              <div class="check-icon">✓</div>
+              <div class="direct-card-icon">${iconHtml}</div>
+              <div class="direct-card-title">${appName}</div>
+              <div class="direct-card-desc">${appDesc}</div>
+              <div class="direct-card-price">฿${p.price}</div>
+          </div>`;
+      }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
+  } else {
+      const uniqueCats = [...new Set(filtered.map(p => p.cat))];
+      grid.innerHTML = uniqueCats.map(cat => {
+        const p = filtered.find(x => x.cat === cat);
+        const icon = p.icon || '📦';
+        const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
+        const catDesc = p.catDesc ? `<div style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">${p.catDesc.replace(/\n/g, '<br>')}</div>` : '';
+        return `<div class="category-card" onclick="openCategory('${cat}')"><div class="cat-icon-wrapper">${iconHtml}</div><div style="font-weight:600; font-size:15px; line-height:1.2;">${cat}</div>${catDesc}</div>`;
+      }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้า</p>';
+  }
 }
 
 function openCategory(catName) {
@@ -627,37 +656,223 @@ async function deleteProduct(id) {
 }
 
 function showCategories() { document.getElementById('categoriesView').style.display='block'; document.getElementById('productsView').style.display='none'; }
+
+/* =======================================
+   อัปเดตระบบโปรโมชั่น (iOS/Android ขั้นบันได)
+   ======================================= */
+function getCalculatedCart() {
+    let appItems = []; 
+    let otherItems = [];
+    
+    // แยกสินค้าแอพเกมออกมาชุดนึงเพื่อคำนวณโปรโมชั่น
+    cart.forEach(i => {
+        if(isAppGameTab(i.tab)) appItems.push({...i});
+        else otherItems.push({...i});
+    });
+
+    let isBulkAll = false;
+    if (appItems.length >= 164) {
+        isBulkAll = true;
+    }
+
+    let processedCart = [];
+    let total = 0;
+    let activePromos = []; 
+
+    otherItems.forEach(item => {
+        processedCart.push({...item, effectivePrice: item.price, isPromo: false});
+        total += item.price;
+    });
+
+    if (isBulkAll) {
+        appItems.forEach(item => {
+            processedCart.push({...item, effectivePrice: 0, isPromo: true, promoLabel: "รวมในโปรเหมา"});
+        });
+        total += 3000;
+        activePromos.push("เหมาทุกแอพ 164 แอพ 3,000฿");
+    } else {
+        let appsPromo = []; // สำหรับแอพ 20-25฿
+        let ineligibleApps = []; // สำหรับแอพที่แพงกว่าหรืออื่นๆ (เช่น 35-50฿)
+        
+        appItems.forEach(item => {
+            if (item.price >= 20 && item.price <= 25) {
+                appsPromo.push(item);
+            } else {
+                ineligibleApps.push(item); 
+            }
+        });
+
+        // คิดราคาแอพที่ไม่เข้าโปรเต็มจำนวน
+        ineligibleApps.forEach(item => {
+            processedCart.push({...item, effectivePrice: item.price, isPromo: false});
+            total += item.price;
+        });
+
+        // จัดเรียงแอพที่เข้าโปร จากราคาแพงไปราคาถูก (ให้ประโยชน์สูงสุดกับลูกค้า)
+        appsPromo.sort((a, b) => b.price - a.price);
+
+        let count = appsPromo.length;
+        let idx = 0;
+        let b30 = 0, b15 = 0, b8 = 0, b3 = 0, b2_25 = 0;
+
+        // คำนวณสเต็ปการซื้อทีละขั้น (Greedy)
+        while(idx + 30 <= count) {
+            b30++;
+            for(let i=0; i<30; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 360/30, isPromo: true, promoLabel: "โปร 30 แอพ"});
+            total += 360;
+        }
+        while(idx + 15 <= count) {
+            b15++;
+            for(let i=0; i<15; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 210/15, isPromo: true, promoLabel: "โปร 15 แอพ"});
+            total += 210;
+        }
+        while(idx + 8 <= count) {
+            b8++;
+            for(let i=0; i<8; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 80/8, isPromo: true, promoLabel: "โปร 8 แอพ"});
+            total += 80;
+        }
+        while(idx + 3 <= count) {
+            b3++;
+            for(let i=0; i<3; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 45/3, isPromo: true, promoLabel: "โปร 3 แอพ"});
+            total += 45;
+        }
+        
+        // เช็คเงื่อนไขพิเศษ: หากเหลือ 2 แอพ และทั้งคู่ราคา 25฿ ให้ได้โปร 45฿
+        let remaining = count - idx;
+        if (remaining === 2 && appsPromo[idx].price === 25 && appsPromo[idx+1].price === 25) {
+            b2_25++;
+            processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"});
+            processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"});
+            total += 45;
+        } else {
+            // เศษที่เหลือจากการเข้าโปร คิดราคาเต็มตามปกติ
+            while(idx < count) {
+                processedCart.push({...appsPromo[idx], effectivePrice: appsPromo[idx].price, isPromo: false});
+                total += appsPromo[idx].price;
+                idx++;
+            }
+        }
+
+        if (b30 > 0) activePromos.push(`โปร 30 แอพ 360฿ (${b30} ชุด)`);
+        if (b15 > 0) activePromos.push(`โปร 15 แอพ 210฿ (${b15} ชุด)`);
+        if (b8 > 0) activePromos.push(`โปร 8 แอพ 80฿ (${b8} ชุด)`);
+        if (b3 > 0) activePromos.push(`โปร 3 แอพ 45฿ (${b3} ชุด)`);
+        if (b2_25 > 0) activePromos.push(`โปรคู่แอพ 25฿ (${b2_25} ชุด)`);
+    }
+
+    // นำตะกร้ามาจัดเรียงใหม่ให้ลำดับเหมือนที่ลูกค้าเลือกแต่แรก
+    let finalSorted = [];
+    cart.forEach(originalItem => {
+        let foundIdx = processedCart.findIndex(p => p.id === originalItem.id);
+        if(foundIdx > -1) {
+            finalSorted.push(processedCart[foundIdx]);
+            processedCart.splice(foundIdx, 1);
+        }
+    });
+
+    return { items: finalSorted, total, isBulkAll, activePromos };
+}
+
 function toggleItem(id) {
   const idx = cart.findIndex(c => c.id === id);
   if(idx > -1) cart.splice(idx, 1); else cart.push(products.find(p => p.id === id));
-  document.getElementById('cartCount').innerText = cart.length; document.getElementById('cartTotal').innerText = cart.reduce((s,i)=>s+i.price,0);
+  
+  const calcInfo = getCalculatedCart();
+  
+  document.getElementById('cartCount').innerText = cart.length; 
+  document.getElementById('cartTotal').innerText = calcInfo.total;
   document.getElementById('bottomBar').classList.toggle('active', cart.length > 0);
-  if(document.getElementById('productsView').style.display === 'block') openCategory(document.getElementById('currentCategoryTitle').innerText);
+  
+  if(document.getElementById('productsView').style.display === 'block') {
+      openCategory(document.getElementById('currentCategoryTitle').innerText);
+  } else {
+      renderCategories(); 
+  }
 }
 
 function openCartSummary() {
   if(cart.length === 0) return;
-  let html = ''; let total = 0;
-  cart.forEach((item, index) => {
-    html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px;"><div style="flex: 1;"><span style="font-weight: 600;">${index + 1}. ${item.cat}</span><br><span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}</span></div><div style="font-weight: bold;">฿${item.price}</div></div>`; total += item.price;
+  let calcInfo = getCalculatedCart();
+  let html = ''; 
+  
+  calcInfo.items.forEach((item, index) => {
+    let priceDisplay = `฿${item.price}`;
+    
+    if (calcInfo.isBulkAll && isAppGameTab(item.tab)) {
+         priceDisplay = `<span style="color:var(--primary); font-weight:bold; font-size:12px;">รวมในเหมา 164 แอพ</span>`;
+    } else if (item.isPromo) {
+         priceDisplay = `<span style="text-decoration:line-through; color:#999; font-size:12px;">฿${item.price}</span> <span style="color:var(--success); font-weight:bold;">${item.promoLabel}</span>`;
+    }
+    
+    html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px;">
+       <div style="flex: 1;"><span style="font-weight: 600;">${index + 1}. ${item.cat}</span><br><span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}</span></div>
+       <div style="font-weight: bold;">${priceDisplay}</div>
+    </div>`; 
   });
-  document.getElementById('cartSummaryList').innerHTML = html; document.getElementById('cartSummaryTotal').innerText = total;
+
+  if (calcInfo.isBulkAll) {
+      html += `<div style="text-align:center; padding: 10px; background:#fdf4ff; color:var(--primary); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:14px;">🎉 เปิดใช้ราคาโปรเหมา 3,000฿ สำเร็จ!</div>`;
+  } else if (calcInfo.activePromos.length > 0) {
+      let pText = calcInfo.activePromos.join(' และ ');
+      html += `<div style="text-align:center; padding: 10px; background:#f0fdf4; color:var(--success); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:13px;">🎉 ยินดีด้วย! คุณได้รับ ${pText}</div>`;
+  }
+
+  document.getElementById('cartSummaryList').innerHTML = html; 
+  document.getElementById('cartSummaryTotal').innerText = calcInfo.total;
   document.getElementById('cartSummaryModal').style.display = 'flex';
 }
 
 function closeCartSummary() { document.getElementById('cartSummaryModal').style.display = 'none'; }
+
 function confirmCheckout() {
   if(cart.length === 0) return;
-  let text = "🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n"; let total = 0; let isGameTopup = false; 
-  cart.forEach((item, index) => { text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}\n   ราคา: ${item.price} บาท\n`; total += item.price; if (item.tab === "เติมเกม") isGameTopup = true; });
-  text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${total} บาท*\n---------------------------\n`;
-  if (isGameTopup) { text += "📌 *แจ้งไอดี / รหัสผ่าน ได้เลยค่ะ*\n"; } else { text += "รบกวนแอดมินสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏"; }
+  let calcInfo = getCalculatedCart();
+  let text = ""; 
+  
+  let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
+  let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
+  
+  // แพทเทิร์นข้อความเฉพาะแท็บแอพ iOS/Android (แบบไม่มีสินค้าหมวดหมู่อื่นปน)
+  if (appItems.length > 0 && otherItems.length === 0) {
+      let appLines = appItems.map(i => {
+          let appNameStr = (i.name && i.name !== i.cat && i.name !== '-') ? `${i.cat} ${i.name}` : i.cat;
+          return `🍃 ݂  ${appNameStr} 𓈒`;
+      }).join('\n'); 
+
+      text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n✿  𓈒  รวมยอด    ꒰  ${calcInfo.total}฿  ꒱   ݂🎐♡\n${appLines}\n---------------------------\nรบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
+  } 
+  // แพทเทิร์นข้อความสำหรับตะกร้าสินค้าปกติ หรือตะกร้าผสม
+  else {
+      text = "🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n"; 
+      let isGameTopup = false; 
+      calcInfo.items.forEach((item, index) => { 
+         let priceStr = `${item.price} บาท`;
+         if (calcInfo.isBulkAll && isAppGameTab(item.tab)) priceStr = "รวมในโปรเหมา";
+         else if (item.isPromo) priceStr = `ลดเหลือ (${item.promoLabel})`;
+
+         text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${item.name} ${item.packDesc ? `(${item.packDesc})` : ''}\n   ราคา: ${priceStr}\n`; 
+         if (item.tab === "เติมเกม") isGameTopup = true; 
+      });
+      text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${calcInfo.total} บาท*\n---------------------------\n`;
+      
+      if (calcInfo.isBulkAll) text += `🎉 *ได้รับโปรเหมาแอพสุดคุ้ม 3,000 บาท*\n`;
+      else if (calcInfo.activePromos.length > 0) text += `🎉 *ได้รับส่วนลดโปรโมชั่นแอพ*\n`;
+
+      if (isGameTopup) { text += "📌 *แจ้งไอดี / รหัสผ่าน ได้เลยค่ะ*\n"; } else { text += "รบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏"; }
+  }
+
   navigator.clipboard.writeText(text).then(() => {
     alert("✅ คัดลอกรายการสั่งซื้อเรียบร้อยแล้ว!\nระบบกำลังพาคุณไปที่ LINE ของร้าน...");
     cart = []; document.getElementById('cartCount').innerText = "0"; document.getElementById('cartTotal').innerText = "0"; document.getElementById('bottomBar').classList.remove('active');
-    if(document.getElementById('productsView').style.display === 'block') openCategory(document.getElementById('currentCategoryTitle').innerText);
+    
+    if(document.getElementById('productsView').style.display === 'block') {
+        openCategory(document.getElementById('currentCategoryTitle').innerText);
+    } else {
+        renderCategories(); 
+    }
+    
     closeCartSummary(); window.open(`https://line.me/R/ti/p/~${shopInfo.line.replace('@', '%40')}`, '_blank');
-  }).catch(err => { alert("❌ ไม่สามารถคัดลอกได้ รบกวนแคปหน้าจอส่งแอดมิน"); });
+  }).catch(err => { alert("❌ ไม่สามารถคัดลอกได้ รบกวนแคปหน้าจอส่งแม่ค้า"); });
 }
 </script>
 </body>
