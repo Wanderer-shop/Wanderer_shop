@@ -15,12 +15,11 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .bg-glow-1 { position: fixed; top: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(176,38,255,0.1) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; }
 .bg-glow-2 { position: fixed; bottom: 20%; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,210,255,0.08) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; }
 
-/* 🌟 Header ต้นฉบับ 🌟 */
 .hero { max-width: 1200px; margin: 0 auto 40px auto; background: linear-gradient(135deg, rgba(176,38,255,0.6) 0%, rgba(0,210,255,0.4) 100%); padding: 30px 20px 55px; text-align: center; position: relative; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; overflow: visible; }
 #heroMedia { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
 .hero > div:not(#heroMedia) { position: relative; z-index: 2; }
 
-/* แท็บด้านบนจัดกึ่งกลางซ้อนทับขอบล่าง */
+/* แท็บด้านบนจัดกึ่งกลาง */
 .tab-container { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center; background: var(--bg-card); border-radius: 30px; padding: 6px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: max-content; max-width: 95%; overflow-x: auto; scrollbar-width: none; z-index: 10; white-space: nowrap; }
 .tab-container::-webkit-scrollbar { display: none; }
 .tab-btn { padding: 10px 20px; border-radius: 25px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; background: transparent; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
@@ -69,6 +68,16 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .category-card { background: white; border-radius: 18px; padding: 20px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.2s; position: relative; border: 1px solid transparent; }
 .category-card:active { transform: scale(0.95); }
 
+/* 🌟 ดีไซน์การ์ด IOS-ANDROID แบบใหม่ 🌟 */
+.os-card { background: var(--bg-card); border-radius: 18px; padding: 15px 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; border: 2.5px solid transparent; display: flex; flex-direction: column; align-items: center; height: 165px; /* ความสูงคงที่ ให้ทรงคล้าย 5x5 */ }
+.os-card.selected { border-color: var(--primary); background-color: #fdf8ff; }
+.os-app-title { font-weight: 600; font-size: 13px; color: var(--text-dark); width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 8px; }
+.os-app-price { color: var(--primary); font-weight: 700; font-size: 13px; margin-top: 2px; }
+.os-actions { position: absolute; bottom: 10px; /* ดันลงชิดขอบล่าง ~1 ซม. */ left: 0; width: 100%; padding: 0 10px; display: flex; gap: 5px; }
+.os-btn { flex: 1; padding: 6px 0; font-size: 11px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; font-weight: bold; color: #4b5563; transition: 0.2s; }
+.os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.os-btn:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; border: none; }
+
 .app-status-tag { position: absolute; top: -10px; right: -8px; font-size: 11px; background: white; border: 1px solid #eee; padding: 3px 8px; border-radius: 12px; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 5; }
 .app-status-tag.ready { color: #10b981; }
 .app-status-tag.empty { color: #ef4444; }
@@ -94,6 +103,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .admin-modal-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
 .a-tab-btn { padding: 8px 16px; border: none; background: #f3f4f6; border-radius: 20px; font-family: inherit; font-size: 13px; font-weight: 600; color: #6b7280; cursor: pointer; white-space: nowrap; transition: 0.2s; }
 .a-tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px var(--glow); }
+
 .a-tab-content { display: none; }
 .a-tab-content.active { display: block; }
 .admin-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; background: #fafafa; }
@@ -103,8 +113,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .floating-admin-btn { display: none; position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: #A0C4FF; color: white; font-size: 32px; font-weight: 300; border: none; box-shadow: 0 4px 15px rgba(160,196,255,0.6); z-index: 1500; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; line-height: 1; padding-bottom: 4px; }
 .floating-admin-btn:active { transform: scale(0.9); }
 
-/* 🌟 ตัวเลือกเรียงตาม */
-.sort-box { padding: 6px 12px; border-radius: 20px; border: 1px solid #e5e7eb; background: var(--bg-card); font-family: 'Kanit'; font-size: 13px; color: var(--text-muted); outline: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+/* ตัวเลือกเรียงตาม */
+.sort-box { padding: 6px 12px; border-radius: 20px; border: 1px solid #e5e7eb; background: white; font-family: 'Kanit'; font-size: 13px; color: var(--text-muted); outline: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
 </style>
 </head>
 <body>
@@ -166,7 +176,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     <div id="categoriesView">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h3 style="border-left: 4px solid var(--primary); padding-left: 10px; margin: 0; font-size: 16px;">รายการสินค้า</h3>
-          <select id="sortDropdown" class="sort-box" onchange="handleSortChange()">
+          <select id="sortDropdownCat" class="sort-box" onchange="renderCategories()">
               <option value="default">เรียงตาม: ค่าเริ่มต้น</option>
               <option value="az">A-Z</option>
               <option value="price_asc">ราคา (ต่ำ-สูง)</option>
@@ -177,8 +187,14 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     </div>
     
     <div id="productsView" style="display:none; max-width:800px; margin:0 auto;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-          <button onclick="showCategories()" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; font-size:16px;">← กลับหน้าหมวดหมู่</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <button onclick="showCategories()" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; font-size:16px; margin: 0;">← กลับหน้าหมวดหมู่</button>
+          <select id="sortDropdownProd" class="sort-box" onchange="renderProductList()">
+              <option value="default">เรียงตาม: ค่าเริ่มต้น</option>
+              <option value="az">A-Z</option>
+              <option value="price_asc">ราคา (ต่ำ-สูง)</option>
+              <option value="price_desc">ราคา (สูง-ต่ำ)</option>
+          </select>
       </div>
       
       <div style="text-align: left; margin-bottom: 20px; padding: 0 10px;">
@@ -194,7 +210,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 <div class="bottom-bar" id="bottomBar">
   <div>
       <div style="color: var(--text-muted); font-size: 12px;">เลือก <span id="cartCount" style="font-weight:bold; color:var(--primary);">0</span> รายการ</div>
-      <div style="color:var(--primary); font-weight:bold; font-size:18px;">฿<span id="cartTotal">0</span></div>
+      <div style="color:var(--primary); font-weight:bold; font-size:18px;"><span id="cartTotal">0</span>฿</div>
   </div>
   <button onclick="confirmCheckout()" style="padding:10px 25px; border-radius:25px; border:none; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; font-weight:700; cursor:pointer; box-shadow: 0 4px 10px rgba(176,38,255,0.3);">สั่งซื้อเลย</button>
 </div>
@@ -348,9 +364,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 </div>
 
 <script>
-// ==========================================
-// 🔴 ลิงก์จาก Google Apps Script และรหัสแอดมิน
-// ==========================================
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbx1ijbDV6ugE-bo2hcx2-SsdBNtoyxOvZOt-v27lF9l6TVMiJ-URXyBdMZzLAOJIGVpBw/exec"; 
 
 let shopInfo = JSON.parse(localStorage.getItem('wandererShopInfo')) || { 
@@ -377,23 +390,15 @@ function saveLocalSafely() {
 
 function sendVisitStatToSheet() {
     if(!GOOGLE_SHEET_API_URL) return;
-    fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-        body: JSON.stringify({ action: "record_visit", timestamp: new Date().toLocaleString('th-TH') })
-    }).catch(e => console.log("Stats err", e));
+    fetch(GOOGLE_SHEET_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: "record_visit", timestamp: new Date().toLocaleString('th-TH') }) }).catch(e => console.log(e));
 }
 
 function syncDataToSheet() {
     if(!GOOGLE_SHEET_API_URL) return;
-    fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: "sync_data", shopInfo: shopInfo, products: products, tabs: tabs, timestamp: new Date().toLocaleString('th-TH') })
-    }).catch(e => console.log("Sync err", e));
+    fetch(GOOGLE_SHEET_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: "sync_data", shopInfo: shopInfo, products: products, tabs: tabs, timestamp: new Date().toLocaleString('th-TH') }) }).catch(e => console.log(e));
 }
 
-// 🌟 ระบบเข้าแอดมินจากการกดชื่อร้าน 5 ครั้ง 🌟
+// 🌟 ระบบกดชื่อร้าน 5 ครั้ง
 function handleAdminTap() {
   if (isAdminLoggedIn) { openAdminModal(); return; }
   adminTapCount++; 
@@ -418,7 +423,6 @@ function openAdminModal() {
   document.getElementById('shopLineLinkInput').value = shopInfo.lineLink || '';
   document.getElementById('shopTwInput').value = shopInfo.twitter || ''; 
   document.getElementById('shopTwLinkInput').value = shopInfo.twLink || '';
-  
   document.getElementById('shopLogoInput').value = shopInfo.logo || '';
   document.getElementById('shopCoverInput').value = shopInfo.cover || ''; document.getElementById('shopCoverDescInput').value = shopInfo.coverDesc || '';
   document.getElementById('shopWarrantyInput').value = shopInfo.warranty || ''; document.getElementById('shopTimeOpenInput').value = shopInfo.openTime || '09:00';
@@ -438,46 +442,26 @@ function switchAdminModalTab(tabId, btn) {
 
 function updateAdminFormFields() {
     let tab = document.getElementById('pTabTarget').value || '';
-    let cAppDesc = document.getElementById('grpAppDesc'); 
-    let cVariant = document.getElementById('grpVariant');
-    let cName = document.getElementById('grpName'); 
-    let cSubDesc = document.getElementById('grpSubDesc');
-    let cIcon = document.getElementById('grpIcon'); 
-    let lblVariant = document.getElementById('lblVariant');
+    let cAppDesc = document.getElementById('grpAppDesc'); let cVariant = document.getElementById('grpVariant');
+    let cName = document.getElementById('grpName'); let cSubDesc = document.getElementById('grpSubDesc');
+    let cIcon = document.getElementById('grpIcon'); let lblVariant = document.getElementById('lblVariant');
     let osGroup = document.getElementById('osAppGroup');
     
-    cAppDesc.style.display = 'block'; 
-    cVariant.style.display = 'block'; 
-    cName.style.display = 'block'; 
-    cSubDesc.style.display = 'block'; 
-    cIcon.style.display = 'block';
-    osGroup.style.display = 'none';
-    lblVariant.innerHTML = 'ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม):';
+    cAppDesc.style.display = 'block'; cVariant.style.display = 'block'; cName.style.display = 'block'; cSubDesc.style.display = 'block'; cIcon.style.display = 'block'; osGroup.style.display = 'none'; lblVariant.innerHTML = 'ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม):';
 
-    if (tab === 'เติมเกม') { 
-        cSubDesc.style.display = 'none'; 
-    } 
+    if (tab === 'เติมเกม') { cSubDesc.style.display = 'none'; } 
     else if (tab === 'แอพ/เกม IOS-ANDROID' || tab.includes('IOS-ANDROID')) { 
-        cAppDesc.style.display = 'block'; 
-        cVariant.style.display = 'none';
-        cName.style.display = 'none'; 
-        cSubDesc.style.display = 'none'; 
-        osGroup.style.display = 'block';
+        cAppDesc.style.display = 'block'; cVariant.style.display = 'none'; cName.style.display = 'none'; cSubDesc.style.display = 'none'; osGroup.style.display = 'block';
     } 
     else if (tab === 'เติมเหรียญนิยาย' || tab.includes('นิยาย')) { 
-        cAppDesc.style.display = 'none'; 
-        cName.style.display = 'none'; 
-        cSubDesc.style.display = 'none'; 
+        cAppDesc.style.display = 'none'; cName.style.display = 'none'; cSubDesc.style.display = 'none'; 
     } 
-    
     toggleOSFields();
 }
 
 function toggleOSFields() {
-    let isIOS = document.getElementById('pSupportIOS').checked;
-    let isAndroid = document.getElementById('pSupportAndroid').checked;
-    document.getElementById('boxTextIOS').style.display = isIOS ? 'block' : 'none';
-    document.getElementById('boxTextAndroid').style.display = isAndroid ? 'block' : 'none';
+    let isIOS = document.getElementById('pSupportIOS').checked; let isAndroid = document.getElementById('pSupportAndroid').checked;
+    document.getElementById('boxTextIOS').style.display = isIOS ? 'block' : 'none'; document.getElementById('boxTextAndroid').style.display = isAndroid ? 'block' : 'none';
 }
 
 function renderShopInfo() {
@@ -513,14 +497,10 @@ function renderShopInfo() {
 }
 
 function saveShopInfo(e) { e.preventDefault();
-  shopInfo.facebook = document.getElementById('shopFbInput').value; 
-  shopInfo.fbLink = document.getElementById('shopFbLinkInput').value;
-  shopInfo.line = '@' + document.getElementById('shopLineInput').value.replace('@', '');
-  shopInfo.lineLink = document.getElementById('shopLineLinkInput').value;
-  shopInfo.twitter = document.getElementById('shopTwInput').value; 
-  shopInfo.twLink = document.getElementById('shopTwLinkInput').value;
-  shopInfo.logo = document.getElementById('shopLogoInput').value;
-  shopInfo.cover = document.getElementById('shopCoverInput').value; shopInfo.coverDesc = document.getElementById('shopCoverDescInput').value;
+  shopInfo.facebook = document.getElementById('shopFbInput').value; shopInfo.fbLink = document.getElementById('shopFbLinkInput').value;
+  shopInfo.line = '@' + document.getElementById('shopLineInput').value.replace('@', ''); shopInfo.lineLink = document.getElementById('shopLineLinkInput').value;
+  shopInfo.twitter = document.getElementById('shopTwInput').value; shopInfo.twLink = document.getElementById('shopTwLinkInput').value;
+  shopInfo.logo = document.getElementById('shopLogoInput').value; shopInfo.cover = document.getElementById('shopCoverInput').value; shopInfo.coverDesc = document.getElementById('shopCoverDescInput').value;
   shopInfo.warranty = document.getElementById('shopWarrantyInput').value; shopInfo.openTime = document.getElementById('shopTimeOpenInput').value;
   shopInfo.closeTime = document.getElementById('shopTimeCloseInput').value; shopInfo.status = document.getElementById('shopStatusInput').value;
   saveLocalSafely(); renderShopInfo(); alert('บันทึกสำเร็จ!');
@@ -534,7 +514,7 @@ function updateShopStatus(status) {
   else if (status === 'pause') { p.className = 'shop-status-pill status-pause'; l.textContent = 'PAUSE'; ib.className = 'status-badge pause'; it.textContent = 'พักส่ง'; }
 }
 
-// 🌟 ฟังก์ชันเปิดลิงก์ที่ลูกค้ากด 🌟
+// 🌟 ระบบกดลิงก์ที่ลูกค้ากด 🌟
 function openSocialLink(type) {
     if(type === 'fb') {
         if(shopInfo.fbLink) window.open(shopInfo.fbLink, '_blank');
@@ -569,24 +549,18 @@ function switchMainTab(target, btn) {
       document.getElementById('tab-products').classList.remove('active'); document.getElementById('tab-info').classList.add('active');
   } else { 
       document.getElementById('tab-info').classList.remove('active'); document.getElementById('tab-products').classList.add('active'); 
-      currentTab = target; 
-      showCategories(); 
+      currentTab = target; showCategories(); 
   }
 }
 
 function handleSortChange() {
-    if(document.getElementById('productsView').style.display === 'block') {
-        renderProductList();
-    } else {
-        renderCategories();
-    }
+    if(document.getElementById('productsView').style.display === 'block') { renderProductList(); } 
+    else { renderCategories(); }
 }
 
 function showCategories() {
-  document.getElementById('productsView').style.display = 'none';
-  document.getElementById('categoriesView').style.display = 'block';
-  document.getElementById('sortDropdown').value = 'default';
-  renderCategories();
+  document.getElementById('productsView').style.display = 'none'; document.getElementById('categoriesView').style.display = 'block';
+  document.getElementById('sortDropdownCat').value = 'default'; renderCategories();
 }
 
 function renderCategories() {
@@ -602,20 +576,16 @@ function renderCategories() {
   }, {});
 
   let groupedEntries = Object.entries(grouped).map(([c, item]) => ({ cat: c, ...item }));
-  let sortVal = document.getElementById('sortDropdown') ? document.getElementById('sortDropdown').value : 'default';
+  let sortVal = document.getElementById('sortDropdownCat') ? document.getElementById('sortDropdownCat').value : 'default';
   
-  if (sortVal === 'az') { 
-      groupedEntries.sort((a,b) => a.cat.localeCompare(b.cat)); 
-  } else if (sortVal === 'price_asc') { 
-      groupedEntries.sort((a,b) => Number(a.price) - Number(b.price)); 
-  } else if (sortVal === 'price_desc') { 
-      groupedEntries.sort((a,b) => Number(b.price) - Number(a.price)); 
-  }
+  if (sortVal === 'az') { groupedEntries.sort((a,b) => a.cat.localeCompare(b.cat)); } 
+  else if (sortVal === 'price_asc') { groupedEntries.sort((a,b) => Number(a.price) - Number(b.price)); } 
+  else if (sortVal === 'price_desc') { groupedEntries.sort((a,b) => Number(b.price) - Number(a.price)); }
 
   let html = '';
   for(let item of groupedEntries) {
     let c = item.cat;
-    let imgHtml = item.icon ? `<img src="${item.icon}" style="width: 100%; height: 100%; border-radius: 15px; object-fit: cover;">` : `<div style="font-size:30px; color:#ddd;">📦</div>`;
+    let imgHtml = item.icon ? `<img src="${item.icon}" style="width: 100%; height: 100%; border-radius: 14px; object-fit: cover;">` : `<div style="font-size:30px; color:#ddd;">📦</div>`;
     let badgeHtml = '';
     if (item.statuses.includes('ready')) { badgeHtml = `<div class="app-status-tag ready">🟢 พร้อม</div>`; }
     else if (item.statuses.includes('waiting')) { badgeHtml = `<div class="app-status-tag waiting">🟠 รอแก้</div>`; }
@@ -623,7 +593,7 @@ function renderCategories() {
 
     let appDescHtml = item.desc ? `<div style="font-size: 11.5px; color: gray; margin-top: 6px; line-height: 1.3; white-space: pre-line;">${item.desc}</div>` : '';
 
-    // 🌟 ระบบ IOS-ANDROID (ไม่มีอิโมจิที่ปุ่ม / กดแล้วการ์ดมีขอบม่วงและติ๊กถูกที่รูป) 🌟
+    // 🌟 ระบบ IOS-ANDROID (การ์ดใหม่ ไม่มีอิโมจิปุ่ม / ขอบม่วง / ติ๊กถูกที่มุมซ้ายบนรูป)
     if (currentTab === 'แอพ/เกม IOS-ANDROID' || currentTab.includes('IOS-ANDROID')) {
         let iosInCart = cart.find(x => x.cat === c && x.osType === 'iOS');
         let andInCart = cart.find(x => x.cat === c && x.osType === 'Android');
@@ -637,24 +607,24 @@ function renderCategories() {
             ? `<button onclick="toggleDirectCart('${item.id}', '${c}', 'Android', event)" style="flex:1; padding:6px 0; background:${andInCart ? 'var(--primary)' : '#fff'}; color:${andInCart ? '#fff' : '#666'}; border:1px solid ${andInCart ? 'var(--primary)' : '#ddd'}; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer; transition:0.2s;">Android</button>`
             : `<button disabled style="flex:1; padding:6px 0; background:#f3f4f6; color:#9ca3af; border:none; border-radius:8px; font-weight:bold; font-size:11px; cursor:not-allowed;">Android</button>`;
 
+        // ติ๊กถูกสีขาววงกลมม่วงที่มุมซ้ายบนของรูปภาพ
         let checkmarkHtml = isSelected 
-            ? `<div style="position: absolute; top: -5px; left: -5px; width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 10; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">✓</div>` 
+            ? `<div style="position: absolute; top: -6px; left: -6px; width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 10; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">✓</div>` 
             : '';
 
-        html += `<div class="category-card" style="border: 2.5px solid ${isSelected ? 'var(--primary)' : 'transparent'}; background: ${isSelected ? '#fdf8ff' : '#fff'};">
+        html += `<div class="os-card ${isSelected ? 'selected' : ''}" style="cursor: default;">
             ${badgeHtml}
-            <div class="cat-icon-wrapper" style="position: relative; width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 15px; overflow: visible;">
+            <div style="position: relative; width: 65px; height: 65px; margin: 0 auto; border-radius: 14px; flex-shrink: 0;">
                 ${checkmarkHtml}
-                <div style="width:100%; height:100%; overflow:hidden; border-radius:15px; background: #f3f4f6; display: flex; align-items: center; justify-content: center;">
+                <div style="width:100%; height:100%; overflow:hidden; border-radius:14px; background:#f3f4f6; display:flex; align-items:center; justify-content:center;">
                     ${imgHtml}
                 </div>
             </div>
             
-            <div style="font-weight:600; font-size:13px; color:var(--text-dark); line-height:1.2;">${c}</div>
-            <div style="color: var(--primary); font-weight: 700; font-size: 14px; margin-top: 4px;">฿${item.price}</div>
-            ${appDescHtml}
+            <div class="os-app-title">${c}</div>
+            ${item.price ? `<div class="os-app-price">${item.price}฿</div>` : ''}
             
-            <div style="display: flex; gap: 5px; margin-top: 10px;">
+            <div class="os-actions">
                 ${btnIOS}
                 ${btnAndroid}
             </div>
@@ -664,7 +634,7 @@ function renderCategories() {
             ${badgeHtml}
             <div class="cat-icon-wrapper">${imgHtml}</div>
             <div style="font-weight:600; font-size:14px; color:var(--text-dark); line-height:1.2;">${c}</div>
-            <div style="color: var(--primary); font-weight: 700; font-size: 14px; margin-top: 4px;">เริ่มต้น ฿${item.price}</div>
+            <div style="color: var(--primary); font-weight: 700; font-size: 14px; margin-top: 4px;">เริ่มต้น ${item.price}฿</div>
             ${appDescHtml}
         </div>`;
     }
@@ -672,7 +642,7 @@ function renderCategories() {
   grid.innerHTML = html || `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#aaa;">ยังไม่มีสินค้าในหมวดหมู่นี้</div>`;
 }
 
-// 🌟 กดซ้ำที่ระบบเดิม = เอาออกจากตะกร้า 🌟
+// 🌟 ระบบกดซ้ำ = เอาออกจากตะกร้า 🌟
 function toggleDirectCart(productId, catName, osType, event) {
     event.stopPropagation();
     let p = products.find(x => x.cat === catName && x.tab === currentTab && x.id === productId); 
@@ -698,25 +668,21 @@ function toggleDirectCart(productId, catName, osType, event) {
 
 function openCategory(catName) {
   document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block'; 
-  document.getElementById('currentCategoryTitle').textContent = catName; 
-  document.getElementById('sortDropdown').value = 'default';
+  document.getElementById('currentCategoryTitle').textContent = catName; document.getElementById('sortDropdownProd').value = 'default';
   
   let catProducts = products.filter(p => p.tab === currentTab && p.cat === catName);
-  let desc = catProducts.find(p => p.appDesc)?.appDesc || '';
-  let descEl = document.getElementById('currentCategoryDesc');
+  let desc = catProducts.find(p => p.appDesc)?.appDesc || ''; let descEl = document.getElementById('currentCategoryDesc');
   
-  if(desc) { descEl.style.display = 'block'; descEl.textContent = desc; } 
-  else { descEl.style.display = 'none'; }
-
+  if(desc) { descEl.style.display = 'block'; descEl.textContent = desc; } else { descEl.style.display = 'none'; }
   renderProductList(); 
 }
 
-// 🌟 หน้าแพ็กเกจย่อย ไม่มีรูปไอคอนแอป 🌟
+// 🌟 หน้าแพ็กเกจย่อย ลบไอคอนแอปออก 🌟
 function renderProductList() {
   const catName = document.getElementById('currentCategoryTitle').textContent;
   let catProducts = products.filter(p => p.tab === currentTab && p.cat === catName);
   
-  let sortVal = document.getElementById('sortDropdown') ? document.getElementById('sortDropdown').value : 'default';
+  let sortVal = document.getElementById('sortDropdownProd') ? document.getElementById('sortDropdownProd').value : 'default';
   if (sortVal === 'az') { catProducts.sort((a,b) => (a.name || a.cat).localeCompare(b.name || b.cat)); }
   else if (sortVal === 'price_asc') { catProducts.sort((a,b) => Number(a.price) - Number(b.price)); }
   else if (sortVal === 'price_desc') { catProducts.sort((a,b) => Number(b.price) - Number(a.price)); }
@@ -739,7 +705,7 @@ function renderProductList() {
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
             <div style="flex: 1; text-align: left; padding-right: 10px;">${nameHtml}</div>
             ${p.subDesc ? `<div style="flex: 1.2; text-align: center; border-left: 1px solid #f3f4f6; border-right: 1px solid #f3f4f6; padding: 0 10px; min-height: 20px; display: flex; align-items: center; justify-content: center;">${subDescHtml}</div>` : `<div style="flex: 1.2;"></div>`}
-            <div style="flex: 1; text-align: right; font-weight: 700; color: var(--primary); font-size: 16px; padding-left: 10px;">฿${p.price}</div>
+            <div style="flex: 1; text-align: right; font-weight: 700; color: var(--primary); font-size: 16px; padding-left: 10px;">${p.price}฿</div>
         </div>
       </div>`;
     }); 
@@ -749,35 +715,27 @@ function renderProductList() {
 }
 
 function toggleCart(id) {
-  const idx = cart.findIndex(x => x.id === id);
-  const p = products.find(x => x.id === id);
-  if(idx > -1) { cart.splice(idx, 1); } 
-  else { if(p && p.status === 'ready') { cart.push({...p, uid: p.id}); }}
+  const idx = cart.findIndex(x => x.id === id); const p = products.find(x => x.id === id);
+  if(idx > -1) { cart.splice(idx, 1); } else { if(p && p.status === 'ready') { cart.push({...p, uid: p.id}); }}
   updateCartUI();
   const el = document.getElementById('item-'+id);
   if(el) { if(idx > -1) { el.classList.remove('selected'); } else { el.classList.add('selected'); } }
 }
 
 function calculateTotal() {
-    let appCount = cart.length;
-    let sum = cart.reduce((s, c) => s + Number(c.price), 0);
-    if (appCount >= 3 && appCount <= 30) { return sum; } 
-    else { return sum; }
+    let appCount = cart.length; let sum = cart.reduce((s, c) => s + Number(c.price), 0);
+    if (appCount >= 3 && appCount <= 30) { return sum; } else { return sum; }
 }
 
 function updateCartUI() {
   const bar = document.getElementById('bottomBar');
-  if(cart.length > 0) {
-    bar.classList.add('active'); 
-    document.getElementById('cartCount').textContent = cart.length;
-    document.getElementById('cartTotal').textContent = calculateTotal();
-  } else { bar.classList.remove('active'); }
+  if(cart.length > 0) { bar.classList.add('active'); document.getElementById('cartCount').textContent = cart.length; document.getElementById('cartTotal').textContent = calculateTotal(); } 
+  else { bar.classList.remove('active'); }
 }
 
-// 🌟 ฟอร์มสั่งซื้ออิโมจิ
+// 🌟 ฟอร์มสั่งซื้อแบบใหม่ มินิมอล
 function confirmCheckout() {
   if(cart.length === 0) return; 
-  
   let total = calculateTotal();
   let itemsText = cart.map(c => `🍃 ݂  ${c.cat} ${c.variant || c.osType || ''} 𓈒`).join('\n');
 
@@ -808,10 +766,8 @@ function saveProduct(e) {
     appDesc: document.getElementById('pAppDesc').value, variant: document.getElementById('pVariant').value,
     name: document.getElementById('pName').value, subDesc: document.getElementById('pSubDesc').value, 
     price: document.getElementById('pPrice').value, iconUrl: document.getElementById('pIconUrl').value,
-    supportIOS: document.getElementById('pSupportIOS').checked,
-    supportAndroid: document.getElementById('pSupportAndroid').checked,
-    textIOS: document.getElementById('pTextIOS').value,
-    textAndroid: document.getElementById('pTextAndroid').value
+    supportIOS: document.getElementById('pSupportIOS').checked, supportAndroid: document.getElementById('pSupportAndroid').checked,
+    textIOS: document.getElementById('pTextIOS').value, textAndroid: document.getElementById('pTextAndroid').value
   };
   if(id) { const idx = products.findIndex(x => x.id === id); if(idx > -1) products[idx] = p; } else { products.push(p); }
   saveLocalSafely(); cancelEdit(); renderAdminList();
@@ -820,20 +776,14 @@ function saveProduct(e) {
 
 function editProduct(id) {
   const p = products.find(x => x.id === id); if(!p) return;
-  document.getElementById('editId').value = p.id; document.getElementById('pTabTarget').value = p.tab;
-  updateAdminFormFields();
+  document.getElementById('editId').value = p.id; document.getElementById('pTabTarget').value = p.tab; updateAdminFormFields();
   document.getElementById('pCat').value = p.cat; document.getElementById('pStatus').value = p.status || 'ready';
   document.getElementById('pAppDesc').value = p.appDesc || ''; document.getElementById('pVariant').value = p.variant || '';
   document.getElementById('pName').value = p.name || ''; document.getElementById('pSubDesc').value = p.subDesc || '';
   document.getElementById('pPrice').value = p.price; document.getElementById('pIconUrl').value = p.iconUrl || '';
-  
-  document.getElementById('pSupportIOS').checked = p.supportIOS || false;
-  document.getElementById('pSupportAndroid').checked = p.supportAndroid || false;
-  document.getElementById('pTextIOS').value = p.textIOS || '';
-  document.getElementById('pTextAndroid').value = p.textAndroid || '';
-  toggleOSFields();
-
-  document.getElementById('saveBtn').textContent = "บันทึกการแก้ไข"; document.getElementById('cancelBtn').style.display = "block";
+  document.getElementById('pSupportIOS').checked = p.supportIOS || false; document.getElementById('pSupportAndroid').checked = p.supportAndroid || false;
+  document.getElementById('pTextIOS').value = p.textIOS || ''; document.getElementById('pTextAndroid').value = p.textAndroid || '';
+  toggleOSFields(); document.getElementById('saveBtn').textContent = "บันทึกการแก้ไข"; document.getElementById('cancelBtn').style.display = "block";
   document.getElementById('adminModal').scrollTo(0, 0);
 }
 
@@ -843,19 +793,14 @@ function deleteProduct(id) {
 function cancelEdit() {
   document.getElementById('adminForm').reset(); document.getElementById('editId').value = '';
   document.getElementById('saveBtn').textContent = "เพิ่มสินค้าใหม่"; document.getElementById('cancelBtn').style.display = "none";
-  
-  document.getElementById('pSupportIOS').checked = false;
-  document.getElementById('pSupportAndroid').checked = false;
-  document.getElementById('pTextIOS').value = '';
-  document.getElementById('pTextAndroid').value = '';
-
+  document.getElementById('pSupportIOS').checked = false; document.getElementById('pSupportAndroid').checked = false;
+  document.getElementById('pTextIOS').value = ''; document.getElementById('pTextAndroid').value = '';
   updateAdminFormFields();
 }
 
 function updateAdminTabUI() {
   const list = document.getElementById('adminTabList');
-  list.innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background:#f9fafb; margin-bottom:8px; border-radius:10px; border:1px solid #f3f4f6;"><span style="font-weight:600; font-size:14px; color:#374151;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; cursor:pointer; font-weight:600; font-size:13px;">ลบ</button></div>`).join('');
-  renderTabs();
+  list.innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background:#f9fafb; margin-bottom:8px; border-radius:10px; border:1px solid #f3f4f6;"><span style="font-weight:600; font-size:14px; color:#374151;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; cursor:pointer; font-weight:600; font-size:13px;">ลบ</button></div>`).join(''); renderTabs();
 }
 
 function addTab() {
@@ -869,25 +814,19 @@ function deleteTab(idx) {
 function renderAdminList() {
   if(!currentAdminCatTab && tabs.length > 0) currentAdminCatTab = tabs[0];
   document.getElementById('adminCategoryTabs').innerHTML = tabs.map(t => `<button class="a-tab-btn ${t === currentAdminCatTab ? 'active' : ''}" onclick="currentAdminCatTab='${t}'; renderAdminList();">${t}</button>`).join('');
-  
   let groupedAdmin = {};
-  products.filter(p => p.tab === currentAdminCatTab).forEach(p => {
-      if (!groupedAdmin[p.cat]) groupedAdmin[p.cat] = [];
-      groupedAdmin[p.cat].push(p);
-  });
-
+  products.filter(p => p.tab === currentAdminCatTab).forEach(p => { if (!groupedAdmin[p.cat]) groupedAdmin[p.cat] = []; groupedAdmin[p.cat].push(p); });
   let html = '';
   for(let cat in groupedAdmin) {
       html += `<div style="background:#f9fafb; padding:8px 10px; font-weight:bold; color:var(--primary); border-radius:6px; margin-top:10px; border-left:3px solid var(--primary);">📦 ${cat}</div>`;
       groupedAdmin[cat].forEach(p => {
           let sDot = p.status === 'ready' ? '🟢' : (p.status === 'empty' ? '🔴' : '🟠');
           html += `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px 12px 15px; display:flex; justify-content:space-between; align-items:center;">
-              <div>${sDot} ${p.name || '-'}<br><small style="color:gray;">${p.variant ? `[${p.variant}]` : ''} - ฿${p.price}</small></div>
+              <div>${sDot} ${p.name || '-'}<br><small style="color:gray;">${p.variant ? `[${p.variant}]` : ''} - ${p.price}฿</small></div>
               <div><button type="button" onclick="editProduct('${p.id}')" style="color:#2563eb; border:none; background:none; font-weight:600; cursor:pointer; margin-right:10px;">แก้ไข</button><button type="button" onclick="deleteProduct('${p.id}')" style="color:#ef4444; border:none; background:none; font-weight:600; cursor:pointer;">ลบ</button></div>
           </div>`;
       });
-  }
-  document.getElementById('adminProductList').innerHTML = html || '<div style="text-align:center; padding:30px; color:#aaa;">ไม่มีสินค้า</div>';
+  } document.getElementById('adminProductList').innerHTML = html || '<div style="text-align:center; padding:30px; color:#aaa;">ไม่มีสินค้า</div>';
 }
 function resetData() { if(prompt('พิมพ์ "RESET" เพื่อยืนยันการล้างข้อมูลทั้งหมด') === "RESET") { localStorage.clear(); location.reload(); } }
 </script>
