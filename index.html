@@ -50,7 +50,7 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
 .product-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--text-dark); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
 .product-price { color: var(--primary); font-weight: 700; font-size: 15px; }
 
-/* 🌟 เงื่อนไข: แท็บ IOS-ANDROID (กรอบม่วง + ติ๊กถูก) */
+/* เงื่อนไข: แท็บ IOS-ANDROID (กรอบม่วง + ติ๊กถูก) */
 .product-card.selected { border-color: var(--primary); background-color: #fdf8ff; }
 .check-badge { position: absolute; top: -6px; left: -6px; width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 10; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 .product-card.selected .check-badge { display: flex; }
@@ -217,8 +217,10 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
       <div class="modal-close" onclick="closeModal('adminDashboardModal')">&times;</div>
       <h3 style="margin-bottom: 15px; font-family: 'Mitr'; display: flex; justify-content: space-between; align-items: center;">
           จัดการระบบ
-          <button onclick="openShopInfoModal()" style="background:#f39c12; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; margin-right:5px;">ตั้งค่าร้าน</button>
-          <button onclick="openAddProductModal()" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">+ เพิ่มสินค้า</button>
+          <div>
+              <button onclick="openShopInfoModal()" style="background:#f39c12; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; margin-right:5px;">ตั้งค่าร้าน</button>
+              <button onclick="openAddProductModal()" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">+ เพิ่มสินค้า</button>
+          </div>
       </h3>
       <div id="adminProductList" style="max-height: 60vh; overflow-y: auto;"></div>
   </div>
@@ -471,9 +473,7 @@ function toggleDirectCart(productId, osType, event) {
 }
 
 function calculateTotal() {
-    let appCount = cart.length;
     let sum = cart.reduce((s, item) => s + item.price, 0);
-    if (appCount >= 3 && appCount <= 30) { return sum; }
     return sum;
 }
 
@@ -498,7 +498,6 @@ function showProductDetails(productName) {
 
 function goBackToMain() { document.getElementById('subProductView').style.display = 'none'; document.getElementById('mainView').style.display = 'block'; }
 
-// 🌟 ลบรูปภาพไอคอนออกจากหน้าแพ็กเกจย่อย
 function renderProductList(subProducts) {
   const container = document.getElementById('subProductList'); let html = '';
   subProducts.forEach(p => {
@@ -509,7 +508,6 @@ function renderProductList(subProducts) {
       else if(p.status === 'wait') { statBadge = '<span class="status-badge status-wait">รอของเข้า</span>'; disClass = 'disabled'; }
 
       let v = p.variant ? p.variant : p.name;
-      // 🌟 นำ <img src="${p.iconUrl}"> ที่เคยมีตรงนี้ออกไป เพื่อไม่ให้โชว์รูปที่หน้านี้
       html += `<div class="product-list-item ${isSel?'selected':''} ${disClass}" ${p.status === 'ready' ? `onclick="toggleCart('${p.id}')"` : ''} id="item-${p.id}">
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
               <div style="flex: 1; text-align: left; padding-right: 10px;"><div style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 5px;">${v}</div>${statBadge}</div>
