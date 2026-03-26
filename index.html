@@ -349,6 +349,7 @@ textarea.admin-input { resize: vertical; }
 const BIN_ID = '69bf96fbc3097a1dd549f01f';
 const MASTER_KEY = '$2a$10$PMIxGvNzIUreq6iY.zlLEuXPaMeYVDiDUIvrAnW2HcwdKhgQUU4da';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzfG5EFrSyFUqc8Aor22ntf-taSf3qlRb4omqAmdwgB0V1NNp7H4o4ZSUxUPlIXA91EzQ/exec';
 
 function saveLocalSafely() {
@@ -413,6 +414,7 @@ let currentSort = 'default';
 window.onload = async () => {
     fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ type: 'เข้าชมเว็บไซต์', items: '-', total: 0, viewCount: 1 })
     }).catch(e => console.log(e));
@@ -1050,6 +1052,7 @@ function confirmCheckout() {
   
   fetch(GOOGLE_SHEETS_URL, {
     method: 'POST',
+    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ type: 'คำสั่งซื้อใหม่', items: itemsBought, total: calcInfo.total, viewCount: 0 })
   }).catch(e => console.log('Sheet Error:', e));
