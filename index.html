@@ -349,8 +349,6 @@ textarea.admin-input { resize: vertical; }
 const BIN_ID = '69bf96fbc3097a1dd549f01f';
 const MASTER_KEY = '$2a$10$PMIxGvNzIUreq6iY.zlLEuXPaMeYVDiDUIvrAnW2HcwdKhgQUU4da';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-
-// ลิงก์ Google Sheets อันใหม่ที่ลูกค้าให้มา
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzfG5EFrSyFUqc8Aor22ntf-taSf3qlRb4omqAmdwgB0V1NNp7H4o4ZSUxUPlIXA91EzQ/exec';
 
 function saveLocalSafely() {
@@ -410,7 +408,7 @@ let cart = [];
 let isAdminLoggedIn = false;
 let selectedSystems = {}; 
 let currentAdminCatTab = null; 
-let currentSort = 'default'; // ตัวแปรเก็บสถานะการจัดเรียง (default, alpha, priceAsc, priceDesc)
+let currentSort = 'default'; 
 
 window.onload = async () => {
     fetch(GOOGLE_SHEETS_URL, {
@@ -454,7 +452,6 @@ function isAppGameTab(tabName) {
     return name.includes('ios') || name.includes('androi');
 }
 
-// ควบคุมการแสดงผลฟอร์มแอดมินตามแท็บที่เลือก
 function toggleAdminFieldsByTab() {
     const tabEl = document.getElementById('pTabTarget');
     if(!tabEl) return;
@@ -464,7 +461,7 @@ function toggleAdminFieldsByTab() {
     if(isAppTab) {
         document.getElementById('standardProductFields').style.display = 'none';
         document.getElementById('appGameProductFields').style.display = 'block';
-        toggleDescFields(); // อัปเดตการแสดงผลกล่องข้อความตาม Checkbox
+        toggleDescFields(); 
     } else {
         document.getElementById('standardProductFields').style.display = 'block';
         document.getElementById('appGameProductFields').style.display = 'none';
@@ -486,7 +483,6 @@ function toggleAdminFieldsByTab() {
     }
 }
 
-// ควบคุมการซ่อนโชว์กล่องข้อความตาม Checkbox ระบบ
 function toggleDescFields() {
     document.getElementById('iosDescGroup').style.display = document.getElementById('pSysIos').checked ? 'block' : 'none';
     document.getElementById('androidDescGroup').style.display = document.getElementById('pSysAndroid').checked ? 'block' : 'none';
@@ -501,7 +497,6 @@ function renderTabs() {
 
 function switchTab(id) {
   currentTab = id;
-  // Reset sorting เมื่อเปลี่ยนแท็บ
   currentSort = 'default';
   document.getElementById('sortSelectGrid').value = 'default';
   document.getElementById('sortSelectList').value = 'default';
@@ -634,13 +629,10 @@ function selectSystem(e, pId, sys) {
     } else { renderCategories(); }
 }
 
-// ฟังก์ชันสำหรับเลือกการเรียงลำดับ
 function changeSort(val) {
     currentSort = val;
-    // ซิงค์ค่า dropdown ทั้ง 2 จุดให้ตรงกัน
     document.getElementById('sortSelectGrid').value = val;
     document.getElementById('sortSelectList').value = val;
-
     if (document.getElementById('productsView').style.display === 'block') {
         openCategory(document.getElementById('currentCategoryTitle').innerText);
     } else {
@@ -648,7 +640,6 @@ function changeSort(val) {
     }
 }
 
-// ฟังก์ชัน Sort ข้อมูล
 function sortProductsArray(arr) {
     if (currentSort === 'alpha') {
         return arr.sort((a, b) => a.cat.localeCompare(b.cat));
@@ -657,16 +648,13 @@ function sortProductsArray(arr) {
     } else if (currentSort === 'priceDesc') {
         return arr.sort((a, b) => b.price - a.price);
     }
-    return arr; // default
+    return arr; 
 }
 
 function renderCategories(tabName = currentTab) {
   const grid = document.getElementById('categoryGrid');
   let filtered = products.filter(p => p.tab === tabName);
-  
-  // จัดเรียงข้อมูลถ้ามีการเลือก
   filtered = sortProductsArray([...filtered]);
-
   const isDirectGrid = isAppGameTab(tabName);
 
   if (isDirectGrid) {
@@ -674,9 +662,7 @@ function renderCategories(tabName = currentTab) {
           const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
           const icon = p.icon || '📦';
           const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
-          
           const appName = p.cat; 
-          
           const statusClass = (p.status === 'empty') ? 'c-status-empty' : 'c-status-ready';
           const statusText = (p.status === 'empty') ? 'ไม่พร้อม' : 'พร้อม';
           const statusHtml = `<div class="card-status-pill ${statusClass}"><div class="status-dot-sm"></div>${statusText}</div>`;
@@ -694,7 +680,6 @@ function renderCategories(tabName = currentTab) {
           let dynamicDesc = '';
           if (activeSys === 'iOS') dynamicDesc = p.iosDesc || '';
           else if (activeSys === 'Android') dynamicDesc = p.androidDesc || '';
-          
           const appDesc = dynamicDesc ? dynamicDesc.replace(/\n/g, '<br>') : '<span style="color:#ccc;">-</span>';
 
           return `
@@ -709,9 +694,7 @@ function renderCategories(tabName = currentTab) {
           </div>`;
       }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
   } else {
-      // สร้างหมวดหมู่ (ไม่ซ้ำกัน)
       const uniqueCats = [...new Set(filtered.map(p => p.cat))];
-      
       grid.innerHTML = uniqueCats.map(cat => {
         const p = filtered.find(x => x.cat === cat);
         const icon = p.icon || '📦';
@@ -725,10 +708,7 @@ function renderCategories(tabName = currentTab) {
 function openCategory(catName) {
   document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block';
   let items = products.filter(p => p.cat === catName && p.tab === currentTab);
-  
-  // จัดเรียงข้อมูลในหน้ารายละเอียดย่อย
   items = sortProductsArray([...items]);
-
   document.getElementById('currentCategoryTitle').innerText = catName;
   document.getElementById('currentCategoryDesc').innerHTML = items[0] && items[0].catDesc ? items[0].catDesc.replace(/\n/g, '<br>') : '';
   
@@ -741,7 +721,6 @@ function openCategory(catName) {
       html += grouped[v].map(p => {
         const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
         const statusDot = p.status === 'empty' ? '<span style="color:var(--danger); font-size:10px; margin-left:5px;">🔴 หมด</span>' : '<span style="color:var(--success); font-size:10px; margin-left:5px;">🟢 พร้อม</span>';
-        
         const showStatus = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab)) ? statusDot : '';
 
         return `<div class="product-item ${isSel}" onclick="toggleItem('${p.id}')">
@@ -760,18 +739,15 @@ async function saveProduct(e) {
   e.preventDefault();
   const btn = document.getElementById('saveBtn'); btn.innerText = "กำลังบันทึกออนไลน์...";
   const id = document.getElementById('editId').value;
-  
   const cleanIcon = document.getElementById('pIconUrl').value.replace(/<[^>]*>?/gm, '').trim();
   const tabName = document.getElementById('pTabTarget').value;
   const isAppTab = isAppGameTab(tabName);
   const isPremiumTab = tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium');
 
-  // ดึงค่าระบบจาก Checkbox
   let selectedSysArr = [];
   if (isAppTab) {
       if (document.getElementById('pSysIos').checked) selectedSysArr.push('iOS');
       if (document.getElementById('pSysAndroid').checked) selectedSysArr.push('Android');
-      
       if (selectedSysArr.length === 0) {
           alert("กรุณาเลือกระบบที่รองรับอย่างน้อย 1 ระบบ (iOS หรือ Android)");
           btn.innerText = id ? "อัปเดตสินค้า" : "บันทึกข้อมูลสินค้า";
@@ -796,7 +772,6 @@ async function saveProduct(e) {
   };
 
   if(id) { products[products.findIndex(p => p.id === id)] = newP; } else { products.push(newP); }
-
   saveLocalSafely();
   const isSuccess = await syncToServer(); 
   
@@ -814,8 +789,6 @@ function editProduct(id) {
   if(p) {
     document.getElementById('editId').value = p.id;
     document.getElementById('pTabTarget').value = p.tab;
-    
-    // ตั้งค่า Checkbox ระบบ
     if (p.systems) {
         document.getElementById('pSysIos').checked = p.systems.includes('iOS');
         document.getElementById('pSysAndroid').checked = p.systems.includes('Android');
@@ -823,7 +796,6 @@ function editProduct(id) {
         document.getElementById('pSysIos').checked = true;
         document.getElementById('pSysAndroid').checked = true;
     }
-
     toggleAdminFieldsByTab();
 
     document.getElementById('pStatus').value = p.status || 'ready';
@@ -834,13 +806,11 @@ function editProduct(id) {
     document.getElementById('pPackDesc').value = p.packDesc || '';
     document.getElementById('pPrice').value = p.price;
     document.getElementById('pIconUrl').value = p.icon || '';
-    
     document.getElementById('pIosDesc').value = p.iosDesc || '';
     document.getElementById('pAndroidDesc').value = p.androidDesc || '';
 
     const preview = document.getElementById('pIconPreview');
     if (p.icon) { preview.src = p.icon; preview.style.display = 'block'; } else { preview.style.display = 'none'; }
-    
     document.getElementById('saveBtn').innerText = "อัปเดตสินค้า"; document.getElementById('saveBtn').style.background = "#059669";
     document.getElementById('cancelBtn').style.display = "block";
     document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
@@ -854,10 +824,8 @@ function cancelEdit() {
   document.getElementById('pIosDesc').value = "";
   document.getElementById('pAndroidDesc').value = "";
   document.getElementById('pPackDesc').value = "";
-  
   document.getElementById('pSysIos').checked = true;
   document.getElementById('pSysAndroid').checked = true;
-
   document.getElementById('pIconPreview').style.display = 'none';
   document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
   document.getElementById('cancelBtn').style.display = "none";
@@ -879,7 +847,6 @@ function renderAdminList() {
 
   const filteredProducts = products.filter(p => p.tab === currentAdminCatTab);
   const sortedProducts = [...filteredProducts].sort((a, b) => a.cat.localeCompare(b.cat));
-  
   const grouped = {}; 
   sortedProducts.forEach(p => { if (!grouped[p.cat]) grouped[p.cat] = []; grouped[p.cat].push(p); });
 
@@ -889,7 +856,6 @@ function renderAdminList() {
     html += grouped[cat].map(p => {
         const showStatusInList = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab));
         const sDot = showStatusInList ? (p.status === 'empty' ? '🔴' : '🟢') : '';
-
         const dispName = (p.name && p.name !== '-') ? p.name : 'สินค้าทั่วไป';
 
         return `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px; display:flex; justify-content:space-between; align-items:center;">
@@ -964,7 +930,6 @@ function getCalculatedCart() {
         appItems.forEach(item => { if (item.price >= 20 && item.price <= 25) { appsPromo.push(item); } else { ineligibleApps.push(item); } });
 
         ineligibleApps.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
-
         appsPromo.sort((a, b) => b.price - a.price);
 
         let count = appsPromo.length; let idx = 0;
@@ -1072,7 +1037,6 @@ function confirmCheckout() {
   if(cart.length === 0) return;
   let calcInfo = getCalculatedCart();
   let text = ""; 
-  
   let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
   let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
 
