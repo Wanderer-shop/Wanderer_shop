@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wanderer Shop</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Mitr:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* --- Design System --- */
+/* --- Design System (อิงจากไฟล์ต้นฉบับรูปที่ 1) --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root { --primary: #b026ff; --secondary: #00d2ff; --bg-main: #f4f5f7; --bg-card: #ffffff; --text-muted: #6b7280; --glow: rgba(176,38,255,0.5); --text-dark: #1f2937; --white: #ffffff; --success: #10b981; --danger: #ef4444; --warning: #f39c12; }
 body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(--text-dark); overflow-x: hidden; padding-bottom: 110px; }
@@ -15,9 +16,14 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .shape1 { width: 300px; height: 300px; background: var(--primary); top: -100px; left: -100px; }
 .shape2 { width: 250px; height: 250px; background: var(--secondary); bottom: 100px; right: -50px; }
 
+/* Header แบบคลีนๆ */
 header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); padding: 15px 20px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-bottom: 1px solid rgba(255,255,255,0.5); }
 .logo { font-family: 'Mitr', sans-serif; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .admin-btn { background: rgba(176,38,255,0.1); color: var(--primary); border: none; padding: 6px 12px; border-radius: 20px; font-family: 'Kanit'; font-weight: 600; font-size: 13px; cursor: pointer; }
+
+/* ข้อความต้อนรับ */
+.welcome-text { text-align: center; padding: 15px 20px 0px; font-size: 14px; color: var(--text-muted); }
+.welcome-text b { color: var(--text-dark); }
 
 .search-container { padding: 15px 20px; }
 .search-box { width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid #e5e7eb; font-family: 'Kanit'; font-size: 15px; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); transition: 0.3s; }
@@ -34,24 +40,14 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
 
 .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
 
-/* --- ส่วนของ Product Card (แก้ไขเพื่อรองรับกรอบสีม่วง) --- */
+/* 🌟 Product Card & Selection (รองรับโหมด IOS-ANDROID) */
 .product-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 2px solid transparent; position: relative; }
 .product-card:active { transform: scale(0.98); }
-.product-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px 12px 0 0; }
+.product-card.selected { border-color: var(--primary); background-color: #fdf8ff; } 
+.product-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
 .product-info { padding: 12px; }
 .product-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--text-dark); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
 .product-price { color: var(--primary); font-weight: 700; font-size: 15px; }
-
-/* 🌟 เงื่อนไข 2.1: กรอบสีม่วง + ติ๊กถูกสีขาวบนวงกลมม่วง */
-.product-card.selected { border-color: var(--primary); background-color: #fcf8ff; }
-.check-badge { position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; z-index: 10; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-.product-card.selected .check-badge { display: flex; }
-
-/* 🌟 เงื่อนไข 2.2: ปุ่มเลือกระบบใต้ชื่อแอพ */
-.os-selector { display: flex; gap: 5px; margin-top: 8px; }
-.os-btn { flex: 1; padding: 6px 0; font-size: 11px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; font-weight: bold; color: #4b5563; transition: 0.2s; }
-.os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.os-btn:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; border: none; }
 
 /* Sub-package View */
 #subProductView { display: none; padding: 20px; animation: slideIn 0.3s ease; }
@@ -96,7 +92,6 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
 .cart-item-price { color: var(--primary); font-weight: 600; font-size: 14px; }
 .cart-item-remove { color: var(--danger); background: #fee2e2; border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; cursor: pointer; }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -112,6 +107,8 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
   <div class="logo">Wanderer Shop</div>
   <button class="admin-btn" onclick="openAdminLogin()">ผู้ดูแลระบบ</button>
 </header>
+
+<div class="welcome-text">ยินดีต้อนรับสู่ร้าน <b>Wanderer Shop</b> รับสินค้าอะไรดีคะ</div>
 
 <div id="mainView">
   <div class="search-container">
@@ -233,7 +230,6 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
               <textarea id="textAndroid" class="form-control" rows="2" placeholder="เช่น: โหลดผ่าน Play Store เท่านั้น..." style="font-size: 13px; border-radius: 6px; margin-bottom:0;"></textarea>
           </div>
       </div>
-
       <div style="margin-bottom:15px;">
           <label style="display:block; margin-bottom:5px; font-weight:500;">คำอธิบาย / กติกา (แสดงหน้าเลือกแพ็กเกจ)</label>
           <textarea id="desc" class="form-control" rows="3" placeholder="เช่น ห้ามเปลี่ยนรหัสผ่าน..."></textarea>
@@ -269,7 +265,7 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
 </div>
 
 <script>
-// --- Configuration ---
+// 🌟 1. ตั้งค่าลิงก์และรหัสผ่านแอดมินตามที่คุณต้องการ
 const APP_URL = 'https://script.google.com/macros/s/AKfycbx1ijbDV6ugE-bo2hcx2-SsdBNtoyxOvZOt-v27lF9l6TVMiJ-URXyBdMZzLAOJIGVpBw/exec';
 const ADMIN_PIN = '170647'; 
 
@@ -313,7 +309,7 @@ function loadProducts() {
       });
 }
 
-// 🌟 แก้ปัญหาข้อมูลทะลุแท็บ (ใช้ currentCategory กรอง)
+// 🌟 กรองหมวดหมู่ที่ป้องกันการทะลุแท็บ
 function filterCategory(cat, element) {
   document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
   element.classList.add('active');
@@ -354,7 +350,7 @@ function renderProducts(productsToRender) {
   let html = '';
   productsToRender.forEach(p => {
       
-      // 🌟 เงื่อนไข 2: หมวดหมู่ IOS-ANDROID ไม่ต้องมี Pop-up ยืนยัน
+      // 🌟 เงื่อนไข 2: หมวด IOS-ANDROID เลือกระบบไว + การ์ดกรอบม่วง
       if (p.category === 'แอพ/เกม IOS-ANDROID' || p.category.includes('IOS-ANDROID')) {
           
           let iosInCart = cart.find(c => c.id === p.id && c.osType === 'iOS');
@@ -364,36 +360,24 @@ function renderProducts(productsToRender) {
           let supportIOSBool = p.supportIOS === true || p.supportIOS === 'TRUE' || p.supportIOS === 'true';
           let supportAndroidBool = p.supportAndroid === true || p.supportAndroid === 'TRUE' || p.supportAndroid === 'true';
 
-          let btnIOS = supportIOSBool 
-              ? `<button class="os-btn ${iosInCart?'active':''}" onclick="toggleDirectCart('${p.id}', 'iOS', event)">🍎 iOS</button>` 
-              : `<button class="os-btn" disabled>🍎 iOS</button>`;
-              
-          let btnAndroid = supportAndroidBool 
-              ? `<button class="os-btn ${andInCart?'active':''}" onclick="toggleDirectCart('${p.id}', 'Android', event)">🤖 Android</button>`
-              : `<button class="os-btn" disabled>🤖 Android</button>`;
-
           html += `
           <div class="product-card ${isSelected ? 'selected' : ''}" style="cursor: default;">
-              
               <div style="position: relative;">
-                  <div class="check-badge">✓</div>
-                  <img src="${p.imageUrl}" alt="${p.name}" style="border-bottom: 1px solid #f3f4f6; border-radius: 12px 12px 0 0;">
+                  <div class="check-badge" style="${isSelected ? 'display:flex;' : 'display:none;'} position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; background: var(--primary); color: white; border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; z-index: 10; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">✓</div>
+                  <img src="${p.imageUrl}" alt="${p.name}" style="border-radius: 12px 12px 0 0;">
               </div>
-              
               <div class="product-info" style="padding: 12px;">
                   <div class="product-title" style="font-size: 13px;">${p.name}</div>
                   <div class="product-price">฿${p.price}</div>
-                  
-                  <div class="os-selector">
-                      ${btnIOS}
-                      ${btnAndroid}
+                  <div class="os-selector" style="display: flex; gap: 5px; margin-top: 8px;">
+                      <button onclick="toggleDirectCart('${p.id}', 'iOS', event)" ${!supportIOSBool ? 'disabled' : ''} style="flex: 1; padding: 6px 0; font-size: 11px; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; ${iosInCart ? 'background: var(--primary); color: #fff; border-color: var(--primary);' : (supportIOSBool ? 'background: #fff; color: #4b5563;' : 'background: #f3f4f6; color: #9ca3af; border: none; cursor: not-allowed;')}">🍎 iOS</button>
+                      <button onclick="toggleDirectCart('${p.id}', 'Android', event)" ${!supportAndroidBool ? 'disabled' : ''} style="flex: 1; padding: 6px 0; font-size: 11px; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; ${andInCart ? 'background: var(--primary); color: #fff; border-color: var(--primary);' : (supportAndroidBool ? 'background: #fff; color: #4b5563;' : 'background: #f3f4f6; color: #9ca3af; border: none; cursor: not-allowed;')}">🤖 Android</button>
                   </div>
               </div>
-              
           </div>`;
 
       } else {
-          // โหมดปกติ (แอพพรีเมี่ยม ฯลฯ)
+          // โหมดปกติ (คลิกเปิดหน้าย่อย)
           html += `
           <div class="product-card" onclick="showProductDetails('${p.name}')">
               <img src="${p.imageUrl}" alt="${p.name}" style="border-radius: 12px 12px 0 0;">
@@ -407,9 +391,9 @@ function renderProducts(productsToRender) {
   container.innerHTML = html;
 }
 
-// 🌟 ฟังก์ชันจัดการปุ่ม iOS/Android ลงตะกร้า (ไม่ต้อง Pop-up)
+// 🌟 ฟังก์ชันจัดการปุ่มเลือกระบบไว
 function toggleDirectCart(productId, osType, event) {
-    event.stopPropagation(); // กันไม่ให้คลิกทะลุไปการ์ดหลัก
+    event.stopPropagation(); // กันคลิกทะลุ
     const product = allProducts.find(p => p.id === productId); 
     if (!product) return;
 
@@ -417,44 +401,44 @@ function toggleDirectCart(productId, osType, event) {
     let existingIdx = cart.findIndex(item => item.uid === uid);
 
     if (existingIdx > -1) {
-        // เอาออกจากตะกร้า
         cart.splice(existingIdx, 1);
     } else {
-        // เอาเข้าตะกร้า
         cart.push({
             id: product.id,
             name: product.name,
             price: parseFloat(product.price),
-            variant: `${osType}`, // เก็บเพื่อโชว์ในฟอร์ม
+            variant: `${osType}`, 
             image: product.imageUrl,
             uid: uid,
             category: product.category,
             osType: osType
         });
+        
+        let instructionText = (osType === 'iOS') ? product.textIOS : product.textAndroid;
+        if(instructionText) {
+            Swal.fire({ icon: 'info', title: 'แจ้งเตือน', text: instructionText, confirmButtonText: 'รับทราบ', confirmButtonColor: 'var(--primary)' });
+        } else {
+            Swal.fire({ icon: 'success', title: 'เพิ่มลงตะกร้าแล้ว', showConfirmButton: false, timer: 700, toast: true, position: 'top' });
+        }
     }
     
     saveCart();
     renderCart();
-    renderProductsByCategory(); // บังคับให้การ์ดอัปเดตสีม่วง
+    renderProductsByCategory(); // อัปเดตสีการ์ด
 }
 
-// 🌟 ฟังก์ชันคำนวณราคา (สำหรับเงื่อนไข 3 ถึง 30 แอพ)
+// 🌟 ฟังก์ชันคำนวณโปรโมชั่น (3-30 แอพ)
 function calculateTotal() {
     let appCount = cart.length;
     let sum = cart.reduce((s, item) => s + item.price, 0);
 
     if (appCount >= 3 && appCount <= 30) {
-        // [แก้ไขสูตรโปรโมชั่นของคุณตรงนี้ได้เลยครับ]
-        // ตัวอย่าง 1: ลดเหลือแอพละ 50 บาท -> return appCount * 50;
-        // ตัวอย่าง 2: ลด 10% -> return sum * 0.9;
-        
-        return sum; // ตอนนี้เป็นราคาสะสมปกติ
+        // คุณสามารถแก้สูตรตรงนี้ได้เลย เช่น คิดราคาเหมาแอพละ 50 บาท ให้ใส่: return appCount * 50;
+        return sum; // ตอนนี้คือราคารวมปกติ
     }
-    
-    return sum; // นอกเหนือ 3-30 แอพ คิดปกติ
+    return sum;
 }
 
-// Search
 document.getElementById('searchInput').addEventListener('input', function(e) {
   let text = e.target.value.toLowerCase();
   if(text === '') { renderProductsByCategory(); return; }
@@ -471,7 +455,7 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
   renderProducts(grouped);
 });
 
-// --- Sub Product Details View (สำหรับโหมดปกติ) ---
+// --- Sub Product Details View ---
 function showProductDetails(productName) {
   let subProducts = allProducts.filter(p => p.name === productName);
   if(subProducts.length === 0) return;
@@ -577,7 +561,7 @@ function removeFromCart(uid) {
 
 function renderCart() {
   let count = cart.length;
-  let total = calculateTotal(); // ใช้งานโปรโมชั่น
+  let total = calculateTotal();
 
   document.getElementById('cartCount').innerText = count;
   document.getElementById('cartTotal').innerText = total;
@@ -608,12 +592,11 @@ function renderCart() {
   document.getElementById('cartItemsContainer').innerHTML = html;
 }
 
-// 🌟 เงื่อนไข 3: ฟอร์มสั่งซื้อแบบใหม่ มินิมอล
+// 🌟 ฟอร์มสั่งซื้อแบบใหม่ มินิมอล
 function proceedToCheckout() {
   if(cart.length === 0) return;
   
   let total = calculateTotal();
-  // จัดเรียงรายการแอปและระบบที่เลือก (เช่น Minecraft [iOS])
   let itemsText = cart.map(item => {
       let vLabel = item.osType ? `[${item.osType}]` : (item.variant ? `[${item.variant}]` : '');
       return `🍃 ݂  ${item.name} ${vLabel} 𓈒`;
@@ -729,8 +712,10 @@ function checkCategoryForOSGroup() {
   const categorySelect = document.getElementById('category');
   if (!categorySelect) return;
   const osGroup = document.getElementById('osAppGroup');
-  if (categorySelect.value === 'แอพ/เกม IOS-ANDROID') { osGroup.style.display = 'block'; } 
-  else {
+  
+  if (categorySelect.value === 'แอพ/เกม IOS-ANDROID') {
+      osGroup.style.display = 'block';
+  } else {
       osGroup.style.display = 'none';
       document.getElementById('supportIOS').checked = false;
       document.getElementById('supportAndroid').checked = false;
@@ -751,16 +736,25 @@ function saveProduct() {
   let price = document.getElementById('price').value;
   let category = document.getElementById('category').value;
   
-  if(!name || !price || !category) { Swal.fire('แจ้งเตือน', 'กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'warning'); return; }
+  if(!name || !price || !category) {
+      Swal.fire('แจ้งเตือน', 'กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'warning');
+      return;
+  }
 
-  btn.innerText = 'กำลังบันทึก...'; btn.disabled = true;
+  btn.innerText = 'กำลังบันทึก...';
+  btn.disabled = true;
 
   let productData = {
       id: document.getElementById('productId').value || generateId(),
-      name: name, category: category, desc: document.getElementById('desc').value,
-      price: price, imageUrl: document.getElementById('imageUrl').value,
-      variant: document.getElementById('variant').value, subDesc: document.getElementById('subDesc').value,
-      status: document.getElementById('status').value, iconUrl: document.getElementById('iconUrl').value,
+      name: name,
+      category: category,
+      desc: document.getElementById('desc').value,
+      price: price,
+      imageUrl: document.getElementById('imageUrl').value,
+      variant: document.getElementById('variant').value,
+      subDesc: document.getElementById('subDesc').value,
+      status: document.getElementById('status').value,
+      iconUrl: document.getElementById('iconUrl').value,
       supportIOS: document.getElementById('supportIOS').checked,
       supportAndroid: document.getElementById('supportAndroid').checked,
       textIOS: document.getElementById('textIOS').value,
@@ -768,19 +762,37 @@ function saveProduct() {
   };
 
   execAppsScript('saveProduct', productData)
-      .then(res => { Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success'); closeModal('adminModal'); loadProducts(); })
-      .catch(err => { Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกได้: ' + err, 'error'); })
-      .finally(() => { btn.innerText = 'บันทึกข้อมูล'; btn.disabled = false; });
+      .then(res => {
+          Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success');
+          closeModal('adminModal');
+          loadProducts(); 
+      })
+      .catch(err => {
+          Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกได้: ' + err, 'error');
+      })
+      .finally(() => {
+          btn.innerText = 'บันทึกข้อมูล';
+          btn.disabled = false;
+      });
 }
 
 function deleteProduct(id) {
   Swal.fire({
-      title: 'ยืนยันการลบ?', text: "คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'ใช่, ลบเลย!'
+      title: 'ยืนยันการลบ?',
+      text: "คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'ใช่, ลบเลย!'
   }).then((result) => {
       if (result.isConfirmed) {
           document.getElementById('loader').style.display = 'flex';
           execAppsScript('deleteProduct', { id: id })
-              .then(res => { Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อย', 'success'); loadProducts(); })
+              .then(res => {
+                  Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อย', 'success');
+                  loadProducts();
+              })
               .catch(err => Swal.fire('ผิดพลาด', err, 'error'))
               .finally(() => document.getElementById('loader').style.display = 'none');
       }
@@ -788,14 +800,25 @@ function deleteProduct(id) {
 }
 
 function resetAdminForm() {
-  document.getElementById('productId').value = ''; document.getElementById('name').value = '';
-  document.getElementById('category').value = ''; document.getElementById('desc').value = '';
-  document.getElementById('price').value = ''; document.getElementById('imageUrl').value = '';
-  document.getElementById('variant').value = ''; document.getElementById('subDesc').value = '';
-  document.getElementById('status').value = 'ready'; document.getElementById('iconUrl').value = '';
-  document.getElementById('supportIOS').checked = false; document.getElementById('supportAndroid').checked = false;
-  document.getElementById('textIOS').value = ''; document.getElementById('textAndroid').value = '';
-  checkCategoryForOSGroup(); document.getElementById('adminModalTitle').innerText = 'เพิ่มสินค้าใหม่';
+  document.getElementById('productId').value = '';
+  document.getElementById('name').value = '';
+  document.getElementById('category').value = '';
+  document.getElementById('desc').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('imageUrl').value = '';
+  document.getElementById('variant').value = '';
+  document.getElementById('subDesc').value = '';
+  document.getElementById('status').value = 'ready';
+  document.getElementById('iconUrl').value = '';
+  
+  document.getElementById('supportIOS').checked = false;
+  document.getElementById('supportAndroid').checked = false;
+  document.getElementById('textIOS').value = '';
+  document.getElementById('textAndroid').value = '';
+  
+  checkCategoryForOSGroup();
+  
+  document.getElementById('adminModalTitle').innerText = 'เพิ่มสินค้าใหม่';
 }
 
 function generateId() { return 'prod_' + Math.random().toString(36).substr(2, 9); }
