@@ -314,7 +314,6 @@ header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); paddin
 </div>
 
 <script>
-// 🌟 1. ตั้งค่าลิงก์และรหัสผ่านแอดมิน 
 const APP_URL = 'https://script.google.com/macros/s/AKfycbx1ijbDV6ugE-bo2hcx2-SsdBNtoyxOvZOt-v27lF9l6TVMiJ-URXyBdMZzLAOJIGVpBw/exec';
 const ADMIN_PIN = '170647'; 
 
@@ -416,7 +415,6 @@ function renderProducts(productsToRender) {
   
   let html = '';
   productsToRender.forEach(p => {
-      // 🌟 เงื่อนไข 2: IOS-ANDROID ไร้ Pop-up กรอบม่วง ติ๊กถูกซ้ายบน
       if (p.category === 'แอพ/เกม IOS-ANDROID' || p.category.includes('IOS-ANDROID')) {
           let iosInCart = cart.find(c => c.id === p.id && c.osType === 'iOS');
           let andInCart = cart.find(c => c.id === p.id && c.osType === 'Android');
@@ -440,7 +438,6 @@ function renderProducts(productsToRender) {
               </div>
           </div>`;
       } else {
-          // โหมดปกติ
           html += `
           <div class="product-card" onclick="showProductDetails('${p.name}')">
               <img src="${p.imageUrl}" alt="${p.name}" style="border-radius: 12px 12px 0 0;">
@@ -454,7 +451,6 @@ function renderProducts(productsToRender) {
   container.innerHTML = html;
 }
 
-// 🌟 กดปุ่ม OS เลือกลงตะกร้าทันที ถ้ามีอยู่แล้วให้ลบออก
 function toggleDirectCart(productId, osType, event) {
     event.stopPropagation();
     const product = allProducts.find(p => p.id === productId); 
@@ -477,12 +473,10 @@ function toggleDirectCart(productId, osType, event) {
 function calculateTotal() {
     let appCount = cart.length;
     let sum = cart.reduce((s, item) => s + item.price, 0);
-    // 🌟 ใส่สูตรโปรโมชั่น 3-30 แอพที่นี่
     if (appCount >= 3 && appCount <= 30) { return sum; }
     return sum;
 }
 
-// Search
 document.getElementById('searchInput').addEventListener('input', function(e) {
   let text = e.target.value.toLowerCase();
   if(text === '') { renderProductsByCategory(); return; }
@@ -504,6 +498,7 @@ function showProductDetails(productName) {
 
 function goBackToMain() { document.getElementById('subProductView').style.display = 'none'; document.getElementById('mainView').style.display = 'block'; }
 
+// 🌟 ลบรูปภาพไอคอนออกจากหน้าแพ็กเกจย่อย
 function renderProductList(subProducts) {
   const container = document.getElementById('subProductList'); let html = '';
   subProducts.forEach(p => {
@@ -514,9 +509,9 @@ function renderProductList(subProducts) {
       else if(p.status === 'wait') { statBadge = '<span class="status-badge status-wait">รอของเข้า</span>'; disClass = 'disabled'; }
 
       let v = p.variant ? p.variant : p.name;
+      // 🌟 นำ <img src="${p.iconUrl}"> ที่เคยมีตรงนี้ออกไป เพื่อไม่ให้โชว์รูปที่หน้านี้
       html += `<div class="product-list-item ${isSel?'selected':''} ${disClass}" ${p.status === 'ready' ? `onclick="toggleCart('${p.id}')"` : ''} id="item-${p.id}">
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-              ${p.iconUrl ? `<img src="${p.iconUrl}" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 12px; object-fit: cover;">` : ''}
               <div style="flex: 1; text-align: left; padding-right: 10px;"><div style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 5px;">${v}</div>${statBadge}</div>
               ${p.subDesc ? `<div style="flex: 1.2; text-align: center; border-left: 1px solid #f3f4f6; border-right: 1px solid #f3f4f6; padding: 0 10px; font-size: 12px; color: #6b7280;">${p.subDesc}</div>` : `<div style="flex: 1.2;"></div>`}
               <div style="flex: 1; text-align: right; font-weight: 700; color: var(--primary); font-size: 16px;">฿${p.price}</div>
@@ -555,7 +550,6 @@ function renderCart() {
   document.getElementById('cartItemsContainer').innerHTML = html;
 }
 
-// 🌟 ฟอร์มสั่งซื้ออิโมจิ
 function proceedToCheckout() {
   if(cart.length === 0) return;
   let total = calculateTotal();
@@ -575,7 +569,6 @@ ${itemsText}
   .then(() => { cart = []; saveCart(); renderCart(); renderProductsByCategory(); window.location.href = lineUrl; });
 }
 
-// --- Admin System ---
 function openAdminLogin() { document.getElementById('loginModal').style.display = 'flex'; }
 function verifyAdmin() {
   let pin = document.getElementById('adminPin').value;
