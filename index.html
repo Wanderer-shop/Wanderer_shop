@@ -41,7 +41,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .info-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto 20px auto; }
 .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
 .info-row:last-child { border-bottom: none; }
-.sh { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+.sh { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; justify-content: space-between; flex-wrap: wrap; }
+.sh-left { display: flex; align-items: center; gap: 10px; }
 .sh-line { width: 4px; height: 20px; background: var(--primary); border-radius: 2px; }
 
 .media-cover { max-width: 800px; margin: 0 auto 20px auto; padding: 0; position: relative; }
@@ -109,6 +110,9 @@ textarea.admin-input { resize: vertical; }
 .admin-label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
 .admin-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 15px; transition: 0.2s; }
 .cart-list-scroll { max-height: 40vh; overflow-y: auto; margin-bottom: 15px; border-top: 1px dashed #eee; border-bottom: 1px dashed #eee; padding: 15px 0; }
+
+.sort-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #ddd; font-family: 'Kanit', sans-serif; font-size: 13px; background: white; color: var(--text-dark); outline: none; cursor: pointer; }
+.sort-select:focus { border-color: var(--primary); }
 </style>
 </head>
 <body>
@@ -142,15 +146,33 @@ textarea.admin-input { resize: vertical; }
 
   <div id="tab-products" class="tab-content active">
     <div id="categoriesView">
-      <div class="sh"><div class="sh-line"></div><h2>รายการสินค้า</h2></div>
+      <div class="sh">
+          <div class="sh-left"><div class="sh-line"></div><h2>รายการสินค้า</h2></div>
+          <select id="sortSelectGrid" class="sort-select" onchange="changeSort(this.value)">
+              <option value="default">เรียงตาม: ค่าเริ่มต้น</option>
+              <option value="alpha">เรียงตาม: ตัวอักษร (A-Z)</option>
+              <option value="priceAsc">เรียงตาม: ราคา (น้อยไปมาก)</option>
+              <option value="priceDesc">เรียงตาม: ราคา (มากไปน้อย)</option>
+          </select>
+      </div>
       <div class="category-grid" id="categoryGrid"></div>
     </div>
     <div id="productsView" style="display:none; max-width:800px; margin:0 auto;">
       <button onclick="showCategories()" style="background:none; border:none; color:var(--primary); cursor:pointer; margin-bottom:15px; font-weight:600;">← กลับไปหน้าหมวดหมู่</button>
-      <div style="margin-bottom:20px;">
-        <h2 id="currentCategoryTitle" style="line-height:1.2;">-</h2>
-        <div id="currentCategoryDesc" style="font-size:13px; color:var(--text-muted); margin-top:8px; line-height:1.5;"></div>
+      
+      <div class="sh" style="margin-bottom:20px;">
+          <div class="sh-left" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+            <h2 id="currentCategoryTitle" style="line-height:1.2;">-</h2>
+            <div id="currentCategoryDesc" style="font-size:13px; color:var(--text-muted); line-height:1.5;"></div>
+          </div>
+          <select id="sortSelectList" class="sort-select" onchange="changeSort(this.value)">
+              <option value="default">เรียงตาม: ค่าเริ่มต้น</option>
+              <option value="alpha">เรียงตาม: ตัวอักษร (A-Z)</option>
+              <option value="priceAsc">เรียงตาม: ราคา (น้อยไปมาก)</option>
+              <option value="priceDesc">เรียงตาม: ราคา (มากไปน้อย)</option>
+          </select>
       </div>
+
       <div id="productGrid"></div>
     </div>
   </div>
@@ -235,11 +257,26 @@ textarea.admin-input { resize: vertical; }
 
         <div id="appGameProductFields" style="display:none;">
             <div style="border: 2px dashed #b026ff; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #faf5ff;">
-                <label class="admin-label" style="color: #b026ff; font-size: 14px; font-weight: bold;">🍎 ข้อความ (iOS):</label>
-                <textarea id="pIosDesc" class="admin-input" rows="3" placeholder="- แบบให้ร้านโหลดให้..."></textarea>
                 
-                <label class="admin-label" style="color: #10b981; font-size: 14px; font-weight: bold; margin-top:10px;">🤖 ข้อความ (Android):</label>
-                <textarea id="pAndroidDesc" class="admin-input" rows="3" placeholder="- โหลดผ่าน Play Store..."></textarea>
+                <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+                    <label class="admin-label" style="display:inline-block; margin-right:15px; color:#4b5563;">ระบบที่รองรับ:</label>
+                    <label style="margin-right: 20px; font-size: 15px; cursor:pointer; font-weight: 500;">
+                        <input type="checkbox" id="pSysIos" checked onchange="toggleDescFields()" style="transform: scale(1.2); margin-right: 5px;"> 🍎 iOS
+                    </label>
+                    <label style="font-size: 15px; cursor:pointer; font-weight: 500;">
+                        <input type="checkbox" id="pSysAndroid" checked onchange="toggleDescFields()" style="transform: scale(1.2); margin-right: 5px;"> 🤖 Android
+                    </label>
+                </div>
+
+                <div id="iosDescGroup">
+                    <label class="admin-label" style="color: #b026ff; font-size: 14px; font-weight: bold;">🍎 ข้อความ (iOS):</label>
+                    <textarea id="pIosDesc" class="admin-input" rows="3" placeholder="- แบบให้ร้านโหลดให้..."></textarea>
+                </div>
+                
+                <div id="androidDescGroup" style="margin-top:10px;">
+                    <label class="admin-label" style="color: #10b981; font-size: 14px; font-weight: bold;">🤖 ข้อความ (Android):</label>
+                    <textarea id="pAndroidDesc" class="admin-input" rows="3" placeholder="- โหลดผ่าน Play Store..."></textarea>
+                </div>
             </div>
         </div>
 
@@ -313,7 +350,7 @@ const BIN_ID = '69bf96fbc3097a1dd549f01f';
 const MASTER_KEY = '$2a$10$PMIxGvNzIUreq6iY.zlLEuXPaMeYVDiDUIvrAnW2HcwdKhgQUU4da';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-// ลิงก์ Google Sheets อันใหม่
+// ลิงก์ Google Sheets อันใหม่ที่ลูกค้าให้มา
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzfG5EFrSyFUqc8Aor22ntf-taSf3qlRb4omqAmdwgB0V1NNp7H4o4ZSUxUPlIXA91EzQ/exec';
 
 function saveLocalSafely() {
@@ -373,18 +410,13 @@ let cart = [];
 let isAdminLoggedIn = false;
 let selectedSystems = {}; 
 let currentAdminCatTab = null; 
+let currentSort = 'default'; // ตัวแปรเก็บสถานะการจัดเรียง (default, alpha, priceAsc, priceDesc)
 
 window.onload = async () => {
-    // โค้ดส่งยอดคนเข้าชมเว็บไปยัง Google Sheets อัตโนมัติเมื่อเปิดเว็บ
     fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-            type: 'เข้าชมเว็บไซต์',
-            items: '-',
-            total: 0,
-            viewCount: 1
-        })
+        body: JSON.stringify({ type: 'เข้าชมเว็บไซต์', items: '-', total: 0, viewCount: 1 })
     }).catch(e => console.log(e));
 
     await fetchFromServer(); 
@@ -429,16 +461,15 @@ function toggleAdminFieldsByTab() {
     const tabName = tabEl.value;
     const isAppTab = isAppGameTab(tabName);
     
-    // 1. สลับฟอร์มข้อความ
     if(isAppTab) {
         document.getElementById('standardProductFields').style.display = 'none';
         document.getElementById('appGameProductFields').style.display = 'block';
+        toggleDescFields(); // อัปเดตการแสดงผลกล่องข้อความตาม Checkbox
     } else {
         document.getElementById('standardProductFields').style.display = 'block';
         document.getElementById('appGameProductFields').style.display = 'none';
     }
 
-    // 2. ซ่อน/แสดง รายละเอียดย่อย (เฉพาะแท็บแอพพรีเมี่ยม)
     const packDescGroup = document.getElementById('packDescGroup');
     if (tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium')) {
         packDescGroup.style.display = 'block';
@@ -446,7 +477,6 @@ function toggleAdminFieldsByTab() {
         packDescGroup.style.display = 'none';
     }
 
-    // 3. จัดการซ่อน/แสดง สถานะสินค้า
     const statusGroup = document.getElementById('statusFieldGroup');
     if (tabName.includes('เติมเกม') || isAppTab) {
         statusGroup.style.display = 'block';
@@ -454,6 +484,12 @@ function toggleAdminFieldsByTab() {
         statusGroup.style.display = 'none';
         document.getElementById('pStatus').value = 'ready'; 
     }
+}
+
+// ควบคุมการซ่อนโชว์กล่องข้อความตาม Checkbox ระบบ
+function toggleDescFields() {
+    document.getElementById('iosDescGroup').style.display = document.getElementById('pSysIos').checked ? 'block' : 'none';
+    document.getElementById('androidDescGroup').style.display = document.getElementById('pSysAndroid').checked ? 'block' : 'none';
 }
 
 function renderTabs() {
@@ -465,6 +501,11 @@ function renderTabs() {
 
 function switchTab(id) {
   currentTab = id;
+  // Reset sorting เมื่อเปลี่ยนแท็บ
+  currentSort = 'default';
+  document.getElementById('sortSelectGrid').value = 'default';
+  document.getElementById('sortSelectList').value = 'default';
+
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   if (id === 'info') { document.getElementById('tab-info').classList.add('active'); } 
   else {
@@ -593,9 +634,39 @@ function selectSystem(e, pId, sys) {
     } else { renderCategories(); }
 }
 
+// ฟังก์ชันสำหรับเลือกการเรียงลำดับ
+function changeSort(val) {
+    currentSort = val;
+    // ซิงค์ค่า dropdown ทั้ง 2 จุดให้ตรงกัน
+    document.getElementById('sortSelectGrid').value = val;
+    document.getElementById('sortSelectList').value = val;
+
+    if (document.getElementById('productsView').style.display === 'block') {
+        openCategory(document.getElementById('currentCategoryTitle').innerText);
+    } else {
+        renderCategories();
+    }
+}
+
+// ฟังก์ชัน Sort ข้อมูล
+function sortProductsArray(arr) {
+    if (currentSort === 'alpha') {
+        return arr.sort((a, b) => a.cat.localeCompare(b.cat));
+    } else if (currentSort === 'priceAsc') {
+        return arr.sort((a, b) => a.price - b.price);
+    } else if (currentSort === 'priceDesc') {
+        return arr.sort((a, b) => b.price - a.price);
+    }
+    return arr; // default
+}
+
 function renderCategories(tabName = currentTab) {
   const grid = document.getElementById('categoryGrid');
-  const filtered = products.filter(p => p.tab === tabName);
+  let filtered = products.filter(p => p.tab === tabName);
+  
+  // จัดเรียงข้อมูลถ้ามีการเลือก
+  filtered = sortProductsArray([...filtered]);
+
   const isDirectGrid = isAppGameTab(tabName);
 
   if (isDirectGrid) {
@@ -611,7 +682,7 @@ function renderCategories(tabName = currentTab) {
           const statusHtml = `<div class="card-status-pill ${statusClass}"><div class="status-dot-sm"></div>${statusText}</div>`;
 
           let sysHtml = '';
-          let activeSys = 'iOS'; 
+          let activeSys = null; 
           if (p.systems && p.systems.length > 0) {
               activeSys = selectedSystems[p.id] || (cart.find(c => c.id === p.id && c.chosenSystem) ? cart.find(c => c.id === p.id).chosenSystem : null) || p.systems[0];
               sysHtml = `<div class="sys-opts">` + p.systems.map(sys => {
@@ -638,7 +709,9 @@ function renderCategories(tabName = currentTab) {
           </div>`;
       }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
   } else {
+      // สร้างหมวดหมู่ (ไม่ซ้ำกัน)
       const uniqueCats = [...new Set(filtered.map(p => p.cat))];
+      
       grid.innerHTML = uniqueCats.map(cat => {
         const p = filtered.find(x => x.cat === cat);
         const icon = p.icon || '📦';
@@ -651,7 +724,11 @@ function renderCategories(tabName = currentTab) {
 
 function openCategory(catName) {
   document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block';
-  const items = products.filter(p => p.cat === catName && p.tab === currentTab);
+  let items = products.filter(p => p.cat === catName && p.tab === currentTab);
+  
+  // จัดเรียงข้อมูลในหน้ารายละเอียดย่อย
+  items = sortProductsArray([...items]);
+
   document.getElementById('currentCategoryTitle').innerText = catName;
   document.getElementById('currentCategoryDesc').innerHTML = items[0] && items[0].catDesc ? items[0].catDesc.replace(/\n/g, '<br>') : '';
   
@@ -689,6 +766,19 @@ async function saveProduct(e) {
   const isAppTab = isAppGameTab(tabName);
   const isPremiumTab = tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium');
 
+  // ดึงค่าระบบจาก Checkbox
+  let selectedSysArr = [];
+  if (isAppTab) {
+      if (document.getElementById('pSysIos').checked) selectedSysArr.push('iOS');
+      if (document.getElementById('pSysAndroid').checked) selectedSysArr.push('Android');
+      
+      if (selectedSysArr.length === 0) {
+          alert("กรุณาเลือกระบบที่รองรับอย่างน้อย 1 ระบบ (iOS หรือ Android)");
+          btn.innerText = id ? "อัปเดตสินค้า" : "บันทึกข้อมูลสินค้า";
+          return;
+      }
+  }
+
   const newP = {
     id: id || 'p' + Date.now(),
     tab: tabName,
@@ -700,7 +790,7 @@ async function saveProduct(e) {
     variant: isAppTab ? '' : document.getElementById('pVariant').value.trim(), 
     name: isAppTab ? '-' : (document.getElementById('pName').value.trim() || '-'),
     packDesc: (isAppTab || !isPremiumTab) ? '' : document.getElementById('pPackDesc').value.trim(),
-    systems: isAppTab ? ['iOS', 'Android'] : [], 
+    systems: selectedSysArr, 
     iosDesc: isAppTab ? document.getElementById('pIosDesc').value.trim() : '',
     androidDesc: isAppTab ? document.getElementById('pAndroidDesc').value.trim() : ''
   };
@@ -725,6 +815,15 @@ function editProduct(id) {
     document.getElementById('editId').value = p.id;
     document.getElementById('pTabTarget').value = p.tab;
     
+    // ตั้งค่า Checkbox ระบบ
+    if (p.systems) {
+        document.getElementById('pSysIos').checked = p.systems.includes('iOS');
+        document.getElementById('pSysAndroid').checked = p.systems.includes('Android');
+    } else {
+        document.getElementById('pSysIos').checked = true;
+        document.getElementById('pSysAndroid').checked = true;
+    }
+
     toggleAdminFieldsByTab();
 
     document.getElementById('pStatus').value = p.status || 'ready';
@@ -755,6 +854,10 @@ function cancelEdit() {
   document.getElementById('pIosDesc').value = "";
   document.getElementById('pAndroidDesc').value = "";
   document.getElementById('pPackDesc').value = "";
+  
+  document.getElementById('pSysIos').checked = true;
+  document.getElementById('pSysAndroid').checked = true;
+
   document.getElementById('pIconPreview').style.display = 'none';
   document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
   document.getElementById('cancelBtn').style.display = "none";
@@ -842,9 +945,6 @@ async function deleteProduct(id) {
 
 function showCategories() { document.getElementById('categoriesView').style.display='block'; document.getElementById('productsView').style.display='none'; }
 
-/* ==================================================
-   ตรรกะคำนวณโปรโมชั่นสุดคุ้ม (ขั้นบันได Greedy Logic)
-   ================================================== */
 function getCalculatedCart() {
     let appItems = []; let otherItems = [];
     cart.forEach(i => { if(isAppGameTab(i.tab)) appItems.push({...i}); else otherItems.push({...i}); });
@@ -976,7 +1076,6 @@ function confirmCheckout() {
   let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
   let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
 
-  // --- โค้ดส่งข้อมูลไป Google Sheets ---
   let itemsBought = calcInfo.items.map(i => {
       let name = i.cat;
       if (i.name && i.name !== '-') name += ` ${i.name}`;
@@ -988,14 +1087,8 @@ function confirmCheckout() {
   fetch(GOOGLE_SHEETS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      type: 'คำสั่งซื้อใหม่',
-      items: itemsBought,
-      total: calcInfo.total,
-      viewCount: 0 
-    })
+    body: JSON.stringify({ type: 'คำสั่งซื้อใหม่', items: itemsBought, total: calcInfo.total, viewCount: 0 })
   }).catch(e => console.log('Sheet Error:', e));
-  // ------------------------------------
 
   if (appItems.length > 0 && otherItems.length === 0) {
       let appLines = appItems.map(i => {
