@@ -16,6 +16,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 .hero { max-width: 1200px; margin: 0 auto 40px auto; background: linear-gradient(135deg, rgba(176,38,255,0.6) 0%, rgba(0,210,255,0.4) 100%); padding: 30px 20px 55px; text-align: center; position: relative; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
 
+/* ป้ายสถานะร้าน มุมซ้ายบน */
 .shop-status-pill { position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 20; }
 .status-open { background: var(--success); }
 .status-closed { background: var(--danger); }
@@ -54,7 +55,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .cat-icon-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 15px; overflow: hidden; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f0; }
 .cat-icon-wrapper img, .cat-icon-wrapper a { width: 100%; height: 100%; object-fit: cover; pointer-events: none !important; user-select: none; cursor: default; }
 
-/* โหมด Direct Card (กดติ๊กถูก) */
+/* โหมด Direct Card */
 .direct-card { background: white; border-radius: 18px; padding: 15px 10px; text-align: center; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; }
 .direct-card:active { transform: scale(0.98); }
 .direct-card.selected { border-color: var(--primary); background: #faf5ff; }
@@ -122,6 +123,7 @@ textarea.admin-input { resize: vertical; }
   <div class="logo"><img id="shopLogoImg" src=""></div>
   <div class="hero-title" onclick="handleAdminTap()">Wanderer Shop</div>
   <div class="hero-sub">ยินดีต้อนรับร้าน <span id="shopTitleText">Wanderer Shop</span> รับสินค้าอะไรดีคะ</div>
+  
   <div class="tab-container" id="tabBar"></div>
 </div>
 
@@ -225,11 +227,10 @@ textarea.admin-input { resize: vertical; }
             <label class="admin-label">ชื่อแพ็กเกจย่อย:</label>
             <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, ถาวร">
 
-            <label class="admin-label">ระบบที่รองรับ (ตัวเลือกใต้ราคา คั่นด้วยลูกน้ำ):</label>
-            <input type="text" id="pSystems" class="admin-input" placeholder="เช่น iOS, Android, Gmail (เว้นว่างได้)">
-
-            <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
-            <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
+            <div id="packDescGroup" style="display:none;">
+                <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
+                <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
+            </div>
         </div>
 
         <div id="appGameProductFields" style="display:none;">
@@ -312,6 +313,9 @@ const BIN_ID = '69bf96fbc3097a1dd549f01f';
 const MASTER_KEY = '$2a$10$PMIxGvNzIUreq6iY.zlLEuXPaMeYVDiDUIvrAnW2HcwdKhgQUU4da';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
+// ลิงก์ Google Sheets อันใหม่
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzfG5EFrSyFUqc8Aor22ntf-taSf3qlRb4omqAmdwgB0V1NNp7H4o4ZSUxUPlIXA91EzQ/exec';
+
 function saveLocalSafely() {
     try {
         localStorage.setItem('wandererShopInfo', JSON.stringify(shopInfo));
@@ -371,6 +375,18 @@ let selectedSystems = {};
 let currentAdminCatTab = null; 
 
 window.onload = async () => {
+    // โค้ดส่งยอดคนเข้าชมเว็บไปยัง Google Sheets อัตโนมัติเมื่อเปิดเว็บ
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+            type: 'เข้าชมเว็บไซต์',
+            items: '-',
+            total: 0,
+            viewCount: 1
+        })
+    }).catch(e => console.log(e));
+
     await fetchFromServer(); 
     renderShopInfo(); renderTabs(); renderCategories(); updateAdminTabUI(); renderAdminList();
     
@@ -406,7 +422,7 @@ function isAppGameTab(tabName) {
     return name.includes('ios') || name.includes('androi');
 }
 
-// เช็คว่าต้องแสดงแบบฟอร์มไหน (ขึ้นอยู่กับว่าแอดมินเลือกแท็บอะไร)
+// ควบคุมการแสดงผลฟอร์มแอดมินตามแท็บที่เลือก
 function toggleAdminFieldsByTab() {
     const tabEl = document.getElementById('pTabTarget');
     if(!tabEl) return;
@@ -422,13 +438,21 @@ function toggleAdminFieldsByTab() {
         document.getElementById('appGameProductFields').style.display = 'none';
     }
 
-    // 2. จัดการซ่อน/แสดง สถานะสินค้า (ให้แสดงเฉพาะแท็บที่เกี่ยวกับเติมเกม หรือแอพ iOS-Android)
+    // 2. ซ่อน/แสดง รายละเอียดย่อย (เฉพาะแท็บแอพพรีเมี่ยม)
+    const packDescGroup = document.getElementById('packDescGroup');
+    if (tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium')) {
+        packDescGroup.style.display = 'block';
+    } else {
+        packDescGroup.style.display = 'none';
+    }
+
+    // 3. จัดการซ่อน/แสดง สถานะสินค้า
     const statusGroup = document.getElementById('statusFieldGroup');
     if (tabName.includes('เติมเกม') || isAppTab) {
         statusGroup.style.display = 'block';
     } else {
         statusGroup.style.display = 'none';
-        document.getElementById('pStatus').value = 'ready'; // ถ้าซ่อน ให้บังคับเป็นพร้อมส่งเสมอ
+        document.getElementById('pStatus').value = 'ready'; 
     }
 }
 
@@ -558,7 +582,6 @@ function switchAdminModalTab(tabId, btnElement) {
   btnElement.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
 }
 
-// ลูกค้ากดเลือกระบบปฏิบัติการบนการ์ดสินค้า
 function selectSystem(e, pId, sys) {
     e.stopPropagation(); 
     selectedSystems[pId] = sys;
@@ -597,7 +620,6 @@ function renderCategories(tabName = currentTab) {
               }).join('') + `</div>`;
           }
 
-          // แสดงข้อความใต้ชื่อแอปให้ตรงกับปุ่มระบบที่ลูกค้าเลือกไว้ (ดึงข้อมูลจากที่แอดมินกรอก)
           let dynamicDesc = '';
           if (activeSys === 'iOS') dynamicDesc = p.iosDesc || '';
           else if (activeSys === 'Android') dynamicDesc = p.androidDesc || '';
@@ -643,23 +665,11 @@ function openCategory(catName) {
         const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
         const statusDot = p.status === 'empty' ? '<span style="color:var(--danger); font-size:10px; margin-left:5px;">🔴 หมด</span>' : '<span style="color:var(--success); font-size:10px; margin-left:5px;">🟢 พร้อม</span>';
         
-        let sysHtml = '';
-        // แสดงระบบเฉพาะสินค้าที่ไม่ใช่ iOS-Android (เพราะ iOS-Android แสดงแบบการ์ดไปแล้ว) 
-        // แต่ถ้ามีปนมา ก็ให้กดเลือกได้
-        if (p.systems && p.systems.length > 0) {
-            sysHtml = `<div class="sys-opts" style="justify-content:flex-start; margin-top:5px;">` + p.systems.map(sys => {
-                const isActive = (selectedSystems[p.id] === sys || (cart.find(c => c.id === p.id && c.chosenSystem === sys))) ? 'active' : '';
-                return `<div class="sys-btn ${isActive}" style="flex:none; padding:3px 8px;" onclick="selectSystem(event, '${p.id}', '${sys}')">${sys}</div>`;
-            }).join('') + `</div>`;
-        }
-
-        // ซ่อน Status Dot ถ้าเป็นหมวดที่แอดมินไม่ได้เปิดให้ตั้งค่า (เช่น แอพพรีเมี่ยม)
         const showStatus = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab)) ? statusDot : '';
 
         return `<div class="product-item ${isSel}" onclick="toggleItem('${p.id}')">
           <div style="flex:2;">
             <div style="font-weight:600; font-size:15px; display:flex; align-items:center;">${p.name} ${showStatus}</div>
-            ${sysHtml}
           </div>
           ${p.packDesc ? `<div style="flex:1.5; font-size:12px; color:var(--text-muted); text-align:center; padding-left:10px;">${p.packDesc}</div>` : '<div style="flex:1.5;"></div>'}
           <div style="flex:1; text-align:right; color:var(--primary); font-weight:bold; font-size:16px;">฿${p.price}</div>
@@ -677,21 +687,20 @@ async function saveProduct(e) {
   const cleanIcon = document.getElementById('pIconUrl').value.replace(/<[^>]*>?/gm, '').trim();
   const tabName = document.getElementById('pTabTarget').value;
   const isAppTab = isAppGameTab(tabName);
+  const isPremiumTab = tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium');
 
   const newP = {
     id: id || 'p' + Date.now(),
     tab: tabName,
-    // ถ้าไม่ใช่แท็บที่ให้ตั้งสถานะ ให้บังคับเป็น ready
     status: (tabName.includes('เติมเกม') || isAppTab) ? document.getElementById('pStatus').value : 'ready',
     cat: document.getElementById('pCat').value.trim(),
     price: parseInt(document.getElementById('pPrice').value),
     icon: cleanIcon,
-    // แยกลอจิกการบันทึกระหว่างแท็บทั่วไป กับ แท็บแอพเกม
     catDesc: isAppTab ? '' : document.getElementById('pCatDesc').value.trim(), 
     variant: isAppTab ? '' : document.getElementById('pVariant').value.trim(), 
     name: isAppTab ? '-' : (document.getElementById('pName').value.trim() || '-'),
-    packDesc: isAppTab ? '' : document.getElementById('pPackDesc').value.trim(),
-    systems: isAppTab ? ['iOS', 'Android'] : document.getElementById('pSystems').value.split(',').map(s=>s.trim()).filter(s=>s),
+    packDesc: (isAppTab || !isPremiumTab) ? '' : document.getElementById('pPackDesc').value.trim(),
+    systems: isAppTab ? ['iOS', 'Android'] : [], 
     iosDesc: isAppTab ? document.getElementById('pIosDesc').value.trim() : '',
     androidDesc: isAppTab ? document.getElementById('pAndroidDesc').value.trim() : ''
   };
@@ -716,7 +725,6 @@ function editProduct(id) {
     document.getElementById('editId').value = p.id;
     document.getElementById('pTabTarget').value = p.tab;
     
-    // เรียกให้หน้าตาสลับฟอร์มก่อน แล้วค่อยดึงข้อมูลมาใส่
     toggleAdminFieldsByTab();
 
     document.getElementById('pStatus').value = p.status || 'ready';
@@ -727,7 +735,6 @@ function editProduct(id) {
     document.getElementById('pPackDesc').value = p.packDesc || '';
     document.getElementById('pPrice').value = p.price;
     document.getElementById('pIconUrl').value = p.icon || '';
-    document.getElementById('pSystems').value = (p.systems || []).join(', ');
     
     document.getElementById('pIosDesc').value = p.iosDesc || '';
     document.getElementById('pAndroidDesc').value = p.androidDesc || '';
@@ -743,11 +750,11 @@ function editProduct(id) {
 
 function cancelEdit() {
   document.getElementById('adminForm').reset();
-  // เคลียร์ค่าที่ซ่อนอยู่ด้วยเพื่อความชัวร์
   document.getElementById('editId').value = ""; 
   document.getElementById('pIconUrl').value = "";
   document.getElementById('pIosDesc').value = "";
   document.getElementById('pAndroidDesc').value = "";
+  document.getElementById('pPackDesc').value = "";
   document.getElementById('pIconPreview').style.display = 'none';
   document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
   document.getElementById('cancelBtn').style.display = "none";
@@ -777,11 +784,9 @@ function renderAdminList() {
   for (const cat in grouped) {
     html += `<div style="background:#f0f2f5; padding:8px 12px; margin-top:15px; border-radius:8px 8px 0 0; font-weight:bold; display:flex; align-items:center; gap:8px;">📱 ${cat}</div><div style="border:1px solid #e5e7eb; border-radius:0 0 8px 8px; margin-bottom:10px; background:#fff; padding:0 10px;">`;
     html += grouped[cat].map(p => {
-        // ซ่อน Status Dot ในหน้ารายการแอดมิน หากสินค้านั้นอยู่แท็บที่ไม่ให้ตั้งสถานะ
         const showStatusInList = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab));
         const sDot = showStatusInList ? (p.status === 'empty' ? '🔴' : '🟢') : '';
 
-        const sysTag = p.systems && p.systems.length > 0 ? `<br><span style="font-size:10px; background:#f3f4f6; padding:2px 4px; border-radius:4px; color:#4b5563;">${p.systems.join(', ')}</span>` : '';
         const dispName = (p.name && p.name !== '-') ? p.name : 'สินค้าทั่วไป';
 
         return `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px; display:flex; justify-content:space-between; align-items:center;">
@@ -790,7 +795,6 @@ function renderAdminList() {
             ${p.variant ? `<span style="font-size:11px; color:#ef4444; font-weight:bold;">[${p.variant}]</span>` : ''} 
             ${p.packDesc ? `<span style="font-size:11px; color:#6b7280;">(${p.packDesc})</span>` : ''} 
             <br><small style="color:#374151; font-weight:600;">฿${p.price}</small>
-            ${sysTag}
           </div>
           <div>
             <button type="button" onclick="editProduct('${p.id}')" style="color:#2563eb; border:none; background:none; font-weight:600; cursor:pointer; margin-right:10px;">แก้ไข</button>
@@ -806,7 +810,7 @@ function renderAdminList() {
 function updateAdminTabUI() {
   document.getElementById('adminTabList').innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; background:#f8f9fa; padding:10px 15px; border-radius:8px; margin-top:5px; border:1px solid #eee;"><span style="font-weight:500;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; font-weight:bold; cursor:pointer;">ลบ</button></div>`).join('');
   document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join('');
-  toggleAdminFieldsByTab(); // สั่งให้เซ็ตฟอร์มตามแท็บเมื่อโหลดแอดมินเสร็จ
+  toggleAdminFieldsByTab(); 
 }
 
 async function resetData() {
@@ -857,13 +861,10 @@ function getCalculatedCart() {
         total += 3000; activePromos.push("เหมาทุกแอพ 164 แอพ 3,000฿");
     } else {
         let appsPromo = []; let ineligibleApps = [];
-        // คัดเฉพาะแอพราคา 20-25 เข้าเงื่อนไขโปร
         appItems.forEach(item => { if (item.price >= 20 && item.price <= 25) { appsPromo.push(item); } else { ineligibleApps.push(item); } });
 
-        // แอพที่แพง/ถูกกว่า ไม่เข้าโปร คิดราคาเต็ม
         ineligibleApps.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
 
-        // จัดเรียงแอพเข้าโปรจากแพงสุดไปถูกสุด ให้ลูกค้าคุ้มสุด
         appsPromo.sort((a, b) => b.price - a.price);
 
         let count = appsPromo.length; let idx = 0;
@@ -874,7 +875,6 @@ function getCalculatedCart() {
         while(idx + 8 <= count) { b8++; for(let i=0; i<8; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 80/8, isPromo: true, promoLabel: "โปร 8 แอพ"}); total += 80; }
         while(idx + 3 <= count) { b3++; for(let i=0; i<3; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 45/3, isPromo: true, promoLabel: "โปร 3 แอพ"}); total += 45; }
         
-        // กฎพิเศษ: ถ้าเหลือเศษ 2 แอพ และเป็นราคา 25฿ ทั้งคู่ คิดราคาโปร 45฿
         let remaining = count - idx;
         if (remaining === 2 && appsPromo[idx].price === 25 && appsPromo[idx+1].price === 25) {
             b2_25++;
@@ -908,7 +908,6 @@ function toggleItem(id) {
   if(idx > -1) {
       cart.splice(idx, 1); 
   } else {
-      // ดักจับการกดสินค้าหมด
       if (p.status === 'empty' && (p.tab.includes('เติมเกม') || isAppGameTab(p.tab))) {
           alert("สินค้านี้ยังไม่พร้อมให้บริการ หรือ หมดชั่วคราวค่ะ");
           return;
@@ -976,7 +975,28 @@ function confirmCheckout() {
   
   let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
   let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
+
+  // --- โค้ดส่งข้อมูลไป Google Sheets ---
+  let itemsBought = calcInfo.items.map(i => {
+      let name = i.cat;
+      if (i.name && i.name !== '-') name += ` ${i.name}`;
+      if (i.chosenSystem) name += ` [${i.chosenSystem}]`;
+      if (i.variant) name += ` (${i.variant})`;
+      return name;
+  }).join(', ');
   
+  fetch(GOOGLE_SHEETS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      type: 'คำสั่งซื้อใหม่',
+      items: itemsBought,
+      total: calcInfo.total,
+      viewCount: 0 
+    })
+  }).catch(e => console.log('Sheet Error:', e));
+  // ------------------------------------
+
   if (appItems.length > 0 && otherItems.length === 0) {
       let appLines = appItems.map(i => {
           let appNameStr = (i.name && i.name !== i.cat && i.name !== '-') ? `${i.cat} ${i.name}` : i.cat;
