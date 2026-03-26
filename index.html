@@ -16,7 +16,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 .hero { max-width: 1200px; margin: 0 auto 40px auto; background: linear-gradient(135deg, rgba(176,38,255,0.6) 0%, rgba(0,210,255,0.4) 100%); padding: 30px 20px 55px; text-align: center; position: relative; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
 
-/* ป้ายสถานะร้าน มุมซ้ายบน */
 .shop-status-pill { position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 20; }
 .status-open { background: var(--success); }
 .status-closed { background: var(--danger); }
@@ -56,7 +55,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .cat-icon-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 15px; overflow: hidden; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f0; }
 .cat-icon-wrapper img, .cat-icon-wrapper a { width: 100%; height: 100%; object-fit: cover; pointer-events: none !important; user-select: none; cursor: default; }
 
-/* โหมด Direct Card */
 .direct-card { background: white; border-radius: 18px; padding: 15px 10px; text-align: center; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; }
 .direct-card:active { transform: scale(0.98); }
 .direct-card.selected { border-color: var(--primary); background: #faf5ff; }
@@ -346,11 +344,10 @@ textarea.admin-input { resize: vertical; }
 </div>
 
 <script>
-const BIN_ID = '69bf96fbc3097a1dd549f01f';
-const MASTER_KEY = '$2a$10$PMIxGvNzIUreq6iY.zlLEuXPaMeYVDiDUIvrAnW2HcwdKhgQUU4da';
-const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzfG5EFrSyFUqc8Aor22ntf-taSf3qlRb4omqAmdwgB0V1NNp7H4o4ZSUxUPlIXA91EzQ/exec';
+// ==========================================
+// ⚠️ ใส่ลิงก์ Google Sheets Web App URL ใหม่ตรงนี้ ⚠️
+// ==========================================
+const GOOGLE_SHEETS_URL = 'ใส่_URL_ของ_GOOGLE_APPS_SCRIPT_อันใหม่_ตรงนี้';
 
 function saveLocalSafely() {
     try {
@@ -362,37 +359,31 @@ function saveLocalSafely() {
 
 async function syncToServer() {
     try {
-        const response = await fetch(BIN_URL, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json', 
-                'X-Master-Key': MASTER_KEY,
-                'X-Bin-Versioning': 'false' 
-            },
-            body: JSON.stringify({ shopInfo, tabs, products })
+        await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                action: 'updateDatabase', 
+                payload: { shopInfo: shopInfo, tabs: tabs, products: products } 
+            })
         });
-        if (!response.ok) throw new Error('อัปเดตข้อมูลไม่สำเร็จ');
         return true;
     } catch (error) { 
         console.error(error);
-        alert("❌ เกิดข้อผิดพลาดในการบันทึก กรุณาลองใหม่อีกครั้ง");
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheets กรุณาลองใหม่อีกครั้ง");
         return false;
     }
 }
 
 async function fetchFromServer() {
     try {
-        const response = await fetch(BIN_URL + '/latest?timestamp=' + new Date().getTime(), {
-            method: 'GET',
-            headers: { 'X-Master-Key': MASTER_KEY, 'Cache-Control': 'no-cache' },
-            cache: 'no-store'
-        });
-        if (!response.ok) return;
+        const response = await fetch(GOOGLE_SHEETS_URL + '?t=' + new Date().getTime());
         const data = await response.json();
-        if (data && data.record) {
-            if (data.record.shopInfo) shopInfo = data.record.shopInfo;
-            if (data.record.tabs) tabs = data.record.tabs;
-            if (data.record.products) products = data.record.products;
+        if (data) {
+            if (data.shopInfo) shopInfo = data.shopInfo;
+            if (data.tabs) tabs = data.tabs;
+            if (data.products) products = data.products;
             saveLocalSafely();
         }
     } catch (error) { console.error('Fetch error:', error); }
@@ -451,7 +442,8 @@ window.onload = async () => {
 function isAppGameTab(tabName) {
     if (!tabName) return false;
     const name = tabName.toLowerCase();
-    return name.includes('ios') || name.includes('androi');
+    // คลุมทั้งหมวดแอพ/เกม และ เติมเหรียญนิยาย
+    return name.includes('ios') || name.includes('androi') || name.includes('เหรียญ') || name.includes('นิยาย');
 }
 
 function toggleAdminFieldsByTab() {
@@ -762,7 +754,7 @@ async function saveProduct(e) {
     tab: tabName,
     status: (tabName.includes('เติมเกม') || isAppTab) ? document.getElementById('pStatus').value : 'ready',
     cat: document.getElementById('pCat').value.trim(),
-    price: parseInt(document.getElementById('pPrice').value),
+    price: parseInt(document.getElementById('pPrice').value) || 0,
     icon: cleanIcon,
     catDesc: isAppTab ? '' : document.getElementById('pCatDesc').value.trim(), 
     variant: isAppTab ? '' : document.getElementById('pVariant').value.trim(), 
@@ -782,7 +774,7 @@ async function saveProduct(e) {
       if(!currentAdminCatTab) currentAdminCatTab = newP.tab;
       renderAdminList(); renderCategories();
       if(document.getElementById('productsView').style.display === 'block'){ openCategory(document.getElementById('currentCategoryTitle').innerText); }
-      alert("✅ บันทึกสินค้าเรียบร้อย!");
+      alert("✅ บันทึกสินค้าลง Google Sheets เรียบร้อย!");
   } else { btn.innerText = id ? "อัปเดตสินค้า" : "บันทึกข้อมูลสินค้า"; }
 }
 
@@ -885,9 +877,14 @@ function updateAdminTabUI() {
 }
 
 async function resetData() {
-  if(confirm("⚠️ ล้างระบบทั้งหมด ยืนยันหรือไม่?")) {
+  if(confirm("⚠️ ล้างระบบทั้งหมด (รวมถึงใน Google Sheets) ยืนยันหรือไม่?")) {
     localStorage.clear();
-    await fetch(BIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY }, body: JSON.stringify({ shopInfo: {}, tabs: ["สินค้า"], products: [] }) });
+    await fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'updateDatabase', payload: { shopInfo: {}, tabs: ["สินค้า"], products: [] } })
+    });
     location.reload();
   }
 }
