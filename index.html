@@ -18,7 +18,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 #heroMedia { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
 .hero > div:not(#heroMedia) { position: relative; z-index: 2; }
 
-.shop-status-pill { position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 5; }
+/* ป้ายสถานะ มุมซ้ายบน และความยาวตามตัวอักษร */
+.shop-status-pill { position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 5; width: max-content; }
 .status-open { background: var(--success); }
 .status-closed { background: var(--danger); }
 .status-dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1.5s infinite; }
@@ -39,7 +40,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .tab-content.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- Info Tab Styles --- */
 .info-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 600px; margin-left: auto; margin-right: auto; }
 .info-card-title { font-size: 16px; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1; }
 .contact-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #f9fafb; border-radius: 12px; margin-bottom: 10px; color: var(--text-dark); transition: 0.2s; border: 1px solid #f3f4f6; cursor: pointer; }
@@ -50,7 +50,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .icon-line { background: #00B900; }
 .icon-tw { background: #000000; }
 .btn-copy { padding: 5px 12px; background: #e5e7eb; color: #4b5563; border-radius: 12px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
-.btn-copy:active { background: #d1d5db; }
 .time-box { text-align: center; padding: 20px 15px; background: #f9fafb; border-radius: 15px; border: 1px solid #f3f4f6; position: relative; }
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .status-badge.open { background: #d1fae5; color: #059669; }
@@ -61,7 +60,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .time-text { font-size: 26px; font-weight: 700; color: var(--primary); font-family: 'Mitr', sans-serif; }
 .time-sub { font-size: 13px; color: var(--text-muted); margin-top: 5px; }
 
-/* --- Product Grid --- */
 .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; justify-content: center; }
 .category-card { background: white; border-radius: 18px; padding: 20px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.2s; position: relative; }
 .category-card:active { transform: scale(0.95); }
@@ -75,12 +73,10 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .product-item { background: white; border-radius: 15px; padding: 15px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 .product-item.selected { border-color: var(--primary); background: #faf5ff; }
 .product-item.disabled { opacity: 0.5; background: #f5f5f5; border-color: transparent !important; cursor: not-allowed; }
-.product-item.disabled:active { transform: none; }
 
 .bottom-bar { position: fixed; bottom: 0; left: 50%; width: 100%; max-width: 1200px; background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); transform: translate(-50%, 100%); transition: 0.3s; z-index: 1000; }
 .bottom-bar.active { transform: translate(-50%, 0); }
 
-/* --- Modals --- */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { scroll-behavior: smooth; background: white; width: 100%; max-width: 500px; border-radius: 20px; padding: 25px; position: relative; max-height: 90vh; overflow-y: auto; }
 .close-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; color: #999; cursor: pointer; background: none; border: none; }
@@ -93,10 +89,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .admin-label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
 .admin-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 15px; transition: 0.2s; }
 .cart-list-scroll { max-height: 40vh; overflow-y: auto; margin-bottom: 15px; border-top: 1px dashed #eee; border-bottom: 1px dashed #eee; padding: 15px 0; }
-
-/* ปุ่มแอดมินลอยตัว (หลังล็อกอิน) */
 .floating-admin-btn { display: none; position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-size: 28px; border: none; box-shadow: 0 4px 15px rgba(37,99,235,0.4); z-index: 1500; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-.floating-admin-btn:active { transform: scale(0.9); }
 </style>
 </head>
 <body>
@@ -109,10 +102,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   </div>
 
   <div class="logo"><img id="shopLogoImg" src="https://via.placeholder.com/150"></div>
-  
   <div class="hero-title" onclick="handleAdminTap()">Wanderer Shop</div>
-  <div class="hero-sub">ยินดีต้อนรับร้าน <span id="shopTitleText">Wanderer Shop</span> รับสินค้าอะไรดีคะ</div>
-  
+  <div class="hero-sub">ยินดีต้อนรับร้าน <span id="shopTitleText">Wanderer Shop</span></div>
   <div class="tab-container" id="tabBar"></div>
 </div>
 
@@ -120,28 +111,16 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   <div id="tab-info" class="tab-content">
     <div class="info-card">
         <div class="info-card-title">ติดต่อสอบถาม / ข้อมูลร้าน</div>
-        
         <div class="contact-item" onclick="openSocialLink('fb')">
-            <div class="contact-left">
-                <div class="contact-icon icon-fb"><svg viewBox="0 0 320 512" width="16" fill="white"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></div>
-                <span id="info-fb-text">Wanderer Shop</span>
-            </div>
+            <div class="contact-left"><div class="contact-icon icon-fb"><svg viewBox="0 0 320 512" width="16" fill="white"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></div><span id="info-fb-text">Wanderer Shop</span></div>
             <button class="btn-copy" onclick="copyShopInfo(event, 'facebook')">คัดลอก</button>
         </div>
-        
         <div class="contact-item" onclick="openSocialLink('line')">
-            <div class="contact-left">
-                <div class="contact-icon icon-line"><svg viewBox="0 0 448 512" width="20" fill="white"><path d="M271.67 197.63H238.1c-4.04 0-7.31 3.28-7.31 7.31v90.47c0 4.04 3.28 7.31 7.31 7.31h33.57c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-25.54h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-13.31h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.75c0-4.04-3.27-7.31-7.31-7.31zM119.5 197.63H85.93c-4.04 0-7.31 3.28-7.31 7.31v90.47c0 4.04 3.28 7.31 7.31 7.31h33.57c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-60.94h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.75c0-4.04-3.27-7.31-7.31-7.31zM362.47 197.63h-14.8c-3.14 0-5.91 1.98-6.9 4.95l-33.88 101.54-34.69-101.69c-1-2.92-3.75-4.8-6.84-4.8h-14.8c-4.99 0-8.52 4.88-7.1 9.68l42.66 142.19c1.08 3.59 4.39 6.03 8.16 6.03h14.76c3.78 0 7.08-2.45 8.16-6.05l42.34-142.18c1.43-4.81-2.1-9.67-7.07-9.67zM203.88 197.63h-14.78c-4.04 0-7.31 3.28-7.31 7.31v120.02c0 4.04 3.28 7.31 7.31 7.31h14.78c4.04 0 7.31-3.28 7.31-7.31V204.94c0-4.04-3.28-7.31-7.31-7.31zM448 241.67c0-101.69-99.4-184.28-221.75-184.28C103.86 57.39 4.3 140.09 4.3 241.67c0 91.07 79.52 166.75 186.2 181.79 8.65 1.22 20.32 3.73 23.3 11.53 2.68 7.02 1.74 18.23 1.27 25.13l-3.3 48.77c-.85 12.56 6.74 15.65 13.56 12.21 6.82-3.44 92.48-54.49 127.42-94.46 62.72-71.74 95.25-132.89 95.25-184.97z"/></svg></div>
-                <span id="info-line-text">@997pfoig</span>
-            </div>
+            <div class="contact-left"><div class="contact-icon icon-line"><svg viewBox="0 0 448 512" width="20" fill="white"><path d="M271.67 197.63H238.1c-4.04 0-7.31 3.28-7.31 7.31v90.47c0 4.04 3.28 7.31 7.31 7.31h33.57c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-25.54h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-13.31h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.75c0-4.04-3.27-7.31-7.31-7.31zM119.5 197.63H85.93c-4.04 0-7.31 3.28-7.31 7.31v90.47c0 4.04 3.28 7.31 7.31 7.31h33.57c4.04 0 7.31-3.28 7.31-7.31v-14.77c0-4.04-3.28-7.31-7.31-7.31h-18.79v-60.94h18.79c4.04 0 7.31-3.28 7.31-7.31v-14.75c0-4.04-3.27-7.31-7.31-7.31zM362.47 197.63h-14.8c-3.14 0-5.91 1.98-6.9 4.95l-33.88 101.54-34.69-101.69c-1-2.92-3.75-4.8-6.84-4.8h-14.8c-4.99 0-8.52 4.88-7.1 9.68l42.66 142.19c1.08 3.59 4.39 6.03 8.16 6.03h14.76c3.78 0 7.08-2.45 8.16-6.05l42.34-142.18c1.43-4.81-2.1-9.67-7.07-9.67zM203.88 197.63h-14.78c-4.04 0-7.31 3.28-7.31 7.31v120.02c0 4.04 3.28 7.31 7.31 7.31h14.78c4.04 0 7.31-3.28 7.31-7.31V204.94c0-4.04-3.28-7.31-7.31-7.31zM448 241.67c0-101.69-99.4-184.28-221.75-184.28C103.86 57.39 4.3 140.09 4.3 241.67c0 91.07 79.52 166.75 186.2 181.79 8.65 1.22 20.32 3.73 23.3 11.53 2.68 7.02 1.74 18.23 1.27 25.13l-3.3 48.77c-.85 12.56 6.74 15.65 13.56 12.21 6.82-3.44 92.48-54.49 127.42-94.46 62.72-71.74 95.25-132.89 95.25-184.97z"/></svg></div><span id="info-line-text">@997pfoig</span></div>
             <button class="btn-copy" onclick="copyShopInfo(event, 'line')">คัดลอก</button>
         </div>
-
         <div class="contact-item" onclick="openSocialLink('tw')">
-            <div class="contact-left">
-                <div class="contact-icon icon-tw"><svg viewBox="0 0 512 512" width="16" fill="white"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></div>
-                <span id="info-tw-text">-</span>
-            </div>
+            <div class="contact-left"><div class="contact-icon icon-tw"><svg viewBox="0 0 512 512" width="16" fill="white"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></div><span id="info-tw-text">-</span></div>
             <button class="btn-copy" onclick="copyShopInfo(event, 'twitter')">คัดลอก</button>
         </div>
     </div>
@@ -156,8 +135,13 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
         <div class="time-box">
             <div id="info-status-badge" class="status-badge open"><div class="status-badge-dot"></div><span id="info-status-text">เปิดทำการปกติ</span></div>
             <div class="time-text"><span id="info-time-open">09:00</span> - <span id="info-time-close">00:00</span> น.</div>
-            <div class="time-sub">(เปิดทุกวัน)</div>
         </div>
+    </div>
+
+    <div class="info-card" id="mediaCard" style="display:none;">
+        <div class="info-card-title">รูปภาพ / วิดีโอแนะนำ</div>
+        <div id="mediaContainer" style="width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #000;"></div>
+        <div id="mediaDescContainer" style="padding: 12px; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 10px; font-size: 14px; color: var(--text-dark); white-space: pre-line; display: none;"></div>
     </div>
   </div>
 
@@ -166,7 +150,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       <h3 style="margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px;">รายการสินค้า</h3>
       <div class="category-grid" id="categoryGrid"></div>
     </div>
-
     <div id="productsView" style="display:none; max-width:800px; margin:0 auto;">
       <button onclick="showCategories()" style="background:none; border:none; color:var(--primary); cursor:pointer; margin-bottom:15px; font-weight:600; font-size:16px;">← กลับหน้าหมวดหมู่</button>
       <h2 id="currentCategoryTitle" style="margin-bottom:5px; line-height:1.2;">-</h2>
@@ -178,33 +161,16 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 <div class="bottom-bar" id="bottomBar">
   <div>เลือก <span id="cartCount" style="font-weight:bold; color:var(--primary);">0</span> รายการ | ฿<span id="cartTotal" style="color:var(--primary); font-weight:bold; font-size:18px;">0</span></div>
-  <button onclick="openCartSummary()" style="padding:10px 25px; border-radius:25px; border:none; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; font-weight:700; box-shadow: 0 4px 10px var(--glow); cursor:pointer;">สั่งซื้อ</button>
+  <button onclick="confirmCheckout()" style="padding:10px 25px; border-radius:25px; border:none; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; font-weight:700; cursor:pointer;">สั่งซื้อ</button>
 </div>
 
 <button id="floatingAdminBtn" class="floating-admin-btn" onclick="openAdminModal()">➕</button>
 
-<div id="cartSummaryModal" class="modal-overlay">
-  <div class="modal-content" style="max-width: 400px;">
-    <button class="close-btn" onclick="closeCartSummary()">&times;</button>
-    <h3 style="text-align: center; margin-bottom: 10px;">🛒 สรุปรายการสั่งซื้อ</h3>
-    <div id="cartSummaryList" class="cart-list-scroll"></div>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <span style="font-weight: 600; font-size: 16px;">ยอดรวมทั้งสิ้น:</span>
-      <span style="color: var(--primary); font-weight: bold; font-size: 22px;">฿<span id="cartSummaryTotal">0</span></span>
-    </div>
-    <div style="display: flex; gap: 10px;">
-      <button onclick="closeCartSummary()" class="admin-btn" style="background: #e5e7eb; color: #4b5563; flex: 1;">แก้ไขรายการ</button>
-      <button onclick="confirmCheckout()" class="admin-btn" style="flex: 2; background: linear-gradient(135deg, #10b981, #059669);">คัดลอก & ทักไลน์</button>
-    </div>
-  </div>
-</div>
-
 <div id="passwordModal" class="modal-overlay">
   <div class="modal-content" style="max-width: 350px; text-align: center;">
     <button class="close-btn" onclick="closePasswordModal()">&times;</button>
-    <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
-    <h3 style="margin-bottom: 20px;">ยืนยันตัวตนแอดมิน</h3>
-    <input type="password" id="adminPasswordInput" class="admin-input" placeholder="ใส่รหัสผ่าน..." style="text-align: center; font-size: 20px; letter-spacing: 5px;">
+    <div style="font-size: 40px; margin-bottom: 10px;">🔐</div><h3 style="margin-bottom: 20px;">ยืนยันตัวตนแอดมิน</h3>
+    <input type="password" id="adminPasswordInput" class="admin-input" placeholder="ใส่รหัสผ่าน..." style="text-align: center; font-size: 20px;">
     <button onclick="verifyAdmin()" class="admin-btn">เข้าสู่ระบบ</button>
   </div>
 </div>
@@ -225,11 +191,10 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
         <input type="hidden" id="editId">
         
         <label class="admin-label">เลือกแท็บลงขาย:</label>
-        <select id="pTabTarget" class="admin-input" required></select>
+        <select id="pTabTarget" class="admin-input" onchange="updateAdminFormFields()" required></select>
 
-        <label class="admin-label">ชื่อแอป / หมวดหมู่ และ สถานะ:</label>
         <div style="display:flex; gap:10px; margin-bottom:12px;">
-            <input type="text" id="pCat" class="admin-input" placeholder="เช่น Netflix" style="flex:2; margin-bottom:0;" required>
+            <input type="text" id="pCat" class="admin-input" placeholder="ชื่อแอป / หมวดหมู่" style="flex:2; margin-bottom:0;" required>
             <select id="pStatus" class="admin-input" style="flex:1; margin-bottom:0;">
                 <option value="ready">🟢 พร้อม</option>
                 <option value="empty">🔴 ไม่พร้อม</option>
@@ -237,20 +202,33 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
             </select>
         </div>
 
-        <label class="admin-label">รายละเอียดใต้ชื่อแอป (ส่วนแอพพรี):</label>
-        <input type="text" id="pAppDesc" class="admin-input" placeholder="เช่น ต่อเมลเดิม/สมัครใหม่ (เว้นว่างได้)">
+        <div id="grpAppDesc">
+            <label class="admin-label">รายละเอียดใต้ชื่อแอป:</label>
+            <input type="text" id="pAppDesc" class="admin-input" placeholder="เช่น ต่อเมลเดิม/สมัครใหม่ (เว้นว่างได้)">
+        </div>
 
-        <label class="admin-label" style="color:#2563eb;">ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม เช่น ต่อเมลเดิม / สมัครใหม่):</label>
-        <input type="text" id="pVariant" class="admin-input" placeholder="เว้นว่างได้ ถ้าไม่อยากแยกกลุ่ม">
+        <div id="grpVariant">
+            <label class="admin-label" id="lblVariant" style="color:#2563eb;">ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม):</label>
+            <input type="text" id="pVariant" class="admin-input" placeholder="...">
+        </div>
 
-        <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
-        <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, 100 คูปอง">
+        <div id="grpName">
+            <label class="admin-label" id="lblName">ชื่อแพ็กเกจย่อย:</label>
+            <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, 100 คูปอง">
+        </div>
+
+        <div id="grpSubDesc">
+            <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
+            <input type="text" id="pSubDesc" class="admin-input" placeholder="คำอธิบายเพิ่มเติมของแพ็กเกจนี้">
+        </div>
 
         <label class="admin-label">ราคา (บาท):</label>
         <input type="number" id="pPrice" class="admin-input" placeholder="ราคา" required>
         
-        <label class="admin-label">ลิงก์ภาพไอคอน:</label>
-        <input type="text" id="pIconUrl" class="admin-input" placeholder="วางลิงก์รูปภาพ">
+        <div id="grpIcon">
+            <label class="admin-label">ลิงก์ภาพ / ไอคอนแอป (แนะนำ GitHub Raw):</label>
+            <input type="text" id="pIconUrl" class="admin-input" placeholder="วางลิงก์รูปภาพ">
+        </div>
         
         <button type="submit" class="admin-btn" id="saveBtn">บันทึกข้อมูลสินค้า</button>
         <button type="button" onclick="cancelEdit()" id="cancelBtn" style="display:none; background:#9ca3af; margin-top:10px;" class="admin-btn">ยกเลิกแก้ไข</button>
@@ -265,41 +243,19 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
     <div id="a-tab-shop" class="a-tab-content">
       <form id="shopInfoForm" onsubmit="saveShopInfo(event)">
-        <label class="admin-label">ชื่อร้าน / Facebook:</label>
-        <input type="text" id="shopFbInput" class="admin-input" required>
-        
-        <label class="admin-label">ไอดี Line (ใส่ @ ด้วย):</label>
-        <input type="text" id="shopLineInput" class="admin-input" required>
-        
-        <label class="admin-label">Twitter / X (ใส่ไอดี ไม่ต้องใส่ @):</label>
-        <input type="text" id="shopTwInput" class="admin-input" placeholder="เช่น wanderer_shoppp">
-
-        <label class="admin-label">ลิงก์โลโก้ร้าน:</label>
-        <input type="text" id="shopLogoInput" class="admin-input" placeholder="วางลิงก์รูปภาพ">
-
-        <label class="admin-label">ลิงก์ภาพหน้าปก / วิดีโอ GitHub (.mp4) / YouTube:</label>
-        <input type="text" id="shopCoverInput" class="admin-input" placeholder="วางลิงก์รูปภาพ หรือวิดีโอ .mp4">
-
-        <label class="admin-label">การรับประกัน:</label>
-        <textarea id="shopWarrantyInput" class="admin-input" rows="3" placeholder="เงื่อนไขการรับประกัน..."></textarea>
-        
+        <label class="admin-label">ชื่อร้าน / Facebook:</label><input type="text" id="shopFbInput" class="admin-input" required>
+        <label class="admin-label">ไอดี Line (ใส่ @ ด้วย):</label><input type="text" id="shopLineInput" class="admin-input" required>
+        <label class="admin-label">Twitter / X:</label><input type="text" id="shopTwInput" class="admin-input">
+        <label class="admin-label">ลิงก์โลโก้ร้าน:</label><input type="text" id="shopLogoInput" class="admin-input">
+        <label class="admin-label">ลิงก์ภาพหน้าปก / วิดีโอ GitHub (.mp4) / YouTube:</label><input type="text" id="shopCoverInput" class="admin-input">
+        <label class="admin-label">กรอบข้อความอธิบายภาพ/วิดีโอ (เว้นว่างได้):</label><textarea id="shopCoverDescInput" class="admin-input" rows="3"></textarea>
+        <label class="admin-label">การรับประกัน:</label><textarea id="shopWarrantyInput" class="admin-input" rows="3"></textarea>
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;">
-                <label class="admin-label">เวลาเปิด (น.):</label>
-                <input type="time" id="shopTimeOpenInput" class="admin-input" required>
-            </div>
-            <div style="flex:1;">
-                <label class="admin-label">เวลาปิด (น.):</label>
-                <input type="time" id="shopTimeCloseInput" class="admin-input" required>
-            </div>
+            <div style="flex:1;"><label class="admin-label">เวลาเปิด (น.):</label><input type="time" id="shopTimeOpenInput" class="admin-input" required></div>
+            <div style="flex:1;"><label class="admin-label">เวลาปิด (น.):</label><input type="time" id="shopTimeCloseInput" class="admin-input" required></div>
         </div>
-
-        <label class="admin-label">สถานะร้านค้า (โชว์ที่ป้ายด้านบนสุด):</label>
-        <select id="shopStatusInput" class="admin-input">
-            <option value="open">🟢 เปิดทำการปกติ</option>
-            <option value="closed">🔴 ปิดทำการชั่วคราว</option>
-        </select>
-
+        <label class="admin-label">สถานะร้านค้า:</label>
+        <select id="shopStatusInput" class="admin-input"><option value="open">🟢 เปิดทำการปกติ</option><option value="closed">🔴 ปิดทำการชั่วคราว</option></select>
         <button type="submit" class="admin-btn" style="background: #0ea5e9; margin-top:10px;">💾 บันทึกข้อมูลร้าน</button>
       </form>
     </div>
@@ -310,382 +266,311 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
         <button onclick="addTab()" class="admin-btn" style="width:80px; background:#10b981;">เพิ่ม</button>
       </div>
       <div id="adminTabList" style="margin-top:15px;"></div>
-      
-      <div style="margin-top:40px; padding-top:20px; border-top:1px dashed #ccc;">
-        <button onclick="resetData()" style="background:#ef4444;" class="admin-btn">⚠️ ล้างข้อมูลระบบทั้งหมด</button>
-      </div>
+      <div style="margin-top:40px; padding-top:20px; border-top:1px dashed #ccc;"><button onclick="resetData()" style="background:#ef4444;" class="admin-btn">⚠️ ล้างข้อมูลระบบทั้งหมด</button></div>
     </div>
   </div>
 </div>
 
 <script>
-let shopInfo = JSON.parse(localStorage.getItem('wandererShopInfo')) || { facebook: 'Wanderer Shop', line: '@997pfoig', twitter: '', logo: '', cover: '', warranty: '', openTime: '09:00', closeTime: '00:00', status: 'open' };
-let tabs = JSON.parse(localStorage.getItem('wandererTabs')) || ["สินค้า", "เติมเกม"];
+let shopInfo = JSON.parse(localStorage.getItem('wandererShopInfo')) || { 
+  facebook: 'Wanderer Shop', line: '@997pfoig', twitter: '', logo: '', cover: '', coverDesc: '', warranty: '', openTime: '09:00', closeTime: '00:00', status: 'open' 
+};
+let tabs = JSON.parse(localStorage.getItem('wandererTabs')) || ["แอพพรีเมี่ยม", "เติมเกม", "แอพ/เกม IOS-ANDROID", "เติมเหรียญนิยาย"];
 let products = JSON.parse(localStorage.getItem('wandererProducts')) || [];
-
-let currentTab = "สินค้า"; 
-let cart = []; 
-let adminTapCount = 0;
-let isAdminLoggedIn = false; // ตัวแปรสำหรับเช็คล็อกอิน
-let currentAdminCatTab = null; 
+let currentTab = tabs[0];
+let cart = [];
+let adminTapCount = 0; let isAdminLoggedIn = false; let currentAdminCatTab = null;
 
 window.onload = async () => { renderShopInfo(); renderTabs(); renderCategories(); updateAdminTabUI(); renderAdminList(); };
+function saveLocalSafely() { localStorage.setItem('wandererShopInfo', JSON.stringify(shopInfo)); localStorage.setItem('wandererTabs', JSON.stringify(tabs)); localStorage.setItem('wandererProducts', JSON.stringify(products)); }
 
-function saveLocalSafely() {
-    localStorage.setItem('wandererShopInfo', JSON.stringify(shopInfo));
-    localStorage.setItem('wandererTabs', JSON.stringify(tabs));
-    localStorage.setItem('wandererProducts', JSON.stringify(products));
-}
-
-// --- โหมดแอดมิน ---
 function handleAdminTap() {
-    if (isAdminLoggedIn) { openAdminModal(); return; } // ถ้ารหัสผ่านถูกแล้ว ให้เด้งเปิดเลย
-    adminTapCount++;
-    if(adminTapCount >= 5) {
-        adminTapCount = 0; document.getElementById('passwordModal').style.display = 'flex'; document.getElementById('adminPasswordInput').value = '';
-    }
-    setTimeout(() => { adminTapCount = 0; }, 1500);
+  if (isAdminLoggedIn) { openAdminModal(); return; }
+  adminTapCount++; if(adminTapCount >= 5) { adminTapCount = 0; document.getElementById('passwordModal').style.display = 'flex'; }
+  setTimeout(() => { adminTapCount = 0; }, 1500);
 }
 function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
 function verifyAdmin() {
-    if(document.getElementById('adminPasswordInput').value === "170647") {  
-        isAdminLoggedIn = true;
-        document.getElementById('floatingAdminBtn').style.display = 'flex'; // แสดงปุ่มลอยตัวตลอดเวลา
-        closePasswordModal(); openAdminModal(); 
-    } else { alert("รหัสผ่านไม่ถูกต้อง!"); }
+  if(document.getElementById('adminPasswordInput').value === "170647") { isAdminLoggedIn = true; document.getElementById('floatingAdminBtn').style.display = 'flex'; closePasswordModal(); openAdminModal(); } else { alert("รหัสผ่านผิด"); }
 }
 
 function openAdminModal() {
-    document.getElementById('adminModal').style.display = 'flex';
-    document.getElementById('shopFbInput').value = shopInfo.facebook;
-    document.getElementById('shopLineInput').value = shopInfo.line.replace('@', '');
-    document.getElementById('shopTwInput').value = shopInfo.twitter || '';
-    document.getElementById('shopLogoInput').value = shopInfo.logo || '';
-    document.getElementById('shopCoverInput').value = shopInfo.cover || '';
-    document.getElementById('shopWarrantyInput').value = shopInfo.warranty || '';
-    document.getElementById('shopTimeOpenInput').value = shopInfo.openTime || '09:00';
-    document.getElementById('shopTimeCloseInput').value = shopInfo.closeTime || '00:00';
-    document.getElementById('shopStatusInput').value = shopInfo.status || 'open';
+  document.getElementById('adminModal').style.display = 'flex';
+  document.getElementById('shopFbInput').value = shopInfo.facebook; document.getElementById('shopLineInput').value = shopInfo.line.replace('@', '');
+  document.getElementById('shopTwInput').value = shopInfo.twitter || ''; document.getElementById('shopLogoInput').value = shopInfo.logo || '';
+  document.getElementById('shopCoverInput').value = shopInfo.cover || ''; document.getElementById('shopCoverDescInput').value = shopInfo.coverDesc || '';
+  document.getElementById('shopWarrantyInput').value = shopInfo.warranty || ''; document.getElementById('shopTimeOpenInput').value = shopInfo.openTime || '09:00';
+  document.getElementById('shopTimeCloseInput').value = shopInfo.closeTime || '00:00'; document.getElementById('shopStatusInput').value = shopInfo.status || 'open';
+  
+  let targetSelect = document.getElementById('pTabTarget');
+  targetSelect.innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join('');
+  updateAdminFormFields(); // เรียกอัปเดตฟอร์มทันที
+  updateAdminTabUI();
 }
-function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
-
-function switchAdminModalTab(tabId, btnElement) {
-    document.querySelectorAll('.admin-modal-tabs > .a-tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.a-tab-content').forEach(content => content.classList.remove('active'));
-    btnElement.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
+function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; cancelEdit(); }
+function switchAdminModalTab(tabId, btn) {
+  document.querySelectorAll('.a-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.a-tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
+  if(tabId === 'product') renderAdminList();
 }
 
-// --- หน้าข้อมูลร้านค้า ---
-function renderShopInfo() {
-    document.getElementById('info-line-text').innerText = shopInfo.line;
-    document.getElementById('info-fb-text').innerText = shopInfo.facebook;
-    document.getElementById('info-tw-text').innerText = shopInfo.twitter || '-';
-    document.getElementById('info-time-open').innerText = shopInfo.openTime || '09:00';
-    document.getElementById('info-time-close').innerText = shopInfo.closeTime || '00:00';
-    document.getElementById('shopTitleText').innerText = shopInfo.facebook;
-    document.getElementById('shopLogoImg').src = shopInfo.logo || 'https://via.placeholder.com/150';
+// ฟังก์ชันซ่อน/แสดง ฟิลด์ของแอดมินตามแท็บที่เลือก
+function updateAdminFormFields() {
+    let tab = document.getElementById('pTabTarget').value || '';
+    let cAppDesc = document.getElementById('grpAppDesc');
+    let cVariant = document.getElementById('grpVariant');
+    let cName = document.getElementById('grpName');
+    let cSubDesc = document.getElementById('grpSubDesc');
+    let cIcon = document.getElementById('grpIcon');
+    let lblVariant = document.getElementById('lblVariant');
     
-    // จัดการหน้าปก/วิดีโอ
-    const mediaBox = document.getElementById('heroMedia');
-    if (shopInfo.cover) {
-        if (shopInfo.cover.toLowerCase().includes('.mp4')) {
-            mediaBox.innerHTML = `<video src="${shopInfo.cover}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
-        } else {
-            mediaBox.innerHTML = `<div style="width:100%; height:100%; background:url('${shopInfo.cover}') center/cover;"></div>`;
-        }
-    } else { mediaBox.innerHTML = ''; }
+    // รีเซ็ตให้แสดงทั้งหมดก่อน
+    cAppDesc.style.display = 'block'; cVariant.style.display = 'block';
+    cName.style.display = 'block'; cSubDesc.style.display = 'block'; cIcon.style.display = 'block';
+    lblVariant.innerHTML = 'ตัวเลือกแพ็กเกจ (เพื่อจัดกลุ่ม):';
 
-    // การรับประกัน
-    if (shopInfo.warranty) {
-        document.getElementById('warrantyCard').style.display = 'block';
-        document.getElementById('info-warranty-text').innerText = shopInfo.warranty;
-    } else { document.getElementById('warrantyCard').style.display = 'none'; }
-
-    const badge = document.getElementById('info-status-badge');
-    const badgeText = document.getElementById('info-status-text');
-    const topPill = document.getElementById('statusPill');
-    const topLabel = document.getElementById('statusLabel');
-
-    if(shopInfo.status === 'open') {
-        badge.className = 'status-badge open'; badgeText.innerText = 'เปิดทำการปกติ';
-        topPill.className = 'shop-status-pill status-open'; topLabel.innerText = 'OPEN';
+    // เช็คเงื่อนไขตามชื่อแท็บ
+    if (tab === 'เติมเกม') {
+        cIcon.style.display = 'none';
+        cSubDesc.style.display = 'none';
+    } else if (tab === 'แอพ/เกม IOS-ANDROID' || tab.includes('IOS-ANDROID')) {
+        cAppDesc.style.display = 'none';
+        cName.style.display = 'none';
+        cSubDesc.style.display = 'none';
+        lblVariant.innerHTML = 'ระบบที่รองรับ: 🍎 iOS / 🤖 Android';
+    } else if (tab === 'เติมเหรียญนิยาย') {
+        cAppDesc.style.display = 'none';
+        cName.style.display = 'none';
+        cSubDesc.style.display = 'none';
+        lblVariant.innerHTML = 'ระบบการใช้งาน: 🍎 iOS / 🤖 Android';
+    } else if (tab === 'แอพพรีเมี่ยม') {
+        // โชว์ทั้งหมดตามปกติ
     } else {
-        badge.className = 'status-badge closed'; badgeText.innerText = 'ปิดทำการชั่วคราว';
-        topPill.className = 'shop-status-pill status-closed'; topLabel.innerText = 'CLOSED';
+        cSubDesc.style.display = 'none'; // แท็บอื่นๆ ปิด subDesc ไว้ก่อน
     }
 }
 
-function saveShopInfo(e) {
-    e.preventDefault();
-    shopInfo.facebook = document.getElementById('shopFbInput').value;
-    shopInfo.line = '@' + document.getElementById('shopLineInput').value;
-    shopInfo.twitter = document.getElementById('shopTwInput').value;
-    shopInfo.logo = document.getElementById('shopLogoInput').value;
-    shopInfo.cover = document.getElementById('shopCoverInput').value;
-    shopInfo.warranty = document.getElementById('shopWarrantyInput').value;
-    shopInfo.openTime = document.getElementById('shopTimeOpenInput').value;
-    shopInfo.closeTime = document.getElementById('shopTimeCloseInput').value;
-    shopInfo.status = document.getElementById('shopStatusInput').value;
-    saveLocalSafely(); renderShopInfo(); alert('บันทึกข้อมูลร้านค้าแล้ว');
+function renderShopInfo() {
+  document.getElementById('shopTitleText').textContent = shopInfo.facebook;
+  document.getElementById('info-fb-text').textContent = shopInfo.facebook; document.getElementById('info-line-text').textContent = shopInfo.line;
+  document.getElementById('info-tw-text').textContent = shopInfo.twitter || '-'; document.getElementById('info-time-open').textContent = shopInfo.openTime;
+  document.getElementById('info-time-close').textContent = shopInfo.closeTime;
+  if (shopInfo.logo) document.getElementById('shopLogoImg').src = shopInfo.logo;
+
+  const warrantyCard = document.getElementById('warrantyCard');
+  if (shopInfo.warranty) { warrantyCard.style.display = 'block'; document.getElementById('info-warranty-text').textContent = shopInfo.warranty; } else { warrantyCard.style.display = 'none'; }
+
+  const heroMedia = document.getElementById('heroMedia');
+  if(shopInfo.cover && !shopInfo.cover.includes('.mp4') && !shopInfo.cover.includes('youtu')) {
+      heroMedia.style.backgroundImage = `url('${shopInfo.cover}')`; heroMedia.style.backgroundSize = 'cover'; heroMedia.style.backgroundPosition = 'center';
+  } else { heroMedia.style.backgroundImage = 'none'; }
+
+  const mediaCard = document.getElementById('mediaCard'); const mediaContainer = document.getElementById('mediaContainer'); const mediaDescContainer = document.getElementById('mediaDescContainer');
+  if (shopInfo.cover || shopInfo.coverDesc) {
+      mediaCard.style.display = 'block';
+      if (shopInfo.cover) {
+          mediaContainer.style.display = 'block';
+          if (shopInfo.cover.includes('youtu')) {
+              let ytId = shopInfo.cover.includes('youtu.be/') ? shopInfo.cover.split('youtu.be/')[1].split('?')[0] : shopInfo.cover.split('v=')[1].split('&')[0];
+              mediaContainer.innerHTML = `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          } else if (shopInfo.cover.toLowerCase().endsWith('.mp4')) { mediaContainer.innerHTML = `<video width="100%" height="auto" controls><source src="${shopInfo.cover}" type="video/mp4"></video>`;
+          } else { mediaContainer.innerHTML = `<img src="${shopInfo.cover}" style="width:100%; height:auto; display:block;">`; }
+      } else { mediaContainer.style.display = 'none'; }
+      
+      if (shopInfo.coverDesc) { mediaDescContainer.style.display = 'block'; mediaDescContainer.textContent = shopInfo.coverDesc; } else { mediaDescContainer.style.display = 'none'; }
+  } else { mediaCard.style.display = 'none'; }
+
+  updateShopStatus(shopInfo.status);
+}
+
+function saveShopInfo(e) { e.preventDefault();
+  shopInfo.facebook = document.getElementById('shopFbInput').value; shopInfo.line = '@' + document.getElementById('shopLineInput').value.replace('@', '');
+  shopInfo.twitter = document.getElementById('shopTwInput').value; shopInfo.logo = document.getElementById('shopLogoInput').value;
+  shopInfo.cover = document.getElementById('shopCoverInput').value; shopInfo.coverDesc = document.getElementById('shopCoverDescInput').value;
+  shopInfo.warranty = document.getElementById('shopWarrantyInput').value; shopInfo.openTime = document.getElementById('shopTimeOpenInput').value;
+  shopInfo.closeTime = document.getElementById('shopTimeCloseInput').value; shopInfo.status = document.getElementById('shopStatusInput').value;
+  saveLocalSafely(); renderShopInfo(); alert('บันทึกสำเร็จ!');
+}
+function updateShopStatus(status) {
+  const p = document.getElementById('statusPill'); const l = document.getElementById('statusLabel');
+  const ib = document.getElementById('info-status-badge'); const it = document.getElementById('info-status-text');
+  if (status === 'open') { p.className = 'shop-status-pill status-open'; l.textContent = 'OPEN'; ib.className = 'status-badge open'; it.textContent = 'เปิดทำการปกติ';
+  } else { p.className = 'shop-status-pill status-closed'; l.textContent = 'CLOSED'; ib.className = 'status-badge closed'; it.textContent = 'ปิดทำการชั่วคราว'; }
 }
 
 function openSocialLink(type) {
-    if(type === 'fb') window.open('https://m.me/' + shopInfo.facebook, '_blank');
-    if(type === 'line') window.open('https://line.me/R/ti/p/~' + shopInfo.line.replace('@', '%40'), '_blank');
+    if(type === 'fb') window.open('https://facebook.com/search/top?q=' + encodeURIComponent(shopInfo.facebook), '_blank');
+    if(type === 'line') window.open('https://line.me/ti/p/~' + shopInfo.line.replace('@', ''), '_blank');
     if(type === 'tw' && shopInfo.twitter) window.open('https://twitter.com/' + shopInfo.twitter, '_blank');
 }
-function copyShopInfo(e, key) {
-    e.stopPropagation(); let text = shopInfo[key] || ''; if(!text) return;
+function copyShopInfo(e, type) {
+    e.stopPropagation(); let text = type === 'facebook' ? shopInfo.facebook : (type === 'line' ? shopInfo.line : shopInfo.twitter);
+    if(!text || text === '-') return alert('ไม่มีข้อมูล');
     navigator.clipboard.writeText(text).then(() => {
-        const btn = e.target; const orig = btn.innerText;
-        btn.innerText = 'คัดลอกแล้ว!'; btn.style.background = '#10b981'; btn.style.color = 'white';
-        setTimeout(() => { btn.innerText = orig; btn.style.background = '#e5e7eb'; btn.style.color = '#4b5563'; }, 2000);
+        let btn = e.target; let oldText = btn.innerText; btn.innerText = 'คัดลอกแล้ว!'; btn.style.background = 'var(--success)'; btn.style.color = 'white';
+        setTimeout(() => { btn.innerText = oldText; btn.style.background = ''; btn.style.color = ''; }, 1500);
     });
 }
 
 function renderTabs() {
-    const container = document.getElementById('tabBar');
-    let html = `<button class="tab-btn ${currentTab === 'info' ? 'active' : ''}" onclick="switchTab('info')">ข้อมูลร้าน</button>`;
-    tabs.forEach(t => { html += `<button class="tab-btn ${currentTab === t ? 'active' : ''}" onclick="switchTab('${t}')">${t}</button>`; });
-    container.innerHTML = html;
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = `<button class="tab-btn" onclick="switchMainTab('info', this)">ข้อมูลร้าน</button>` + tabs.map(t => `<button class="tab-btn ${t===currentTab?'active':''}" onclick="switchMainTab('${t}', this)">${t}</button>`).join('');
+}
+function switchMainTab(target, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+  if (target === 'info') { document.getElementById('tab-products').classList.remove('active'); document.getElementById('tab-info').classList.add('active');
+  } else { document.getElementById('tab-info').classList.remove('active'); document.getElementById('tab-products').classList.add('active'); currentTab = target; showCategories(); }
 }
 
-function switchTab(id) {
-    currentTab = id; document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    if (id === 'info') { document.getElementById('tab-info').classList.add('active'); } 
-    else { document.getElementById('tab-products').classList.add('active'); showCategories(); renderCategories(); }
-    renderTabs();
-}
-
-function isAppGameTab(tabName) {
-    if (!tabName) return false; const name = tabName.toLowerCase();
-    return name.includes('ios') || name.includes('androi') || name.includes('เหรียญ') || name.includes('นิยาย') || name.includes('แอพ') || name.includes('เกม');
-}
-
-// หน้าหมวดหมู่สินค้า
 function renderCategories() {
-  const grid = document.getElementById('categoryGrid');
-  const filtered = products.filter(p => p.tab === currentTab);
-  const uniqueCats = [...new Set(filtered.map(p => p.cat))];
-  
-  grid.innerHTML = uniqueCats.map(cat => {
-    const catProds = filtered.filter(x => x.cat === cat);
-    const p = catProds[0];
-    let sEmoji = "🟢";
-    if(catProds.some(x => x.status === 'empty')) sEmoji = "🔴";
-    else if(catProds.some(x => x.status === 'waiting')) sEmoji = "🟠";
-
-    return `
-    <div class="category-card" onclick="openCategory('${cat}')">
-        <div class="badge-corner">${sEmoji}</div>
-        <div class="cat-icon-wrapper"><img src="${p.icon || 'https://via.placeholder.com/70'}"></div>
-        <div style="font-weight:600; font-size:15px;">${cat}</div>
-    </div>`;
-  }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้า</p>';
+  const grid = document.getElementById('categoryGrid'); const catItems = products.filter(p => p.tab === currentTab);
+  const grouped = catItems.reduce((acc, p) => {
+    if(!acc[p.cat]) acc[p.cat] = { icon: p.iconUrl, total: 0, desc: p.appDesc };
+    acc[p.cat].total++; if(!acc[p.cat].icon && p.iconUrl) acc[p.cat].icon = p.iconUrl; if(!acc[p.cat].desc && p.appDesc) acc[p.cat].desc = p.appDesc;
+    return acc;
+  }, {});
+  let html = '';
+  for(let c in grouped) {
+    let imgHtml = grouped[c].icon ? `<img src="${grouped[c].icon}">` : `<div style="font-size:30px; color:#ddd;">📦</div>`;
+    html += `<div class="category-card" onclick="openCategory('${c}')"><div class="badge-corner">${grouped[c].total}</div><div class="cat-icon-wrapper">${imgHtml}</div><div style="font-weight:600; font-size:14px; color:var(--text-dark); line-height:1.2;">${c}</div></div>`;
+  }
+  grid.innerHTML = html || `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#aaa;">ยังไม่มีสินค้าในหมวดหมู่นี้</div>`;
 }
 
-function showCategories() { document.getElementById('categoriesView').style.display = 'block'; document.getElementById('productsView').style.display = 'none'; }
-
-// หน้ารายละเอียดข้างในแอป
 function openCategory(catName) {
-  document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block';
-  
-  let items = products.filter(p => p.cat === catName && p.tab === currentTab);
-  let firstItem = items[0] || {};
+  document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block'; document.getElementById('currentCategoryTitle').textContent = catName;
+  const catProducts = products.filter(p => p.tab === currentTab && p.cat === catName);
+  const descEl = document.getElementById('currentCategoryDesc');
+  let mainDesc = catProducts.find(p => p.appDesc)?.appDesc || '';
+  if(mainDesc) { descEl.style.display = 'block'; descEl.textContent = mainDesc; } else { descEl.style.display = 'none'; }
 
-  // แจ้งเตือนแค่ตรงหัวแอป
-  let sTitleWarn = "";
-  if(items.some(x => x.status === 'empty')) sTitleWarn = `<span style="color:var(--danger); font-size:16px;">(🔴 ไม่พร้อมให้บริการ)</span>`;
-  else if(items.some(x => x.status === 'waiting')) sTitleWarn = `<span style="color:var(--warning); font-size:16px;">(🟠 รอแก้ราคา)</span>`;
-
-  document.getElementById('currentCategoryTitle').innerHTML = `${catName} ${sTitleWarn}`;
-  
-  // รายละเอียดใต้ชื่อแอป
-  let descEl = document.getElementById('currentCategoryDesc');
-  if (firstItem.appDesc) { descEl.innerText = firstItem.appDesc; descEl.style.display = 'block'; } 
-  else { descEl.style.display = 'none'; }
-  
-  const grouped = {};
-  items.forEach(p => { const v = p.variant || "ทั่วไป"; if (!grouped[v]) grouped[v] = []; grouped[v].push(p); });
-  
+  const grouped = catProducts.reduce((acc, p) => { let v = p.variant || "ทั่วไป"; if(!acc[v]) acc[v] = []; acc[v].push(p); return acc; }, {});
   let html = '';
-  for (const v in grouped) {
-      html += `<div class="variant-block"><div class="variant-label">${v}</div>`;
-      html += grouped[v].map(p => {
-        const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
-        const isDisable = p.status === 'empty' || p.status === 'waiting';
-        const disabledClass = isDisable ? 'disabled' : '';
-        const onclickAction = isDisable ? `onclick="alert('แพ็กเกจนี้ยังไม่พร้อมให้บริการ หรือ รอแก้ราคาค่ะ');"` : `onclick="toggleItem('${p.id}')"`;
-
-        return `<div class="product-item ${isSel} ${disabledClass}" ${onclickAction}>
-          <div style="flex:2;">
-            <div style="font-weight:600; font-size:15px;">${p.name || '-'}</div>
-          </div>
-          <div style="flex:1; text-align:right; color:var(--primary); font-weight:bold; font-size:16px;">฿${p.price}</div>
-        </div>`;
-      }).join(''); html += `</div>`;
+  for(let v in grouped) {
+    html += v !== "ทั่วไป" ? `<div class="variant-block"><div class="variant-label">${v}</div>` : `<div class="variant-block">`;
+    grouped[v].forEach(p => {
+      let isSel = cart.find(x => x.id === p.id); let sDot = p.status === 'ready' ? '🟢' : (p.status === 'empty' ? '🔴' : '🟠');
+      let statusText = p.status === 'ready' ? '' : (p.status === 'empty' ? ' <span style="color:red;font-size:12px;">(สินค้าหมด)</span>' : ' <span style="color:orange;font-size:12px;">(รอแก้)</span>');
+      let disClass = p.status === 'ready' ? '' : 'disabled';
+      
+      // เพิ่มการโชว์ subDesc (รายละเอียดย่อย) ตรงนี้
+      let subDescHtml = p.subDesc ? `<div style="font-size:12.5px; color:#6b7280; margin-top:3px;">- ${p.subDesc}</div>` : '';
+      let displayName = p.name || p.cat; // ถ้าไม่มีชื่อย่อย (เช่น แอพ IOS-ANDROID) ให้แสดงชื่อหมวดหมู่
+      
+      html += `<div class="product-item ${isSel?'selected':''} ${disClass}" ${p.status === 'ready' ? `onclick="toggleCart('${p.id}')"` : ''} id="item-${p.id}">
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:15px; color:var(--text-dark);">${sDot} ${displayName}${statusText}</div>
+          ${subDescHtml}
+          <div style="color:var(--primary); font-weight:700; font-size:16px; margin-top:3px;">฿${p.price}</div>
+        </div>
+        <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${isSel?'var(--primary)':'#ddd'}; background:${isSel?'var(--primary)':'transparent'}; display:flex; align-items:center; justify-content:center;">
+          ${isSel ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+        </div>
+      </div>`;
+    }); html += `</div>`;
   }
   document.getElementById('productGrid').innerHTML = html;
 }
 
-// Logic คำนวณตะกร้า Original (002.txt)
-function getCalculatedCart() {
-    let appItems = []; let otherItems = [];
-    cart.forEach(i => { if(isAppGameTab(i.tab)) appItems.push({...i}); else otherItems.push({...i}); });
+function showCategories() { document.getElementById('productsView').style.display = 'none'; document.getElementById('categoriesView').style.display = 'block'; renderCategories(); }
 
-    let isBulkAll = (appItems.length >= 164);
-    let processedCart = []; let total = 0; let activePromos = []; 
-    otherItems.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
-
-    if (isBulkAll) {
-        appItems.forEach(item => { processedCart.push({...item, effectivePrice: 0, isPromo: true, promoLabel: "รวมในโปรเหมา"}); });
-        total += 3000; activePromos.push("เหมาทุกแอพ 164 แอพ 3,000฿");
-    } else {
-        let appsPromo = []; let ineligibleApps = [];
-        appItems.forEach(item => { if (item.price >= 20 && item.price <= 25) { appsPromo.push(item); } else { ineligibleApps.push(item); } });
-        ineligibleApps.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
-        appsPromo.sort((a, b) => b.price - a.price);
-
-        let count = appsPromo.length; let idx = 0; let b30 = 0, b15 = 0, b8 = 0, b3 = 0, b2_25 = 0;
-        while(idx + 30 <= count) { b30++; for(let i=0; i<30; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 360/30, isPromo: true, promoLabel: "โปร 30 แอพ"}); total += 360; }
-        while(idx + 15 <= count) { b15++; for(let i=0; i<15; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 210/15, isPromo: true, promoLabel: "โปร 15 แอพ"}); total += 210; }
-        while(idx + 8 <= count) { b8++; for(let i=0; i<8; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 80/8, isPromo: true, promoLabel: "โปร 8 แอพ"}); total += 80; }
-        while(idx + 3 <= count) { b3++; for(let i=0; i<3; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 45/3, isPromo: true, promoLabel: "โปร 3 แอพ"}); total += 45; }
-        let remaining = count - idx;
-        if (remaining === 2 && appsPromo[idx].price === 25 && appsPromo[idx+1].price === 25) {
-            b2_25++; processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"}); processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"}); total += 45;
-        } else { while(idx < count) { processedCart.push({...appsPromo[idx], effectivePrice: appsPromo[idx].price, isPromo: false}); total += appsPromo[idx].price; idx++; } }
-
-        if (b30 > 0) activePromos.push(`โปร 30 แอพ 360฿ (${b30} ชุด)`); if (b15 > 0) activePromos.push(`โปร 15 แอพ 210฿ (${b15} ชุด)`);
-        if (b8 > 0) activePromos.push(`โปร 8 แอพ 80฿ (${b8} ชุด)`); if (b3 > 0) activePromos.push(`โปร 3 แอพ 45฿ (${b3} ชุด)`);
-        if (b2_25 > 0) activePromos.push(`โปรคู่แอพ 25฿ (${b2_25} ชุด)`);
-    }
-
-    let finalSorted = [];
-    cart.forEach(originalItem => { let foundIdx = processedCart.findIndex(p => p.id === originalItem.id); if(foundIdx > -1) { finalSorted.push(processedCart[foundIdx]); processedCart.splice(foundIdx, 1); } });
-    return { items: finalSorted, total, isBulkAll, activePromos };
-}
-
-function toggleItem(id) {
-  let p = products.find(x => x.id === id);
-  if (p.status === 'empty' || p.status === 'waiting') return; // ป้องกันการกด
-  const idx = cart.findIndex(c => c.id === id);
-  if(idx > -1) { cart.splice(idx, 1); } else { cart.push({...p}); }
-  const calcInfo = getCalculatedCart();
-  document.getElementById('cartCount').innerText = cart.length; document.getElementById('cartTotal').innerText = calcInfo.total;
-  document.getElementById('bottomBar').classList.toggle('active', cart.length > 0);
-  openCategory(p.cat);
-}
-
-function openCartSummary() {
-  if(cart.length === 0) return;
-  let calcInfo = getCalculatedCart(); let html = ''; 
-  calcInfo.items.forEach((item, index) => {
-    let priceDisplay = `฿${item.price}`;
-    if (calcInfo.isBulkAll && isAppGameTab(item.tab)) priceDisplay = `<span style="color:var(--primary); font-weight:bold; font-size:12px;">รวมในเหมา</span>`;
-    else if (item.isPromo) priceDisplay = `<span style="text-decoration:line-through; color:#999; font-size:12px;">฿${item.price}</span> <span style="color:var(--success); font-weight:bold;">${item.promoLabel}</span>`;
-    let dispName = (item.name && item.name !== '-') ? item.name : '';
-    html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px;">
-       <div style="flex: 1;"><span style="font-weight: 600;">${index + 1}. ${item.cat}</span><br>
-         <span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${dispName}</span>
-       </div><div style="font-weight: bold; text-align:right;">${priceDisplay}</div>
-    </div>`; 
-  });
-  if (calcInfo.isBulkAll) html += `<div style="text-align:center; padding: 10px; background:#fdf4ff; color:var(--primary); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:14px;">🎉 เปิดใช้ราคาโปรเหมา 3,000฿ สำเร็จ!</div>`;
-  else if (calcInfo.activePromos.length > 0) html += `<div style="text-align:center; padding: 10px; background:#f0fdf4; color:var(--success); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:13px;">🎉 ยินดีด้วย! คุณได้รับ ${calcInfo.activePromos.join(' และ ')}</div>`;
-  document.getElementById('cartSummaryList').innerHTML = html; document.getElementById('cartSummaryTotal').innerText = calcInfo.total;
-  document.getElementById('cartSummaryModal').style.display = 'flex';
-}
-function closeCartSummary() { document.getElementById('cartSummaryModal').style.display = 'none'; }
-
-// ข้อความ Line แบบ Original 100%
-function confirmCheckout() {
-  if(cart.length === 0) return;
-  let calcInfo = getCalculatedCart(); let text = ""; 
-  let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab)); let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
-  
-  if (appItems.length > 0 && otherItems.length === 0) {
-      let appLines = appItems.map(i => { let appNameStr = (i.name && i.name !== i.cat && i.name !== '-') ? `${i.cat} ${i.name}` : i.cat; return `🍃 ݂  ${appNameStr} 𓈒`; }).join('\n'); 
-      text = `🛒 *รายการสั่งซื้อ (${shopInfo.facebook})*\n---------------------------\n✿  𓈒  รวมยอด    ꒰  ${calcInfo.total}฿  ꒱   ݂🎐♡\n${appLines}\n---------------------------\nรบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
-  } else {
-      text = `🛒 *รายการสั่งซื้อ (${shopInfo.facebook})*\n---------------------------\n`; let isGameTopup = false; 
-      calcInfo.items.forEach((item, index) => { 
-         let priceStr = `${item.price} บาท`;
-         if (calcInfo.isBulkAll && isAppGameTab(item.tab)) priceStr = "รวมในโปรเหมา"; else if (item.isPromo) priceStr = `ลดเหลือ (${item.promoLabel})`;
-         let dispName = (item.name && item.name !== '-') ? item.name : '';
-         text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${dispName}\n   ราคา: ${priceStr}\n`; 
-         if (item.tab === "เติมเกม") isGameTopup = true; 
-      });
-      text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${calcInfo.total} บาท*\n---------------------------\n`;
-      if (calcInfo.isBulkAll) text += `🎉 *ได้รับโปรเหมาแอพสุดคุ้ม 3,000 บาท*\n`; else if (calcInfo.activePromos.length > 0) text += `🎉 *ได้รับส่วนลดโปรโมชั่นแอพ*\n`;
-      if (isGameTopup) { text += "📌 *แจ้งไอดี / รหัสผ่าน ได้เลยค่ะ*\n"; } else { text += "รบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏"; }
+function toggleCart(id) {
+  const idx = cart.findIndex(x => x.id === id);
+  if(idx > -1) { cart.splice(idx, 1); } else { const p = products.find(x => x.id === id); if(p && p.status === 'ready') cart.push({...p}); }
+  updateCartUI();
+  const el = document.getElementById('item-'+id);
+  if(el) {
+    el.classList.toggle('selected'); let circle = el.querySelector('div:last-child');
+    if(idx > -1) { circle.style.borderColor = '#ddd'; circle.style.background = 'transparent'; circle.innerHTML = ''; } 
+    else { circle.style.borderColor = 'var(--primary)'; circle.style.background = 'var(--primary)'; circle.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'; }
   }
-  navigator.clipboard.writeText(text).then(() => {
-    alert("✅ คัดลอกรายการสั่งซื้อเรียบร้อยแล้ว!\nระบบกำลังพาคุณไปที่ LINE ของร้าน...");
-    cart = []; document.getElementById('cartCount').innerText = "0"; document.getElementById('cartTotal').innerText = "0"; document.getElementById('bottomBar').classList.remove('active');
-    let catTitleStr = document.getElementById('currentCategoryTitle').innerText.split(' ')[0];
-    openCategory(catTitleStr); closeCartSummary(); window.open(`https://line.me/R/ti/p/~${shopInfo.line.replace('@', '%40')}`, '_blank');
-  });
 }
 
-// ฟังก์ชันแอดมินแก้ไขข้อมูล
-function updateAdminTabUI() {
-  document.getElementById('adminTabList').innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; background:#f8f9fa; padding:10px 15px; border-radius:8px; margin-top:5px; border:1px solid #eee;"><span style="font-weight:500;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; font-weight:bold; cursor:pointer;">ลบ</button></div>`).join('');
-  document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join('');
+function updateCartUI() {
+  const bar = document.getElementById('bottomBar');
+  if(cart.length > 0) {
+    bar.classList.add('active'); document.getElementById('cartCount').textContent = cart.length;
+    document.getElementById('cartTotal').textContent = cart.reduce((s, c) => s + Number(c.price), 0);
+  } else { bar.classList.remove('active'); }
 }
-function addTab() {
-  const name = document.getElementById('newTabInput').value.trim();
-  if (name && !tabs.includes(name)) { tabs.push(name); saveLocalSafely(); updateAdminTabUI(); renderTabs(); document.getElementById('newTabInput').value = ""; }
+
+function confirmCheckout() {
+  if(cart.length === 0) return; let text = "🛒 สั่งซื้อสินค้า\n\n"; let total = 0;
+  cart.forEach((c, i) => { total += Number(c.price); text += `${i+1}. ${c.cat} ${c.variant ? `[${c.variant}]` : ''} ${c.name ? `- ${c.name}` : ''} = ${c.price} บ.\n`; });
+  text += `\nยอดรวม: ${total} บาท\n`;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("คัดลอกรายการสั่งซื้อเรียบร้อย! ระบบจะพาไปที่ Line ของร้าน");
+    cart = []; updateCartUI(); 
+    if(document.getElementById('productsView').style.display === 'block') openCategory(document.getElementById('currentCategoryTitle').textContent);
+    openSocialLink('line');
+  });
 }
-function deleteTab(i) { if(confirm("ลบแท็บนี้สินค้าด้านในจะหายทั้งหมด ยืนยันไหม?")) { tabs.splice(i, 1); saveLocalSafely(); updateAdminTabUI(); renderTabs(); } }
 
 function saveProduct(e) {
-  e.preventDefault(); const id = document.getElementById('editId').value || 'p' + Date.now();
-  const newP = {
-    id: id, tab: document.getElementById('pTabTarget').value,
-    cat: document.getElementById('pCat').value.trim(), status: document.getElementById('pStatus').value,
-    appDesc: document.getElementById('pAppDesc').value.trim(), variant: document.getElementById('pVariant').value.trim(), 
-    name: document.getElementById('pName').value.trim(), price: parseInt(document.getElementById('pPrice').value) || 0, icon: document.getElementById('pIconUrl').value.trim()
+  e.preventDefault(); const id = document.getElementById('editId').value;
+  const p = {
+    id: id || Date.now().toString(), tab: document.getElementById('pTabTarget').value,
+    cat: document.getElementById('pCat').value, status: document.getElementById('pStatus').value,
+    appDesc: document.getElementById('pAppDesc').value, variant: document.getElementById('pVariant').value,
+    name: document.getElementById('pName').value, subDesc: document.getElementById('pSubDesc').value, // บันทึก subDesc
+    price: document.getElementById('pPrice').value, iconUrl: document.getElementById('pIconUrl').value
   };
-  const idx = products.findIndex(p => p.id === id); if(idx > -1) products[idx] = newP; else products.push(newP);
-  saveLocalSafely(); cancelEdit(); renderAdminList(); renderCategories();
+  if(id) { const idx = products.findIndex(x => x.id === id); if(idx > -1) products[idx] = p; } else { products.push(p); }
+  saveLocalSafely(); cancelEdit(); renderAdminList();
+  if(document.getElementById('productsView').style.display === 'none') renderCategories();
 }
 
 function editProduct(id) {
-  const p = products.find(item => item.id === id);
-  if(p) {
-    document.getElementById('editId').value = p.id; document.getElementById('pTabTarget').value = p.tab;
-    document.getElementById('pCat').value = p.cat; document.getElementById('pStatus').value = p.status || 'ready';
-    document.getElementById('pAppDesc').value = p.appDesc || ''; document.getElementById('pVariant').value = p.variant || ''; 
-    document.getElementById('pName').value = p.name || ''; document.getElementById('pPrice').value = p.price; document.getElementById('pIconUrl').value = p.icon || '';
-    document.getElementById('saveBtn').innerText = "อัปเดตสินค้า"; document.getElementById('saveBtn').style.background = "#059669";
-    document.getElementById('cancelBtn').style.display = "block"; document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  const p = products.find(x => x.id === id); if(!p) return;
+  document.getElementById('editId').value = p.id; document.getElementById('pTabTarget').value = p.tab;
+  updateAdminFormFields(); // อัปเดตฟิลด์ที่โชว์ก่อนค่อยยัดค่า
+  document.getElementById('pCat').value = p.cat; document.getElementById('pStatus').value = p.status || 'ready';
+  document.getElementById('pAppDesc').value = p.appDesc || ''; document.getElementById('pVariant').value = p.variant || '';
+  document.getElementById('pName').value = p.name || ''; document.getElementById('pSubDesc').value = p.subDesc || '';
+  document.getElementById('pPrice').value = p.price; document.getElementById('pIconUrl').value = p.iconUrl || '';
+  
+  document.getElementById('saveBtn').textContent = "บันทึกการแก้ไข"; document.getElementById('cancelBtn').style.display = "block";
+  document.getElementById('adminModal').scrollTo(0, 0);
+}
+
+function deleteProduct(id) {
+  if(confirm("ต้องการลบสินค้านี้ใช่หรือไม่?")) { products = products.filter(x => x.id !== id); saveLocalSafely(); renderAdminList(); if(document.getElementById('productsView').style.display === 'none') renderCategories(); }
 }
 function cancelEdit() {
-  document.getElementById('adminForm').reset(); document.getElementById('editId').value = ""; 
-  document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
-  document.getElementById('cancelBtn').style.display = "none";
+  document.getElementById('adminForm').reset(); document.getElementById('editId').value = '';
+  document.getElementById('saveBtn').textContent = "เพิ่มสินค้าใหม่"; document.getElementById('cancelBtn').style.display = "none";
+  updateAdminFormFields();
+}
+
+function updateAdminTabUI() {
+  const list = document.getElementById('adminTabList');
+  list.innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; padding:10px; background:#f9fafb; margin-bottom:5px; border-radius:8px;"><span style="font-weight:600;">${t}</span><button onclick="deleteTab(${i})" style="color:red; border:none; background:none; cursor:pointer;">ลบ</button></div>`).join('');
+  renderTabs();
+}
+
+function addTab() {
+  const input = document.getElementById('newTabInput');
+  if(input.value.trim()) { tabs.push(input.value.trim()); input.value = ''; saveLocalSafely(); updateAdminTabUI(); document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join(''); renderAdminList(); }
+}
+function deleteTab(idx) {
+  if(confirm(`ต้องการลบแท็บ "${tabs[idx]}" ใช่หรือไม่?`)) { tabs.splice(idx, 1); saveLocalSafely(); updateAdminTabUI(); document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join(''); renderAdminList(); }
 }
 
 function renderAdminList() {
-  if (!currentAdminCatTab && tabs.length > 0) currentAdminCatTab = tabs[0];
-  document.getElementById('adminCategoryTabs').innerHTML = tabs.map(t => `<button type="button" class="a-tab-btn ${currentAdminCatTab === t ? 'active' : ''}" onclick="currentAdminCatTab='${t}'; renderAdminList();">${t}</button>`).join('');
-
-  const filteredProducts = products.filter(p => p.tab === currentAdminCatTab); let html = '';
-  filteredProducts.forEach(p => {
+  if(!currentAdminCatTab && tabs.length > 0) currentAdminCatTab = tabs[0];
+  document.getElementById('adminCategoryTabs').innerHTML = tabs.map(t => `<button class="a-tab-btn ${t === currentAdminCatTab ? 'active' : ''}" onclick="currentAdminCatTab='${t}'; renderAdminList();">${t}</button>`).join('');
+  let html = '';
+  products.filter(p => p.tab === currentAdminCatTab).forEach(p => {
     let sDot = p.status === 'ready' ? '🟢' : (p.status === 'empty' ? '🔴' : '🟠');
     html += `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px; display:flex; justify-content:space-between; align-items:center;">
-        <div>${sDot} <span style="font-weight:600; color:var(--primary);">${p.cat}</span>: ${p.name || '-'}<br>
-          <small style="color:gray;">${p.variant ? `[${p.variant}]` : ''}</small> - ฿${p.price}</div>
-        <div><button type="button" onclick="editProduct('${p.id}')" style="color:#2563eb; border:none; background:none; font-weight:600; cursor:pointer; margin-right:10px;">แก้ไข</button>
-             <button type="button" onclick="deleteProduct('${p.id}')" style="color:#ef4444; border:none; background:none; font-weight:600; cursor:pointer;">ลบ</button></div>
+        <div>${sDot} <span style="font-weight:600; color:var(--primary);">${p.cat}</span>: ${p.name || '-'}<br><small style="color:gray;">${p.variant ? `[${p.variant}]` : ''}</small> - ฿${p.price}</div>
+        <div><button type="button" onclick="editProduct('${p.id}')" style="color:#2563eb; border:none; background:none; font-weight:600; cursor:pointer; margin-right:10px;">แก้ไข</button><button type="button" onclick="deleteProduct('${p.id}')" style="color:#ef4444; border:none; background:none; font-weight:600; cursor:pointer;">ลบ</button></div>
     </div>`;
   });
-  document.getElementById('adminProductList').innerHTML = html || '<div style="text-align:center; padding:30px; color:#9ca3af;">ยังไม่มีสินค้า</div>';
+  document.getElementById('adminProductList').innerHTML = html || '<div style="text-align:center; padding:30px; color:#aaa;">ไม่มีสินค้า</div>';
 }
-function deleteProduct(id) { if(confirm("ยืนยันการลบสินค้านี้?")) { products = products.filter(p => p.id !== id); saveLocalSafely(); renderAdminList(); renderCategories(); } }
-function resetData() { if(confirm("⚠️ ล้างระบบทั้งหมด ยืนยันหรือไม่?")) { localStorage.clear(); location.reload(); } }
+function resetData() { if(prompt('พิมพ์ "RESET" เพื่อยืนยันการล้างข้อมูลทั้งหมด') === "RESET") { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
