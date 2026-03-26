@@ -8,7 +8,7 @@
 <style>
 /* --- Design System --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-:root { --primary: #b026ff; --secondary: #00d2ff; --bg-main: #f4f5f7; --bg-card: #ffffff; --text-muted: #6b7280; --glow: rgba(176,38,255,0.5); --text-dark: #1f2937; --white: #ffffff; --success: #10b981; --danger: #ef4444; }
+:root { --primary: #b026ff; --secondary: #00d2ff; --bg-main: #f4f5f7; --bg-card: #ffffff; --text-muted: #6b7280; --glow: rgba(176,38,255,0.5); --text-dark: #1f2937; --white: #ffffff; --success: #10b981; --danger: #ef4444; --warning: #f39c12; }
 body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(--text-dark); overflow-x: hidden; padding-bottom: 110px; }
 
 .bg-glow-1 { position: fixed; top: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(176,38,255,0.1) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; }
@@ -65,6 +65,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .status-dot-sm { width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse 1.5s infinite; }
 .c-status-ready { background: var(--success); }
 .c-status-empty { background: var(--danger); }
+.c-status-waiting { background: var(--warning); } /* เพิ่มสีส้ม */
 
 .sys-opts { display: flex; gap: 5px; justify-content: center; width: 100%; margin-top: 10px; flex-wrap: wrap; }
 .sys-btn { flex: 1; min-width: 30%; padding: 5px 2px; font-size: 10px; border-radius: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; color: #6b7280; cursor: pointer; transition: 0.2s; font-weight: 600; text-align: center; white-space: nowrap; }
@@ -230,7 +231,8 @@ textarea.admin-input { resize: vertical; }
             <label class="admin-label">สถานะสินค้า:</label>
             <select id="pStatus" class="admin-input">
                 <option value="ready">🟢 พร้อมส่ง</option>
-                <option value="empty">🔴 ไม่พร้อม/หมด</option>
+                <option value="empty">🔴 ไม่พร้อม</option>
+                <option value="waiting">🟠 รอแก้ราคา</option>
             </select>
         </div>
         
@@ -247,7 +249,7 @@ textarea.admin-input { resize: vertical; }
             <label class="admin-label">ชื่อแพ็กเกจย่อย:</label>
             <input type="text" id="pName" class="admin-input" placeholder="เช่น 1 เดือน, ถาวร">
 
-            <div id="packDescGroup" style="display:none;">
+            <div id="packDescGroup">
                 <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้):</label>
                 <input type="text" id="pPackDesc" class="admin-input" placeholder="โปรโมชั่นเสริม">
             </div>
@@ -324,7 +326,7 @@ textarea.admin-input { resize: vertical; }
         <input type="text" id="shopHoursInput" class="admin-input" required>
         <label class="admin-label">การรับประกัน:</label>
         <input type="text" id="shopWarrantyInput" class="admin-input" required>
-
+        
         <button type="submit" class="admin-btn" id="saveShopBtn" style="background: #0ea5e9;">💾 บันทึกข้อมูลร้าน</button>
       </form>
     </div>
@@ -335,7 +337,7 @@ textarea.admin-input { resize: vertical; }
         <button onclick="addTab()" class="admin-btn" style="width:80px; margin-bottom:0; background:#10b981;">เพิ่ม</button>
       </div>
       <div id="adminTabList" style="margin-top:15px;"></div>
-      
+
       <div style="margin-top:40px; padding-top:20px; border-top:1px dashed #ccc;">
         <button onclick="resetData()" style="background:#ef4444;" class="admin-btn">⚠️ ล้างข้อมูลระบบทั้งหมด</button>
       </div>
@@ -350,749 +352,460 @@ textarea.admin-input { resize: vertical; }
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyUI0Y29tFWesmA8YyKnFaCLkJPC1nUGRyudIVbItol-vY-STTK9ION4-vBrZ4kjQK3hA/exec';
 
 function saveLocalSafely() {
-    try {
-        localStorage.setItem('wandererShopInfo', JSON.stringify(shopInfo));
-        localStorage.setItem('wandererTabs', JSON.stringify(tabs));
-        localStorage.setItem('wandererProducts', JSON.stringify(products));
-    } catch (e) { console.warn("Local storage full"); }
+  try {
+    localStorage.setItem('wandererShopInfo', JSON.stringify(shopInfo));
+    localStorage.setItem('wandererTabs', JSON.stringify(tabs));
+    localStorage.setItem('wandererProducts', JSON.stringify(products));
+  } catch (e) {
+    console.warn("Local storage full");
+  }
 }
 
 async function syncToServer() {
-    try {
-        await fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ 
-                action: 'updateDatabase', 
-                payload: { shopInfo: shopInfo, tabs: tabs, products: products } 
-            })
-        });
-        return true;
-    } catch (error) { 
-        console.error(error);
-        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheets กรุณาลองใหม่อีกครั้ง");
-        return false;
-    }
+  try {
+    await fetch(GOOGLE_SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'updateDatabase',
+        payload: { shopInfo: shopInfo, tabs: tabs, products: products }
+      })
+    });
+    return true;
+  } catch (error) {
+    console.error(error);
+    alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheets");
+    return false;
+  }
 }
 
 async function fetchFromServer() {
-    try {
-        const response = await fetch(GOOGLE_SHEETS_URL + '?t=' + new Date().getTime());
-        const data = await response.json();
-        if (data) {
-            if (data.shopInfo) shopInfo = data.shopInfo;
-            if (data.tabs) tabs = data.tabs;
-            if (data.products) products = data.products;
-            saveLocalSafely();
-        }
-    } catch (error) { console.error('Fetch error:', error); }
+  try {
+    const response = await fetch(GOOGLE_SHEETS_URL + '?t=' + new Date().getTime());
+    const data = await response.json();
+    if (data) {
+      if (data.shopInfo) shopInfo = data.shopInfo;
+      if (data.tabs) tabs = data.tabs;
+      if (data.products) products = data.products;
+      saveLocalSafely();
+    }
+  } catch (error) { console.error('Fetch error:', error); }
 }
 
 const DEFAULT_LOGO = 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400&q=80';
 let shopInfo = JSON.parse(localStorage.getItem('wandererShopInfo')) || { line: '@997pfoig', facebook: 'Wanderer Shop', hours: '11:00 - 00:00 น.', warranty: 'ประกันตลอดชีพ', logo: DEFAULT_LOGO, status: 'OPEN', media: '' };
 let tabs = JSON.parse(localStorage.getItem('wandererTabs')) || ["สินค้า"];
-tabs = tabs.filter(t => t !== "จัดการ"); 
 let products = JSON.parse(localStorage.getItem('wandererProducts')) || [];
-
-let currentTab = "สินค้า"; 
-let cart = []; 
+let currentTab = "สินค้า";
+let cart = [];
 let isAdminLoggedIn = false;
-let selectedSystems = {}; 
-let currentAdminCatTab = null; 
-let currentSort = 'default'; 
+let currentSort = 'default';
 
 window.onload = async () => {
-    fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ type: 'เข้าชมเว็บไซต์', items: '-', total: 0, viewCount: 1 })
-    }).catch(e => console.log(e));
-
-    await fetchFromServer(); 
-    renderShopInfo(); renderTabs(); renderCategories(); updateAdminTabUI(); renderAdminList();
-    
-    document.getElementById('pIconUrl').addEventListener('input', function() {
-        const url = this.value;
-        if(url) { document.getElementById('pIconPreview').src = url; document.getElementById('pIconPreview').style.display = 'block'; }
-        else { document.getElementById('pIconPreview').style.display = 'none'; }
-    });
-    document.getElementById('shopLogoUrl').addEventListener('input', function() {
-        const url = this.value;
-        if(url) { document.getElementById('shopLogoPreview').src = url; document.getElementById('shopLogoPreview').style.display = 'block'; }
-        else { document.getElementById('shopLogoPreview').style.display = 'none'; }
-    });
-    document.getElementById('shopMediaUrl').addEventListener('input', function() {
-        const url = this.value;
-        const mPreview = document.getElementById('shopMediaPreview');
-        if(url) { 
-            mPreview.style.display = 'block';
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                mPreview.innerHTML = `<div style="padding:10px; background:#eee; border-radius:5px; font-size:12px;">✅ ลิงก์ YouTube</div>`;
-            } else if (url.endsWith('.mp4') || url.includes('.mp4?')) {
-                mPreview.innerHTML = `<div style="padding:10px; background:#eee; border-radius:5px; font-size:12px;">✅ ไฟล์วิดีโอ .mp4</div>`;
-            } else {
-                mPreview.innerHTML = `<img src="${url}" style="width:100%; height:auto; object-fit:cover; pointer-events:none;">`;
-            }
-        } else { mPreview.style.display = 'none'; }
-    });
+  await fetchFromServer();
+  renderAll();
+  setupImagePreview('pIconUrl', 'pIconPreview');
+  setupImagePreview('shopLogoUrl', 'shopLogoPreview');
+  setupMediaPreview('shopMediaUrl', 'shopMediaPreview');
 };
 
-function isAppGameTab(tabName) {
-    if (!tabName) return false;
-    const name = tabName.toLowerCase();
-    // คลุมทั้งหมวดแอพ/เกม และ เติมเหรียญนิยาย
-    return name.includes('ios') || name.includes('androi') || name.includes('เหรียญ') || name.includes('นิยาย');
+function renderAll() {
+  renderShopInfo();
+  renderTabs();
+  renderCategories();
+  renderAdminProducts();
+  renderAdminTabs();
 }
 
-function toggleAdminFieldsByTab() {
-    const tabEl = document.getElementById('pTabTarget');
-    if(!tabEl) return;
-    const tabName = tabEl.value;
-    const isAppTab = isAppGameTab(tabName);
-    
-    if(isAppTab) {
-        document.getElementById('standardProductFields').style.display = 'none';
-        document.getElementById('appGameProductFields').style.display = 'block';
-        toggleDescFields(); 
-    } else {
-        document.getElementById('standardProductFields').style.display = 'block';
-        document.getElementById('appGameProductFields').style.display = 'none';
-    }
+function renderShopInfo() {
+  document.getElementById('info-line').innerText = shopInfo.line;
+  document.getElementById('info-fb').innerText = shopInfo.facebook;
+  document.getElementById('info-hours').innerText = shopInfo.hours;
+  document.getElementById('info-warranty').innerText = shopInfo.warranty;
+  document.getElementById('shopTitleText').innerText = shopInfo.facebook;
+  document.getElementById('shopLogoImg').src = shopInfo.logo;
+  
+  const pill = document.getElementById('statusPill');
+  const label = document.getElementById('statusLabel');
+  if (shopInfo.status === 'OPEN') {
+    pill.className = 'shop-status-pill status-open';
+    label.innerText = 'OPEN';
+  } else {
+    pill.className = 'shop-status-pill status-closed';
+    label.innerText = 'CLOSED';
+  }
 
-    const packDescGroup = document.getElementById('packDescGroup');
-    if (tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium')) {
-        packDescGroup.style.display = 'block';
+  const mediaArea = document.getElementById('mediaCoverArea');
+  const mediaBox = document.getElementById('mediaBox');
+  if (shopInfo.media) {
+    mediaArea.style.display = 'block';
+    if (shopInfo.media.includes('youtube.com') || shopInfo.media.includes('youtu.be')) {
+      let vidId = shopInfo.media.split('v=')[1] || shopInfo.media.split('/').pop();
+      mediaBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe>`;
+    } else if (shopInfo.media.endsWith('.mp4')) {
+      mediaBox.innerHTML = `<video src="${shopInfo.media}" autoplay muted loop playsinline></video>`;
     } else {
-        packDescGroup.style.display = 'none';
+      mediaBox.innerHTML = `<img src="${shopInfo.media}">`;
     }
-
-    const statusGroup = document.getElementById('statusFieldGroup');
-    if (tabName.includes('เติมเกม') || isAppTab) {
-        statusGroup.style.display = 'block';
-    } else {
-        statusGroup.style.display = 'none';
-        document.getElementById('pStatus').value = 'ready'; 
-    }
-}
-
-function toggleDescFields() {
-    document.getElementById('iosDescGroup').style.display = document.getElementById('pSysIos').checked ? 'block' : 'none';
-    document.getElementById('androidDescGroup').style.display = document.getElementById('pSysAndroid').checked ? 'block' : 'none';
+  } else {
+    mediaArea.style.display = 'none';
+  }
 }
 
 function renderTabs() {
-  const container = document.getElementById('tabBar');
-  let html = `<button class="tab-btn ${currentTab === 'info' ? 'active' : ''}" onclick="switchTab('info')">ข้อมูลร้าน</button>`;
-  tabs.forEach(t => { html += `<button class="tab-btn ${currentTab === t ? 'active' : ''}" onclick="switchTab('${t}')">${t}</button>`; });
-  container.innerHTML = html;
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = `<button class="tab-btn ${currentTab === 'info' ? 'active' : ''}" onclick="switchTab('info')">ข้อมูลร้าน</button>`;
+  tabs.forEach(t => {
+    bar.innerHTML += `<button class="tab-btn ${currentTab === t ? 'active' : ''}" onclick="switchTab('${t}')">${t}</button>`;
+  });
 }
 
-function switchTab(id) {
-  currentTab = id;
-  currentSort = 'default';
-  document.getElementById('sortSelectGrid').value = 'default';
-  document.getElementById('sortSelectList').value = 'default';
-
+function switchTab(t) {
+  currentTab = t;
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  if (id === 'info') { document.getElementById('tab-info').classList.add('active'); } 
-  else {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  
+  if (t === 'info') {
+    document.getElementById('tab-info').classList.add('active');
+  } else {
     document.getElementById('tab-products').classList.add('active');
-    showCategories(); renderCategories();
+    showCategories();
   }
   renderTabs();
 }
 
-async function addTab() {
-  const name = document.getElementById('newTabInput').value.trim();
-  if (name && !tabs.includes(name)) {
-    tabs.push(name); saveLocalSafely(); 
-    document.getElementById('newTabInput').value = "กำลังบันทึก...";
-    await syncToServer(); 
-    renderTabs(); updateAdminTabUI(); document.getElementById('newTabInput').value = "";
-    if(!currentAdminCatTab) currentAdminCatTab = name;
-    renderAdminList();
-  }
-}
-
-function renderShopInfo() {
-  const pill = document.getElementById('statusPill');
-  if (shopInfo.status === 'OPEN') {
-      pill.className = 'shop-status-pill status-open'; document.getElementById('statusLabel').innerText = 'OPEN';
-  } else {
-      pill.className = 'shop-status-pill status-closed'; document.getElementById('statusLabel').innerText = 'CLOSED';
-  }
-
-  document.getElementById('info-line').innerText = shopInfo.line || '-';
-  document.getElementById('info-fb').innerText = shopInfo.facebook || '-';
-  document.getElementById('info-hours').innerText = shopInfo.hours || '-';
-  document.getElementById('info-warranty').innerText = shopInfo.warranty || '-';
-  document.getElementById('shopTitleText').innerText = shopInfo.facebook || '-';
-  
-  const cleanLogo = shopInfo.logo ? shopInfo.logo.replace(/<[^>]*>?/gm, '') : DEFAULT_LOGO;
-  document.getElementById('shopLogoImg').src = cleanLogo;
-  
-  const mediaArea = document.getElementById('mediaCoverArea');
-  const mediaBox = document.getElementById('mediaBox');
-  if (shopInfo.media) {
-      mediaArea.style.display = 'block';
-      const cleanMedia = shopInfo.media.replace(/<[^>]*>?/gm, '');
-      if (cleanMedia.includes('youtube.com') || cleanMedia.includes('youtu.be')) {
-          let vid = cleanMedia.split('v=')[1] || cleanMedia.split('/').pop();
-          vid = vid.split('&')[0];
-          mediaBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&mute=1&loop=1&playlist=${vid}"></iframe>`;
-      } else if (cleanMedia.match(/\.(mp4|webm|ogg)$/i) || cleanMedia.includes('.mp4?')) {
-          mediaBox.innerHTML = `<video src="${cleanMedia}" autoplay loop muted playsinline controlsList="nodownload"></video>`;
-      } else {
-          mediaBox.innerHTML = `<img src="${cleanMedia}">`;
-      }
-  } else {
-      mediaArea.style.display = 'none';
-  }
-
-  document.getElementById('shopStatusInput').value = shopInfo.status || 'OPEN';
-  document.getElementById('shopLineInput').value = shopInfo.line || '';
-  document.getElementById('shopFbInput').value = shopInfo.facebook || '';
-  document.getElementById('shopHoursInput').value = shopInfo.hours || '';
-  document.getElementById('shopWarrantyInput').value = shopInfo.warranty || '';
-  
-  document.getElementById('shopLogoUrl').value = shopInfo.logo || '';
-  const logoPreview = document.getElementById('shopLogoPreview');
-  if (shopInfo.logo) { logoPreview.src = shopInfo.logo.replace(/<[^>]*>?/gm, ''); logoPreview.style.display = 'block'; } else { logoPreview.style.display = 'none'; }
-  
-  document.getElementById('shopMediaUrl').value = shopInfo.media || '';
-  const mPreview = document.getElementById('shopMediaPreview');
-  if (shopInfo.media) { 
-      mPreview.style.display = 'block';
-      if (shopInfo.media.includes('youtube')) {
-          mPreview.innerHTML = `<div style="padding:10px; background:#eee; border-radius:5px; font-size:12px;">✅ ลิงก์ YouTube</div>`;
-      } else if (shopInfo.media.endsWith('.mp4') || shopInfo.media.includes('.mp4?')) {
-          mPreview.innerHTML = `<div style="padding:10px; background:#eee; border-radius:5px; font-size:12px;">✅ ไฟล์วิดีโอ .mp4</div>`;
-      } else {
-          mPreview.innerHTML = `<img src="${shopInfo.media.replace(/<[^>]*>?/gm, '')}" style="width:100%; height:auto; object-fit:cover; pointer-events:none;">`;
-      }
-  } else { mPreview.style.display = 'none'; }
-}
-
-async function saveShopInfo(e) {
-  e.preventDefault();
-  const btn = document.getElementById('saveShopBtn'); btn.innerText = "กำลังบันทึกข้อมูลออนไลน์...";
-  
-  shopInfo.status = document.getElementById('shopStatusInput').value;
-  shopInfo.logo = document.getElementById('shopLogoUrl').value.replace(/<[^>]*>?/gm, '').trim();
-  shopInfo.media = document.getElementById('shopMediaUrl').value.replace(/<[^>]*>?/gm, '').trim();
-  shopInfo.line = document.getElementById('shopLineInput').value.trim();
-  shopInfo.facebook = document.getElementById('shopFbInput').value.trim();
-  shopInfo.hours = document.getElementById('shopHoursInput').value.trim();
-  shopInfo.warranty = document.getElementById('shopWarrantyInput').value.trim();
-  
-  saveLocalSafely();
-  if(await syncToServer()) { renderShopInfo(); alert("✅ บันทึกข้อมูลร้านค้าเรียบร้อย!"); }
-  btn.innerText = "💾 บันทึกข้อมูลร้าน";
-}
-
-let tapCount = 0; let tapTimer;
-function handleAdminTap() {
-  tapCount++; clearTimeout(tapTimer);
-  if(tapCount >= 5) { tapCount = 0; if(!isAdminLoggedIn) { document.getElementById('passwordModal').style.display = 'flex'; document.getElementById('adminPasswordInput').value = ''; } else { openAdminModal(); } }
-  tapTimer = setTimeout(() => { tapCount = 0; }, 1500); 
-}
-function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
-function verifyAdmin() {
-  if(document.getElementById('adminPasswordInput').value === "170647") {  
-    isAdminLoggedIn = true; closePasswordModal(); document.getElementById('adminFab').style.display = 'flex'; openAdminModal(); 
-  } else { alert("รหัสผ่านไม่ถูกต้อง!"); document.getElementById('adminPasswordInput').value = ''; }
-}
-function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
-function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
-function switchAdminModalTab(tabId, btnElement) {
-  document.querySelectorAll('.admin-modal-tabs > .a-tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.a-tab-content').forEach(content => content.classList.remove('active'));
-  btnElement.classList.add('active'); document.getElementById('a-tab-' + tabId).classList.add('active');
-}
-
-function selectSystem(e, pId, sys) {
-    e.stopPropagation(); 
-    selectedSystems[pId] = sys;
-    let cartItem = cart.find(c => c.id === pId);
-    if (cartItem) { cartItem.chosenSystem = sys; }
-    
-    if(document.getElementById('productsView').style.display === 'block') {
-        openCategory(document.getElementById('currentCategoryTitle').innerText);
-    } else { renderCategories(); }
-}
-
-function changeSort(val) {
-    currentSort = val;
-    document.getElementById('sortSelectGrid').value = val;
-    document.getElementById('sortSelectList').value = val;
-    if (document.getElementById('productsView').style.display === 'block') {
-        openCategory(document.getElementById('currentCategoryTitle').innerText);
-    } else {
-        renderCategories();
-    }
-}
-
-function sortProductsArray(arr) {
-    if (currentSort === 'alpha') {
-        return arr.sort((a, b) => a.cat.localeCompare(b.cat));
-    } else if (currentSort === 'priceAsc') {
-        return arr.sort((a, b) => a.price - b.price);
-    } else if (currentSort === 'priceDesc') {
-        return arr.sort((a, b) => b.price - a.price);
-    }
-    return arr; 
-}
-
-function renderCategories(tabName = currentTab) {
+function renderCategories() {
   const grid = document.getElementById('categoryGrid');
-  let filtered = products.filter(p => p.tab === tabName);
-  filtered = sortProductsArray([...filtered]);
-  const isDirectGrid = isAppGameTab(tabName);
+  grid.innerHTML = '';
+  
+  const tabProducts = products.filter(p => p.tab === currentTab);
+  const categories = [...new Set(tabProducts.map(p => p.cat))];
+  
+  categories.forEach(cat => {
+    const firstProd = tabProducts.find(p => p.cat === cat);
+    grid.innerHTML += `
+      <div class="category-card" onclick="showProducts('${cat}')">
+        <div class="cat-icon-wrapper"><img src="${firstProd.icon || DEFAULT_LOGO}"></div>
+        <div style="font-weight:600; font-size:14px;">${cat}</div>
+      </div>
+    `;
+  });
+}
 
-  if (isDirectGrid) {
-      grid.innerHTML = filtered.map(p => {
-          const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
-          const icon = p.icon || '📦';
-          const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
-          const appName = p.cat; 
-          const statusClass = (p.status === 'empty') ? 'c-status-empty' : 'c-status-ready';
-          const statusText = (p.status === 'empty') ? 'ไม่พร้อม' : 'พร้อม';
-          const statusHtml = `<div class="card-status-pill ${statusClass}"><div class="status-dot-sm"></div>${statusText}</div>`;
+function showProducts(catName) {
+  document.getElementById('categoriesView').style.display = 'none';
+  document.getElementById('productsView').style.display = 'block';
+  document.getElementById('currentCategoryTitle').innerText = catName;
+  
+  const catProds = products.filter(p => p.tab === currentTab && p.cat === catName);
+  document.getElementById('currentCategoryDesc').innerText = catProds[0].catDesc || '';
+  
+  renderProductGrid(catName);
+}
 
-          let sysHtml = '';
-          let activeSys = null; 
-          if (p.systems && p.systems.length > 0) {
-              activeSys = selectedSystems[p.id] || (cart.find(c => c.id === p.id && c.chosenSystem) ? cart.find(c => c.id === p.id).chosenSystem : null) || p.systems[0];
-              sysHtml = `<div class="sys-opts">` + p.systems.map(sys => {
-                  const isActive = (activeSys === sys) ? 'active' : '';
-                  return `<div class="sys-btn ${isActive}" onclick="selectSystem(event, '${p.id}', '${sys}')">${sys}</div>`;
-              }).join('') + `</div>`;
-          }
+function showCategories() {
+  document.getElementById('categoriesView').style.display = 'block';
+  document.getElementById('productsView').style.display = 'none';
+}
 
-          let dynamicDesc = '';
-          if (activeSys === 'iOS') dynamicDesc = p.iosDesc || '';
-          else if (activeSys === 'Android') dynamicDesc = p.androidDesc || '';
-          const appDesc = dynamicDesc ? dynamicDesc.replace(/\n/g, '<br>') : '<span style="color:#ccc;">-</span>';
+function renderProductGrid(catName) {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
+  
+  const catProds = products.filter(p => p.tab === currentTab && p.cat === catName);
+  const variants = [...new Set(catProds.map(p => p.variant || '-'))];
+  
+  variants.forEach(v => {
+    if (v !== '-') grid.innerHTML += `<div class="variant-label">${v}</div>`;
+    
+    catProds.filter(p => (p.variant || '-') === v).forEach(p => {
+      const isSelected = cart.some(item => item.id === p.id);
+      
+      // เลือกแสดงจุดสีตามสถานะ
+      let statusClass = 'c-status-ready';
+      let statusText = 'พร้อมส่ง';
+      if (p.status === 'empty') { statusClass = 'c-status-empty'; statusText = 'ไม่พร้อม'; }
+      if (p.status === 'waiting') { statusClass = 'c-status-waiting'; statusText = 'รอแก้ราคา'; }
 
-          return `
-          <div class="direct-card ${isSel}" onclick="toggleItem('${p.id}')">
-              <div class="check-icon">✓</div>
-              ${statusHtml}
-              <div class="direct-card-icon">${iconHtml}</div>
-              <div class="direct-card-title">${appName}</div>
-              <div class="direct-card-desc">${appDesc}</div>
-              <div class="direct-card-price">฿${p.price}</div>
-              ${sysHtml}
-          </div>`;
-      }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
+      // ปรับการแสดงผลหน้าเว็บ (แสดงจุดสถานะหน้าชื่อแอป/แพ็กเกจย่อย)
+      let displayTitle = p.name;
+      if (currentTab === "เติมเกม") {
+          displayTitle = `${p.name} <span class="card-status-pill ${statusClass}" style="position:static; display:inline-flex; margin-left:5px; vertical-align:middle; padding:2px 6px;"><div class="status-dot-sm"></div> ${statusText}</span>`;
+      }
+
+      grid.innerHTML += `
+        <div class="product-item ${isSelected ? 'selected' : ''}" onclick="toggleCart('${p.id}')">
+          <div style="flex:1;">
+            <div style="font-weight:600;">${displayTitle}</div>
+            ${p.packDesc ? `<div style="font-size:12px; color:var(--text-muted);">${p.packDesc}</div>` : ''}
+          </div>
+          <div style="font-weight:bold; color:var(--primary);">฿${p.price}</div>
+        </div>
+      `;
+    });
+  });
+}
+
+function toggleCart(id) {
+  const idx = cart.findIndex(item => item.id === id);
+  if (idx > -1) {
+    cart.splice(idx, 1);
   } else {
-      const uniqueCats = [...new Set(filtered.map(p => p.cat))];
-      grid.innerHTML = uniqueCats.map(cat => {
-        const p = filtered.find(x => x.cat === cat);
-        const icon = p.icon || '📦';
-        const iconHtml = icon.startsWith('http') || icon.startsWith('data') ? `<img src="${icon}">` : `<span style="font-size:30px;">${icon}</span>`;
-        const catDesc = p.catDesc ? `<div style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">${p.catDesc.replace(/\n/g, '<br>')}</div>` : '';
-        return `<div class="category-card" onclick="openCategory('${cat}')"><div class="cat-icon-wrapper">${iconHtml}</div><div style="font-weight:600; font-size:15px; line-height:1.2;">${cat}</div>${catDesc}</div>`;
-      }).join('') || '<p style="grid-column:span 2; text-align:center; padding:40px; color:#999;">ยังไม่มีสินค้า</p>';
+    const p = products.find(prod => prod.id === id);
+    cart.push(p);
+  }
+  updateBottomBar();
+  const catName = document.getElementById('currentCategoryTitle').innerText;
+  renderProductGrid(catName);
+}
+
+function updateBottomBar() {
+  const bar = document.getElementById('bottomBar');
+  if (cart.length > 0) {
+    bar.classList.add('active');
+    document.getElementById('cartCount').innerText = cart.length;
+    document.getElementById('cartTotal').innerText = cart.reduce((sum, item) => sum + Number(item.price), 0);
+  } else {
+    bar.classList.remove('active');
   }
 }
 
-function openCategory(catName) {
-  document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block';
-  let items = products.filter(p => p.cat === catName && p.tab === currentTab);
-  items = sortProductsArray([...items]);
-  document.getElementById('currentCategoryTitle').innerText = catName;
-  document.getElementById('currentCategoryDesc').innerHTML = items[0] && items[0].catDesc ? items[0].catDesc.replace(/\n/g, '<br>') : '';
-  
-  const grouped = {};
-  items.forEach(p => { const v = p.variant || "แพ็กเกจทั่วไป"; if (!grouped[v]) grouped[v] = []; grouped[v].push(p); });
-  
-  let html = '';
-  for (const v in grouped) {
-      html += `<div class="variant-block"><div class="variant-label">${v}</div>`;
-      html += grouped[v].map(p => {
-        const isSel = cart.find(c => c.id === p.id) ? 'selected' : '';
-        const statusDot = p.status === 'empty' ? '<span style="color:var(--danger); font-size:10px; margin-left:5px;">🔴 หมด</span>' : '<span style="color:var(--success); font-size:10px; margin-left:5px;">🟢 พร้อม</span>';
-        const showStatus = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab)) ? statusDot : '';
+// --- Admin Logic ---
+function handleAdminTap() {
+  if (isAdminLoggedIn) openAdminModal();
+  else document.getElementById('passwordModal').style.display = 'flex';
+}
 
-        return `<div class="product-item ${isSel}" onclick="toggleItem('${p.id}')">
-          <div style="flex:2;">
-            <div style="font-weight:600; font-size:15px; display:flex; align-items:center;">${p.name} ${showStatus}</div>
-          </div>
-          ${p.packDesc ? `<div style="flex:1.5; font-size:12px; color:var(--text-muted); text-align:center; padding-left:10px;">${p.packDesc}</div>` : '<div style="flex:1.5;"></div>'}
-          <div style="flex:1; text-align:right; color:var(--primary); font-weight:bold; font-size:16px;">฿${p.price}</div>
-        </div>`;
-      }).join(''); html += `</div>`;
+function verifyAdmin() {
+  const pass = document.getElementById('adminPasswordInput').value;
+  if (pass === '1234') { // รหัสผ่านแอดมิน
+    isAdminLoggedIn = true;
+    document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('adminFab').style.display = 'flex';
+    alert("สวัสดีแอดมิน!");
+  } else {
+    alert("รหัสผ่านไม่ถูกต้อง");
   }
-  document.getElementById('productGrid').innerHTML = html;
+}
+
+function openAdminModal() {
+  document.getElementById('adminModal').style.display = 'flex';
+  const select = document.getElementById('pTabTarget');
+  select.innerHTML = '';
+  tabs.forEach(t => { select.innerHTML += `<option value="${t}">${t}</option>`; });
+  
+  // โหลดค่าตั้งต้นเข้าร้านค้า
+  document.getElementById('shopFbInput').value = shopInfo.facebook;
+  document.getElementById('shopLineInput').value = shopInfo.line;
+  document.getElementById('shopHoursInput').value = shopInfo.hours;
+  document.getElementById('shopWarrantyInput').value = shopInfo.warranty;
+  document.getElementById('shopLogoUrl').value = shopInfo.logo;
+  document.getElementById('shopStatusInput').value = shopInfo.status;
+  document.getElementById('shopMediaUrl').value = shopInfo.media;
+  
+  renderAdminProducts();
+}
+
+function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
+
+function switchAdminModalTab(tabId, btn) {
+  document.querySelectorAll('.a-tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.a-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('a-tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
 }
 
 async function saveProduct(e) {
   e.preventDefault();
-  const btn = document.getElementById('saveBtn'); btn.innerText = "กำลังบันทึกออนไลน์...";
-  const id = document.getElementById('editId').value;
-  const cleanIcon = document.getElementById('pIconUrl').value.replace(/<[^>]*>?/gm, '').trim();
-  const tabName = document.getElementById('pTabTarget').value;
-  const isAppTab = isAppGameTab(tabName);
-  const isPremiumTab = tabName.includes('พรีเมี่ยม') || tabName.toLowerCase().includes('premium');
-
-  let selectedSysArr = [];
-  if (isAppTab) {
-      if (document.getElementById('pSysIos').checked) selectedSysArr.push('iOS');
-      if (document.getElementById('pSysAndroid').checked) selectedSysArr.push('Android');
-      if (selectedSysArr.length === 0) {
-          alert("กรุณาเลือกระบบที่รองรับอย่างน้อย 1 ระบบ (iOS หรือ Android)");
-          btn.innerText = id ? "อัปเดตสินค้า" : "บันทึกข้อมูลสินค้า";
-          return;
-      }
-  }
-
-  const newP = {
-    id: id || 'p' + Date.now(),
-    tab: tabName,
-    status: (tabName.includes('เติมเกม') || isAppTab) ? document.getElementById('pStatus').value : 'ready',
-    cat: document.getElementById('pCat').value.trim(),
-    price: parseInt(document.getElementById('pPrice').value) || 0,
-    icon: cleanIcon,
-    catDesc: isAppTab ? '' : document.getElementById('pCatDesc').value.trim(), 
-    variant: isAppTab ? '' : document.getElementById('pVariant').value.trim(), 
-    name: isAppTab ? '-' : (document.getElementById('pName').value.trim() || '-'),
-    packDesc: (isAppTab || !isPremiumTab) ? '' : document.getElementById('pPackDesc').value.trim(),
-    systems: selectedSysArr, 
-    iosDesc: isAppTab ? document.getElementById('pIosDesc').value.trim() : '',
-    androidDesc: isAppTab ? document.getElementById('pAndroidDesc').value.trim() : ''
+  const id = document.getElementById('editId').value || Date.now().toString();
+  const newProd = {
+    id: id,
+    tab: document.getElementById('pTabTarget').value,
+    cat: document.getElementById('pCat').value,
+    catDesc: document.getElementById('pCatDesc').value,
+    variant: document.getElementById('pVariant').value,
+    name: document.getElementById('pName').value,
+    packDesc: document.getElementById('pPackDesc').value, // บันทึกชื่อแพ็กเกจย่อย
+    price: document.getElementById('pPrice').value,
+    icon: document.getElementById('pIconUrl').value,
+    status: document.getElementById('pStatus').value
   };
 
-  if(id) { products[products.findIndex(p => p.id === id)] = newP; } else { products.push(newP); }
+  const idx = products.findIndex(p => p.id === id);
+  if (idx > -1) products[idx] = newProd;
+  else products.push(newProd);
+
   saveLocalSafely();
-  const isSuccess = await syncToServer(); 
-  
-  if(isSuccess) {
-      cancelEdit(); 
-      if(!currentAdminCatTab) currentAdminCatTab = newP.tab;
-      renderAdminList(); renderCategories();
-      if(document.getElementById('productsView').style.display === 'block'){ openCategory(document.getElementById('currentCategoryTitle').innerText); }
-      alert("✅ บันทึกสินค้าลง Google Sheets เรียบร้อย!");
-  } else { btn.innerText = id ? "อัปเดตสินค้า" : "บันทึกข้อมูลสินค้า"; }
+  await syncToServer();
+  renderAll();
+  cancelEdit();
 }
 
 function editProduct(id) {
-  const p = products.find(item => item.id === id);
-  if(p) {
-    document.getElementById('editId').value = p.id;
-    document.getElementById('pTabTarget').value = p.tab;
-    if (p.systems) {
-        document.getElementById('pSysIos').checked = p.systems.includes('iOS');
-        document.getElementById('pSysAndroid').checked = p.systems.includes('Android');
-    } else {
-        document.getElementById('pSysIos').checked = true;
-        document.getElementById('pSysAndroid').checked = true;
-    }
-    toggleAdminFieldsByTab();
-
-    document.getElementById('pStatus').value = p.status || 'ready';
-    document.getElementById('pCat').value = p.cat;
-    document.getElementById('pCatDesc').value = p.catDesc || '';
-    document.getElementById('pVariant').value = p.variant || ''; 
-    document.getElementById('pName').value = p.name !== '-' ? p.name : '';
-    document.getElementById('pPackDesc').value = p.packDesc || '';
-    document.getElementById('pPrice').value = p.price;
-    document.getElementById('pIconUrl').value = p.icon || '';
-    document.getElementById('pIosDesc').value = p.iosDesc || '';
-    document.getElementById('pAndroidDesc').value = p.androidDesc || '';
-
-    const preview = document.getElementById('pIconPreview');
-    if (p.icon) { preview.src = p.icon; preview.style.display = 'block'; } else { preview.style.display = 'none'; }
-    document.getElementById('saveBtn').innerText = "อัปเดตสินค้า"; document.getElementById('saveBtn').style.background = "#059669";
-    document.getElementById('cancelBtn').style.display = "block";
-    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  const p = products.find(prod => prod.id === id);
+  document.getElementById('editId').value = p.id;
+  document.getElementById('pTabTarget').value = p.tab;
+  document.getElementById('pCat').value = p.cat;
+  document.getElementById('pCatDesc').value = p.catDesc || '';
+  document.getElementById('pVariant').value = p.variant || '';
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pPackDesc').value = p.packDesc || '';
+  document.getElementById('pPrice').value = p.price;
+  document.getElementById('pIconUrl').value = p.icon || '';
+  document.getElementById('pStatus').value = p.status || 'ready';
+  
+  document.getElementById('saveBtn').innerText = 'อัปเดตข้อมูลสินค้า';
+  document.getElementById('cancelBtn').style.display = 'block';
+  document.getElementById('adminForm').scrollIntoView();
 }
 
 function cancelEdit() {
   document.getElementById('adminForm').reset();
-  document.getElementById('editId').value = ""; 
-  document.getElementById('pIconUrl').value = "";
-  document.getElementById('pIosDesc').value = "";
-  document.getElementById('pAndroidDesc').value = "";
-  document.getElementById('pPackDesc').value = "";
-  document.getElementById('pSysIos').checked = true;
-  document.getElementById('pSysAndroid').checked = true;
-  document.getElementById('pIconPreview').style.display = 'none';
-  document.getElementById('saveBtn').innerText = "บันทึกข้อมูลสินค้า"; document.getElementById('saveBtn').style.background = "var(--primary)";
-  document.getElementById('cancelBtn').style.display = "none";
-  toggleAdminFieldsByTab();
-}
-
-function switchAdminCatTab(tabName) {
-    currentAdminCatTab = tabName;
-    renderAdminList();
-}
-
-function renderAdminList() {
-  if (!currentAdminCatTab && tabs.length > 0) currentAdminCatTab = tabs[0];
-  if (tabs.length > 0 && !tabs.includes(currentAdminCatTab)) currentAdminCatTab = tabs[0];
-
-  document.getElementById('adminCategoryTabs').innerHTML = tabs.map(t => 
-    `<button type="button" class="a-tab-btn ${currentAdminCatTab === t ? 'active' : ''}" onclick="switchAdminCatTab('${t}')">${t}</button>`
-  ).join('');
-
-  const filteredProducts = products.filter(p => p.tab === currentAdminCatTab);
-  const sortedProducts = [...filteredProducts].sort((a, b) => a.cat.localeCompare(b.cat));
-  const grouped = {}; 
-  sortedProducts.forEach(p => { if (!grouped[p.cat]) grouped[p.cat] = []; grouped[p.cat].push(p); });
-
-  let html = '';
-  for (const cat in grouped) {
-    html += `<div style="background:#f0f2f5; padding:8px 12px; margin-top:15px; border-radius:8px 8px 0 0; font-weight:bold; display:flex; align-items:center; gap:8px;">📱 ${cat}</div><div style="border:1px solid #e5e7eb; border-radius:0 0 8px 8px; margin-bottom:10px; background:#fff; padding:0 10px;">`;
-    html += grouped[cat].map(p => {
-        const showStatusInList = (p.tab.includes('เติมเกม') || isAppGameTab(p.tab));
-        const sDot = showStatusInList ? (p.status === 'empty' ? '🔴' : '🟢') : '';
-        const dispName = (p.name && p.name !== '-') ? p.name : 'สินค้าทั่วไป';
-
-        return `<div style="font-size:13px; border-bottom:1px solid #f3f4f6; padding:12px 5px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            ${sDot} <span style="font-weight:600; color:var(--primary);">${dispName}</span> 
-            ${p.variant ? `<span style="font-size:11px; color:#ef4444; font-weight:bold;">[${p.variant}]</span>` : ''} 
-            ${p.packDesc ? `<span style="font-size:11px; color:#6b7280;">(${p.packDesc})</span>` : ''} 
-            <br><small style="color:#374151; font-weight:600;">฿${p.price}</small>
-          </div>
-          <div>
-            <button type="button" onclick="editProduct('${p.id}')" style="color:#2563eb; border:none; background:none; font-weight:600; cursor:pointer; margin-right:10px;">แก้ไข</button>
-            <button type="button" onclick="deleteProduct('${p.id}')" style="color:#ef4444; border:none; background:none; font-weight:600; cursor:pointer;">ลบ</button>
-          </div>
-        </div>`
-    }).join('');
-    html += `</div>`;
-  }
-  document.getElementById('adminProductList').innerHTML = html || '<div style="text-align:center; padding:30px; color:#9ca3af;">ยังไม่มีสินค้าในแท็บนี้</div>';
-}
-
-function updateAdminTabUI() {
-  document.getElementById('adminTabList').innerHTML = tabs.map((t, i) => `<div style="display:flex; justify-content:space-between; background:#f8f9fa; padding:10px 15px; border-radius:8px; margin-top:5px; border:1px solid #eee;"><span style="font-weight:500;">${t}</span><button onclick="deleteTab(${i})" style="color:#ef4444; border:none; background:none; font-weight:bold; cursor:pointer;">ลบ</button></div>`).join('');
-  document.getElementById('pTabTarget').innerHTML = tabs.map(t => `<option value="${t}">${t}</option>`).join('');
-  toggleAdminFieldsByTab(); 
-}
-
-async function resetData() {
-  if(confirm("⚠️ ล้างระบบทั้งหมด (รวมถึงใน Google Sheets) ยืนยันหรือไม่?")) {
-    localStorage.clear();
-    await fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'updateDatabase', payload: { shopInfo: {}, tabs: ["สินค้า"], products: [] } })
-    });
-    location.reload();
-  }
-}
-
-async function deleteTab(i) {
-  if(confirm("ลบแท็บนี้สินค้าด้านในจะหายทั้งหมด ยืนยันไหม?")) {
-    const name = tabs[i]; products = products.filter(p => p.tab !== name); tabs.splice(i, 1);
-    if(currentAdminCatTab === name) currentAdminCatTab = tabs[0] || null;
-    saveLocalSafely(); await syncToServer(); location.reload();
-  }
+  document.getElementById('editId').value = '';
+  document.getElementById('saveBtn').innerText = 'บันทึกข้อมูลสินค้า';
+  document.getElementById('cancelBtn').style.display = 'none';
 }
 
 async function deleteProduct(id) {
-  if(confirm("ยืนยันการลบสินค้านี้?")) {
+  if (confirm('ยืนยันการลบรายการนี้?')) {
     products = products.filter(p => p.id !== id);
-    saveLocalSafely(); await syncToServer(); renderAdminList(); renderCategories();
-    if(document.getElementById('productsView').style.display === 'block'){
-      const currentCat = document.getElementById('currentCategoryTitle').innerText;
-      if (products.some(p => p.cat === currentCat && p.tab === currentTab)) openCategory(currentCat); else showCategories();
-    }
+    saveLocalSafely();
+    await syncToServer();
+    renderAll();
   }
 }
 
-function showCategories() { document.getElementById('categoriesView').style.display='block'; document.getElementById('productsView').style.display='none'; }
-
-function getCalculatedCart() {
-    let appItems = []; let otherItems = [];
-    cart.forEach(i => { if(isAppGameTab(i.tab)) appItems.push({...i}); else otherItems.push({...i}); });
-
-    let isBulkAll = false;
-    if (appItems.length >= 164) { isBulkAll = true; }
-
-    let processedCart = []; let total = 0; let activePromos = []; 
-
-    otherItems.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
-
-    if (isBulkAll) {
-        appItems.forEach(item => { processedCart.push({...item, effectivePrice: 0, isPromo: true, promoLabel: "รวมในโปรเหมา"}); });
-        total += 3000; activePromos.push("เหมาทุกแอพ 164 แอพ 3,000฿");
-    } else {
-        let appsPromo = []; let ineligibleApps = [];
-        appItems.forEach(item => { if (item.price >= 20 && item.price <= 25) { appsPromo.push(item); } else { ineligibleApps.push(item); } });
-
-        ineligibleApps.forEach(item => { processedCart.push({...item, effectivePrice: item.price, isPromo: false}); total += item.price; });
-        appsPromo.sort((a, b) => b.price - a.price);
-
-        let count = appsPromo.length; let idx = 0;
-        let b30 = 0, b15 = 0, b8 = 0, b3 = 0, b2_25 = 0;
-
-        while(idx + 30 <= count) { b30++; for(let i=0; i<30; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 360/30, isPromo: true, promoLabel: "โปร 30 แอพ"}); total += 360; }
-        while(idx + 15 <= count) { b15++; for(let i=0; i<15; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 210/15, isPromo: true, promoLabel: "โปร 15 แอพ"}); total += 210; }
-        while(idx + 8 <= count) { b8++; for(let i=0; i<8; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 80/8, isPromo: true, promoLabel: "โปร 8 แอพ"}); total += 80; }
-        while(idx + 3 <= count) { b3++; for(let i=0; i<3; i++) processedCart.push({...appsPromo[idx++], effectivePrice: 45/3, isPromo: true, promoLabel: "โปร 3 แอพ"}); total += 45; }
-        
-        let remaining = count - idx;
-        if (remaining === 2 && appsPromo[idx].price === 25 && appsPromo[idx+1].price === 25) {
-            b2_25++;
-            processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"});
-            processedCart.push({...appsPromo[idx++], effectivePrice: 45/2, isPromo: true, promoLabel: "โปรคู่ 25฿"});
-            total += 45;
-        } else {
-            while(idx < count) { processedCart.push({...appsPromo[idx], effectivePrice: appsPromo[idx].price, isPromo: false}); total += appsPromo[idx].price; idx++; }
-        }
-
-        if (b30 > 0) activePromos.push(`โปร 30 แอพ 360฿ (${b30} ชุด)`);
-        if (b15 > 0) activePromos.push(`โปร 15 แอพ 210฿ (${b15} ชุด)`);
-        if (b8 > 0) activePromos.push(`โปร 8 แอพ 80฿ (${b8} ชุด)`);
-        if (b3 > 0) activePromos.push(`โปร 3 แอพ 45฿ (${b3} ชุด)`);
-        if (b2_25 > 0) activePromos.push(`โปรคู่แอพ 25฿ (${b2_25} ชุด)`);
-    }
-
-    let finalSorted = [];
-    cart.forEach(originalItem => {
-        let foundIdx = processedCart.findIndex(p => p.id === originalItem.id);
-        if(foundIdx > -1) { finalSorted.push(processedCart[foundIdx]); processedCart.splice(foundIdx, 1); }
-    });
-
-    return { items: finalSorted, total, isBulkAll, activePromos };
+function renderAdminProducts() {
+  const list = document.getElementById('adminProductList');
+  list.innerHTML = '';
+  products.forEach(p => {
+    list.innerHTML += `
+      <div style="background:#f9fafb; padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border:1px solid #eee;">
+        <div style="font-size:13px;">
+          <b>[${p.tab}] ${p.cat}</b><br>${p.name} - ฿${p.price}
+        </div>
+        <div>
+          <button onclick="editProduct('${p.id}')" style="color:var(--primary); background:none; border:none; cursor:pointer; font-size:12px; font-weight:600;">แก้ไข</button>
+          <button onclick="deleteProduct('${p.id}')" style="color:var(--danger); background:none; border:none; cursor:pointer; font-size:12px; font-weight:600; margin-left:10px;">ลบ</button>
+        </div>
+      </div>
+    `;
+  });
 }
 
-function toggleItem(id) {
-  let p = products.find(x => x.id === id);
-  const idx = cart.findIndex(c => c.id === id);
+async function saveShopInfo(e) {
+  e.preventDefault();
+  shopInfo = {
+    facebook: document.getElementById('shopFbInput').value,
+    line: document.getElementById('shopLineInput').value,
+    hours: document.getElementById('shopHoursInput').value,
+    warranty: document.getElementById('shopWarrantyInput').value,
+    logo: document.getElementById('shopLogoUrl').value || DEFAULT_LOGO,
+    status: document.getElementById('shopStatusInput').value,
+    media: document.getElementById('shopMediaUrl').value
+  };
+  saveLocalSafely();
+  await syncToServer();
+  renderAll();
+  alert("บันทึกข้อมูลร้านค้าสำเร็จ!");
+}
 
-  if(idx > -1) {
-      cart.splice(idx, 1); 
-  } else {
-      if (p.status === 'empty' && (p.tab.includes('เติมเกม') || isAppGameTab(p.tab))) {
-          alert("สินค้านี้ยังไม่พร้อมให้บริการ หรือ หมดชั่วคราวค่ะ");
-          return;
-      }
-      let chosenSys = selectedSystems[id] || (p.systems && p.systems.length > 0 ? p.systems[0] : null);
-      if (chosenSys) selectedSystems[id] = chosenSys;
+function renderAdminTabs() {
+  const list = document.getElementById('adminTabList');
+  list.innerHTML = '';
+  tabs.forEach((t, i) => {
+    list.innerHTML += `
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:5px;">
+        <span>${t}</span>
+        <button onclick="deleteTab(${i})" style="color:var(--danger); border:none; background:none; font-weight:bold;">ลบ</button>
+      </div>
+    `;
+  });
+}
 
-      cart.push({...p, chosenSystem: chosenSys});
+async function addTab() {
+  const val = document.getElementById('newTabInput').value.trim();
+  if (val && !tabs.includes(val)) {
+    tabs.push(val);
+    document.getElementById('newTabInput').value = '';
+    saveLocalSafely();
+    await syncToServer();
+    renderAll();
+    openAdminModal();
   }
-  
-  const calcInfo = getCalculatedCart();
-  
-  document.getElementById('cartCount').innerText = cart.length; 
-  document.getElementById('cartTotal').innerText = calcInfo.total;
-  document.getElementById('bottomBar').classList.toggle('active', cart.length > 0);
-  
-  if(document.getElementById('productsView').style.display === 'block') { openCategory(document.getElementById('currentCategoryTitle').innerText); } 
-  else { renderCategories(); }
+}
+
+async function deleteTab(idx) {
+  if (confirm('การลบแท็บจะทำให้สินค้าในแท็บนี้หายไปจากหน้าแสดงผล ยืนยันไหม?')) {
+    tabs.splice(idx, 1);
+    saveLocalSafely();
+    await syncToServer();
+    renderAll();
+    openAdminModal();
+  }
 }
 
 function openCartSummary() {
-  if(cart.length === 0) return;
-  let calcInfo = getCalculatedCart();
-  let html = ''; 
-  
-  calcInfo.items.forEach((item, index) => {
-    let priceDisplay = `฿${item.price}`;
-    
-    if (calcInfo.isBulkAll && isAppGameTab(item.tab)) {
-         priceDisplay = `<span style="color:var(--primary); font-weight:bold; font-size:12px;">รวมในเหมา</span>`;
-    } else if (item.isPromo) {
-         priceDisplay = `<span style="text-decoration:line-through; color:#999; font-size:12px;">฿${item.price}</span> <span style="color:var(--success); font-weight:bold;">${item.promoLabel}</span>`;
-    }
-
-    let sysText = item.chosenSystem ? `<span style="background:var(--primary); color:white; padding:1px 5px; border-radius:4px; font-size:10px;">${item.chosenSystem}</span>` : '';
-    let dispName = (item.name && item.name !== '-') ? item.name : '';
-    
-    html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px;">
-       <div style="flex: 1;">
-         <span style="font-weight: 600;">${index + 1}. ${item.cat}</span> ${sysText}<br>
-         <span style="font-size: 12px; color: var(--text-muted);">${item.variant ? `[${item.variant}] ` : ''}${dispName} ${item.packDesc ? `(${item.packDesc})` : ''}</span>
-       </div>
-       <div style="font-weight: bold; text-align:right;">${priceDisplay}</div>
-    </div>`; 
-  });
-
-  if (calcInfo.isBulkAll) {
-      html += `<div style="text-align:center; padding: 10px; background:#fdf4ff; color:var(--primary); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:14px;">🎉 เปิดใช้ราคาโปรเหมา 3,000฿ สำเร็จ!</div>`;
-  } else if (calcInfo.activePromos.length > 0) {
-      let pText = calcInfo.activePromos.join(' และ ');
-      html += `<div style="text-align:center; padding: 10px; background:#f0fdf4; color:var(--success); border-radius:8px; margin-bottom:10px; font-weight:bold; font-size:13px;">🎉 ยินดีด้วย! คุณได้รับ ${pText}</div>`;
-  }
-
-  document.getElementById('cartSummaryList').innerHTML = html; 
-  document.getElementById('cartSummaryTotal').innerText = calcInfo.total;
   document.getElementById('cartSummaryModal').style.display = 'flex';
+  const list = document.getElementById('cartSummaryList');
+  list.innerHTML = '';
+  cart.forEach((item, i) => {
+    list.innerHTML += `
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px;">
+        <span>${item.cat} - ${item.name}</span>
+        <span style="font-weight:bold;">฿${item.price}</span>
+      </div>
+    `;
+  });
+  document.getElementById('cartSummaryTotal').innerText = cart.reduce((sum, item) => sum + Number(item.price), 0);
 }
 
 function closeCartSummary() { document.getElementById('cartSummaryModal').style.display = 'none'; }
 
 function confirmCheckout() {
-  if(cart.length === 0) return;
-  let calcInfo = getCalculatedCart();
-  let text = ""; 
-  let appItems = calcInfo.items.filter(i => isAppGameTab(i.tab));
-  let otherItems = calcInfo.items.filter(i => !isAppGameTab(i.tab));
-
-  let itemsBought = calcInfo.items.map(i => {
-      let name = i.cat;
-      if (i.name && i.name !== '-') name += ` ${i.name}`;
-      if (i.chosenSystem) name += ` [${i.chosenSystem}]`;
-      if (i.variant) name += ` (${i.variant})`;
-      return name;
-  }).join(', ');
+  let text = `🛒 *รายการสั่งซื้อ Wanderer Shop*\n---------------------------\n`;
+  cart.forEach((item, i) => {
+    text += `${i+1}. ${item.cat} (${item.name}) - ฿${item.price}\n`;
+  });
+  text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${document.getElementById('cartSummaryTotal').innerText} บาท*\n---------------------------`;
   
-  fetch(GOOGLE_SHEETS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ type: 'คำสั่งซื้อใหม่', items: itemsBought, total: calcInfo.total, viewCount: 0 })
-  }).catch(e => console.log('Sheet Error:', e));
-
-  if (appItems.length > 0 && otherItems.length === 0) {
-      let appLines = appItems.map(i => {
-          let appNameStr = (i.name && i.name !== i.cat && i.name !== '-') ? `${i.cat} ${i.name}` : i.cat;
-          let sysStr = i.chosenSystem ? ` [${i.chosenSystem}]` : '';
-          return `🍃 ݂  ${appNameStr}${sysStr} 𓈒`;
-      }).join('\n'); 
-
-      text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n✿  𓈒  รวมยอด    ꒰  ${calcInfo.total}฿  ꒱   ݂🎐♡\n${appLines}\n---------------------------\nรบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
-  } else {
-      text = "🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n"; 
-      let isGameTopup = false; 
-      calcInfo.items.forEach((item, index) => { 
-         let priceStr = `${item.price} บาท`;
-         if (calcInfo.isBulkAll && isAppGameTab(item.tab)) priceStr = "รวมในโปรเหมา";
-         else if (item.isPromo) priceStr = `ลดเหลือ (${item.promoLabel})`;
-
-         let sysStr = item.chosenSystem ? `\n   ระบบที่เลือก: ${item.chosenSystem}` : '';
-         let dispName = (item.name && item.name !== '-') ? item.name : '';
-
-         text += `${index + 1}. ${item.cat}\n   แพ็กเกจ: ${item.variant ? `[${item.variant}] ` : ''}${dispName} ${item.packDesc ? `(${item.packDesc})` : ''}${sysStr}\n   ราคา: ${priceStr}\n`; 
-         if (item.tab === "เติมเกม") isGameTopup = true; 
-      });
-      text += `---------------------------\n💰 *ยอดรวมทั้งสิ้น: ${calcInfo.total} บาท*\n---------------------------\n`;
-      
-      if (calcInfo.isBulkAll) text += `🎉 *ได้รับโปรเหมาแอพสุดคุ้ม 3,000 บาท*\n`;
-      else if (calcInfo.activePromos.length > 0) text += `🎉 *ได้รับส่วนลดโปรโมชั่นแอพ*\n`;
-
-      if (isGameTopup) { text += "📌 *แจ้งไอดี / รหัสผ่าน ได้เลยค่ะ*\n"; } else { text += "รบกวนแม่ค้าสรุปยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏"; }
-  }
-
   navigator.clipboard.writeText(text).then(() => {
-    alert("✅ คัดลอกรายการสั่งซื้อเรียบร้อยแล้ว!\nระบบกำลังพาคุณไปที่ LINE ของร้าน...");
-    cart = []; document.getElementById('cartCount').innerText = "0"; document.getElementById('cartTotal').innerText = "0"; document.getElementById('bottomBar').classList.remove('active');
-    
-    if(document.getElementById('productsView').style.display === 'block') { openCategory(document.getElementById('currentCategoryTitle').innerText); } 
-    else { renderCategories(); }
-    
-    closeCartSummary(); window.open(`https://line.me/R/ti/p/~${shopInfo.line.replace('@', '%40')}`, '_blank');
-  }).catch(err => { alert("❌ ไม่สามารถคัดลอกได้ รบกวนแคปหน้าจอส่งแม่ค้า"); });
+    alert("คัดลอกรายการแล้ว! ระบบกำลังพาไปหน้า LINE...");
+    window.location.href = `https://line.me/ti/p/~${shopInfo.line.replace('@','')}`;
+  });
+}
+
+function setupImagePreview(inputId, imgId) {
+  const input = document.getElementById(inputId);
+  const img = document.getElementById(imgId);
+  input.addEventListener('input', () => {
+    if (input.value) { img.src = input.value; img.style.display = 'block'; }
+    else { img.style.display = 'none'; }
+  });
+}
+
+function setupMediaPreview(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  input.addEventListener('input', () => {
+    const val = input.value;
+    if (!val) { preview.style.display = 'none'; return; }
+    preview.style.display = 'block';
+    if (val.includes('youtube.com') || val.includes('youtu.be')) {
+      let vidId = val.split('v=')[1] || val.split('/').pop();
+      preview.innerHTML = `<iframe src="https://www.youtube.com/embed/${vidId}" style="width:100%; height:100px;"></iframe>`;
+    } else if (val.endsWith('.mp4')) {
+      preview.innerHTML = `<video src="${val}" style="width:100%;" muted autoplay loop></video>`;
+    } else {
+      preview.innerHTML = `<img src="${val}" style="width:100%;">`;
+    }
+  });
+}
+
+function toggleAdminFieldsByTab() {
+    // ปล่อยไว้หรือเพิ่ม logic ตรวจสอบแท็บตามต้องการ
 }
 </script>
 </body>
