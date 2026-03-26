@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wanderer Shop</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Mitr:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 /* --- Design System --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -99,7 +100,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .admin-label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
 .admin-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 15px; transition: 0.2s; }
 
-/* ปุ่มแอดมินลอยวงกลมฟ้าพาสเทล */
 .floating-admin-btn { display: none; position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: #A0C4FF; color: white; font-size: 32px; font-weight: 300; border: none; box-shadow: 0 4px 15px rgba(160,196,255,0.6); z-index: 1500; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; line-height: 1; padding-bottom: 4px; }
 .floating-admin-btn:active { transform: scale(0.9); }
 
@@ -117,7 +117,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
   <div class="logo"><img id="shopLogoImg" src="https://via.placeholder.com/150"></div>
   <div class="hero-title" onclick="handleAdminTap()">Wanderer Shop</div>
-  <div class="hero-sub">ยินดีต้อนรับร้าน <span id="shopTitleText">Wanderer Shop <span id="shopTitleText">รับสินค้าอะไรดีคะ</span></div>
+  <div class="hero-sub">ยินดีต้อนรับร้าน <span id="shopTitleText">Wanderer Shop</span></div>
   <div class="tab-container" id="tabBar"></div>
 </div>
 
@@ -189,8 +189,11 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 </div>
 
 <div class="bottom-bar" id="bottomBar">
-  <div>เลือก <span id="cartCount" style="font-weight:bold; color:var(--primary);">0</span> รายการ | ฿<span id="cartTotal" style="color:var(--primary); font-weight:bold; font-size:18px;">0</span></div>
-  <button onclick="confirmCheckout()" style="padding:10px 25px; border-radius:25px; border:none; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; font-weight:700; cursor:pointer;">สั่งซื้อ</button>
+  <div>
+      <div style="color: var(--text-muted); font-size: 12px;">เลือก <span id="cartCount" style="font-weight:bold; color:var(--primary);">0</span> รายการ</div>
+      <div style="color:var(--primary); font-weight:bold; font-size:18px;">฿<span id="cartTotal">0</span></div>
+  </div>
+  <button onclick="confirmCheckout()" style="padding:10px 25px; border-radius:25px; border:none; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; font-weight:700; cursor:pointer; box-shadow: 0 4px 10px rgba(176,38,255,0.3);">สั่งซื้อเลย</button>
 </div>
 
 <button id="floatingAdminBtn" class="floating-admin-btn" onclick="openAdminModal()">+</button>
@@ -204,12 +207,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   </div>
 </div>
 
-<div id="osModal" class="modal-overlay">
-  <div class="modal-content" style="max-width: 350px; text-align: center;">
-    <button class="close-btn" onclick="closeOSModal()">&times;</button>
-    <h3 style="margin-bottom: 10px; color: var(--text-dark);">ยืนยันการเลือกระบบ</h3>
-    <div id="osInstructionText" style="margin-bottom: 20px;"></div>
-    <button id="osConfirmBtn" class="admin-btn" style="width: 100%;">รับทราบและเพิ่มลงตะกร้า</button>
+<div id="quickSelectModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 320px; padding: 25px 20px; border-radius: 20px; text-align: center;">
+    <div id="quickSelectContent"></div>
   </div>
 </div>
 
@@ -551,25 +551,16 @@ function renderCategories() {
 
     let appDescHtml = item.desc ? `<div style="font-size: 11.5px; color: gray; margin-top: 6px; line-height: 1.3; white-space: pre-line;">${item.desc}</div>` : '';
 
-    // เงื่อนไข: ถ้าเป็นแท็บ แอพ/เกม IOS-ANDROID ให้แสดงปุ่มเลือกในหน้าหมวดหมู่เลย
+    // 🌟 หมวดหมู่ IOS-ANDROID: ปรับ padding ให้กว้างขึ้น และ font-size ให้เล็กลง (13px)
     if (currentTab === 'แอพ/เกม IOS-ANDROID' || currentTab.includes('IOS-ANDROID')) {
-        let btnIOS = item.supportIOS 
-            ? `<button onclick="event.stopPropagation(); buyAppDirectly('${item.id}', 'iOS')" style="flex: 1; background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; border: none; border-radius: 6px; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 4px;">🍎 iOS</button>` 
-            : `<button disabled style="flex: 1; background: #f3f4f6; color: #9ca3af; border: none; border-radius: 6px; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: not-allowed; display: flex; justify-content: center; align-items: center; gap: 4px;">🍎 iOS</button>`;
-            
-        let btnAndroid = item.supportAndroid 
-            ? `<button onclick="event.stopPropagation(); buyAppDirectly('${item.id}', 'Android')" style="flex: 1; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; border-radius: 6px; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 4px;">🤖 Android</button>`
-            : `<button disabled style="flex: 1; background: #f3f4f6; color: #9ca3af; border: none; border-radius: 6px; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: not-allowed; display: flex; justify-content: center; align-items: center; gap: 4px;">🤖 Android</button>`;
-
-        html += `<div class="category-card" style="padding-bottom: 50px;">
+        // เลือกระบบไว (กดการ์ดแล้ว Modal เลือกระบบจะเด้งขึ้นมา)
+        html += `<div class="category-card" onclick="openQuickSelect('${item.id}', '${c}')" style="padding: 25px 15px; cursor: pointer;">
             ${badgeHtml}
-            <div class="cat-icon-wrapper">${imgHtml}</div>
-            <div style="font-weight:600; font-size:14px; color:var(--text-dark); line-height:1.2;">${c}</div>
+            <div class="cat-icon-wrapper" style="width: 70px; height: 70px; margin-bottom: 12px;">${imgHtml}</div>
+            
+            <div style="font-weight:600; font-size:13px; color:var(--text-dark); line-height:1.2;">${c}</div>
+            
             ${appDescHtml}
-            <div style="position: absolute; bottom: 12px; left: 12px; right: 12px; display: flex; gap: 6px;">
-                ${btnIOS}
-                ${btnAndroid}
-            </div>
         </div>`;
     } else {
         html += `<div class="category-card" onclick="openCategory('${c}')">
@@ -584,34 +575,109 @@ function renderCategories() {
 }
 
 // ---------------------------------------------------------
-// ฟังก์ชันใหม่ ซื้อแอป iOS/Android ข้ามไปตะกร้า
+// 🌟 ระบบ Quick Select สำหรับเลือกระบบ (แบบไม่ต้องมี Pop-up ยืนยัน)
 // ---------------------------------------------------------
-function closeOSModal() { document.getElementById('osModal').style.display = 'none'; }
-function buyAppDirectly(id, osType) {
-    const p = products.find(x => x.id === id);
+function openQuickSelect(id, catName) {
+    // หาข้อมูลสินค้าตัวแรกที่ตรงกับหมวดหมู่นี้
+    let p = products.find(x => x.tab.includes('IOS-ANDROID') && x.cat === catName);
     if (!p) return;
 
-    let instructionText = '';
-    if (osType === 'iOS' && p.textIOS) instructionText = p.textIOS;
-    else if (osType === 'Android' && p.textAndroid) instructionText = p.textAndroid;
+    let supportIOS = p.supportIOS === true || p.supportIOS === 'TRUE' || p.supportIOS === 'true';
+    let supportAndroid = p.supportAndroid === true || p.supportAndroid === 'TRUE' || p.supportAndroid === 'true';
 
-    document.getElementById('osInstructionText').innerHTML = instructionText 
-        ? `<div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); font-size: 13px; color: #4b5563; white-space: pre-line; text-align: left;">${instructionText}</div>` 
-        : '';
-        
-    document.getElementById('osConfirmBtn').onclick = function() {
-        let uid = p.id + '_' + osType;
-        let existing = cart.find(x => x.uid === uid);
-        if (!existing) {
-            cart.push({...p, uid: uid, osType: osType});
-        }
-        updateCartUI();
-        closeOSModal();
-    };
+    // สร้างปุ่มเลือกระบบ
+    let btnIOS = supportIOS
+        ? `<button onclick="instantAddToCart('${p.id}', 'iOS')" style="flex:1; padding:12px; background:linear-gradient(135deg, #4b5563, #1f2937); color:#fff; border:none; border-radius:12px; font-weight:bold; font-size:15px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.1);">🍏 iOS</button>`
+        : `<button disabled style="flex:1; padding:12px; background:#f3f4f6; color:#9ca3af; border:none; border-radius:12px; font-weight:bold; font-size:15px; cursor:not-allowed;">🍏 iOS</button>`;
+
+    let btnAndroid = supportAndroid
+        ? `<button onclick="instantAddToCart('${p.id}', 'Android')" style="flex:1; padding:12px; background:linear-gradient(135deg, #10b981, #16a34a); color:#fff; border:none; border-radius:12px; font-weight:bold; font-size:15px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.1);">🤖 Android</button>`
+        : `<button disabled style="flex:1; padding:12px; background:#f3f4f6; color:#9ca3af; border:none; border-radius:12px; font-weight:bold; font-size:15px; cursor:not-allowed;">🤖 Android</button>`;
+
+    let iconHtml = p.iconUrl ? `<img src="${p.iconUrl}" style="width: 80px; height: 80px; border-radius: 18px; object-fit: cover; margin: 0 auto 15px auto; border: 1px solid #f3f4f6; display: block;">` : `<div style="font-size:40px; margin-bottom:10px;">📦</div>`;
+
+    let html = `
+        <div style="text-align: center; margin-bottom: 20px;">
+            ${iconHtml}
+            <h4 style="font-size: 14px; color: var(--text-muted); margin-bottom: 5px;">เลือกระบบสำหรับ</h4>
+            <div style="color: var(--text-dark); font-weight: bold; font-size: 18px; line-height: 1.3;">${catName}</div>
+            ${(p.appDesc && p.appDesc !== '-') ? `<div style="font-size: 12px; color: gray; margin-top: 8px;">${p.appDesc}</div>` : ''}
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+            ${btnIOS}
+            ${btnAndroid}
+        </div>
+        <button onclick="closeModal('quickSelectModal')" style="width: 100%; padding: 12px; background: transparent; border: 1px solid #e5e7eb; border-radius: 12px; color: var(--text-muted); font-weight: 600; font-size: 14px; cursor: pointer;">ยกเลิก</button>
+    `;
+
+    document.getElementById('quickSelectContent').innerHTML = html;
+    document.getElementById('quickSelectModal').style.display = 'flex';
+}
+
+function instantAddToCart(id, osType) {
+    let p = products.find(x => x.id === id);
+    if (!p) return;
+
+    let uid = p.id + '_' + osType;
+    let existing = cart.find(x => x.uid === uid);
     
-    document.getElementById('osModal').style.display = 'flex';
+    if (existing) {
+        Swal.fire({ icon: 'info', title: 'สินค้านี้อยู่ในตะกร้าแล้ว', timer: 1500, showConfirmButton: false, toast: true, position: 'top' });
+    } else {
+        // ลงตะกร้าทันทีโดยไม่ติด Pop-up ยืนยันซ้ำซ้อน
+        cart.push({...p, uid: uid, osType: osType});
+        
+        let instructionText = (osType === 'iOS') ? p.textIOS : p.textAndroid;
+        if(instructionText) {
+            // โชว์ข้อความที่ร้านตั้งไว้ แล้วหายไปเอง (เป็น Toast)
+            Swal.fire({ icon: 'success', title: 'เพิ่มลงตะกร้าแล้ว', text: instructionText, showConfirmButton: true, confirmButtonText: 'รับทราบ', confirmButtonColor: 'var(--primary)' });
+        } else {
+            Swal.fire({ icon: 'success', title: 'เพิ่มลงตะกร้าแล้ว', showConfirmButton: false, timer: 1200, toast: true, position: 'top' });
+        }
+        
+        updateCartUI();
+    }
+    // ปิด Modal อัตโนมัติเมื่อกดเลือก
+    closeModal('quickSelectModal');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
 }
 // ---------------------------------------------------------
+
+// ---------------------------------------------------------
+// 🌟 ระบบคำนวณโปรโมชั่นในตะกร้า 3-30 แอพ
+// ---------------------------------------------------------
+function calculateTotal() {
+    let total = 0;
+    let appCount = cart.length;
+    
+    // คำนวณราคาสินค้าทั้งหมดก่อน
+    let sum = cart.reduce((s, c) => s + Number(c.price), 0);
+
+    if (appCount >= 3 && appCount <= 30) {
+        // ---------------------------------------------------
+        // ถ้าเข้าเงื่อนไขโปรโมชั่น 3-30 แอพ (แก้ไขสูตรของคุณตรงนี้)
+        // ---------------------------------------------------
+        
+        // แบบที่ 1: ลดราคาเหมาจ่ายแอพละ X บาท (เช่น แอพละ 50 บาท)
+        // total = appCount * 50; 
+        
+        // แบบที่ 2: ลดราคา % (เช่น ลด 10%)
+        // total = sum * 0.9;
+       
+        // ปัจจุบันผมตั้งให้รวมราคาเต็มไว้ก่อน หากมีสูตรให้แก้ที่ตรงนี้ครับ
+        total = sum; 
+    } else {
+        // ถ้าน้อยกว่า 3 หรือมากกว่า 30 ให้คิดราคาปกติ
+        total = sum;
+    }
+
+    return total;
+}
+// ---------------------------------------------------------
+
 
 function openCategory(catName) {
   document.getElementById('categoriesView').style.display = 'none'; document.getElementById('productsView').style.display = 'block'; 
@@ -647,12 +713,10 @@ function renderProductList() {
     html += `<div class="variant-block" style="margin-bottom: 25px;">`;
     
     if (v !== "ทั่วไป") {
-        // จัดข้อความ variant ให้อยู่ชิดซ้าย
         html += `<div class="variant-label" style="font-size: 15px; font-weight: 700; color: var(--primary); margin: 0 0 10px 0; text-align: left;">${v}</div>`;
     }
 
     grouped[v].forEach(p => {
-      // เช็คว่าไอเทมนี้อยู่ในตะกร้าไหม (เช็คผ่าน id ในโหมดปกติ)
       let isSel = cart.find(x => x.id === p.id); 
       let disClass = p.status === 'ready' ? '' : 'disabled';
       
@@ -688,8 +752,6 @@ function renderProductList() {
   document.getElementById('productGrid').innerHTML = html;
 }
 
-function showCategories() { document.getElementById('productsView').style.display = 'none'; document.getElementById('categoriesView').style.display = 'block'; renderCategories(); }
-
 function toggleCart(id) {
   const idx = cart.findIndex(x => x.id === id);
   const p = products.find(x => x.id === id);
@@ -702,30 +764,37 @@ function toggleCart(id) {
   
   const el = document.getElementById('item-'+id);
   if(el) { 
-      if(idx > -1) { 
-          el.classList.remove('selected'); 
-      } else { 
-          el.classList.add('selected'); 
-      } 
+      if(idx > -1) { el.classList.remove('selected'); } 
+      else { el.classList.add('selected'); } 
   }
 }
 
 function updateCartUI() {
   const bar = document.getElementById('bottomBar');
   if(cart.length > 0) {
-    bar.classList.add('active'); document.getElementById('cartCount').textContent = cart.length;
-    document.getElementById('cartTotal').textContent = cart.reduce((s, c) => s + Number(c.price), 0);
-  } else { bar.classList.remove('active'); }
+    bar.classList.add('active'); 
+    document.getElementById('cartCount').textContent = cart.length;
+    
+    // เรียกใช้งานฟังก์ชันคำนวณโปรโมชั่น
+    let finalTotal = calculateTotal();
+    document.getElementById('cartTotal').textContent = finalTotal;
+    
+  } else { 
+    bar.classList.remove('active'); 
+  }
 }
 
 function confirmCheckout() {
-  if(cart.length === 0) return; let text = "🛒 สั่งซื้อสินค้า\n\n"; let total = 0;
+  if(cart.length === 0) return; let text = "🛒 สั่งซื้อสินค้า\n\n"; 
+  
   cart.forEach((c, i) => { 
       let osLabel = c.osType ? `[${c.osType}]` : '';
-      total += Number(c.price); 
       text += `${i+1}. ${c.cat} ${c.variant ? `[${c.variant}]` : ''} ${osLabel} ${c.name ? `- ${c.name}` : ''} = ${c.price} บ.\n`; 
   });
-  text += `\nยอดรวม: ${total} บาท\n`;
+  
+  let finalTotal = calculateTotal();
+  text += `\nยอดรวม: ${finalTotal} บาท\n`; // ใช้ยอดรวมหลังโปรโมชั่น
+  
   navigator.clipboard.writeText(text).then(() => {
     alert("คัดลอกรายการสั่งซื้อเรียบร้อย! ระบบจะพาไปที่ Line ของร้าน");
     cart = []; updateCartUI(); 
