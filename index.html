@@ -8,20 +8,21 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
-  /* โทนดาร์ก ม่วงพาสเทล-ฟ้า */
-  --primary: #b026ff; 
-  --secondary: #00d2ff; 
-  --bg-main: #060513; 
-  --bg-card: #120e26; 
-  --border-color: rgba(176,38,255,0.3); 
-  --text-muted: #8b8bba; 
-  --text-dark: #ffffff;
+  /* 🎨 ธีมพาสเทลสว่าง ฟ้า-ม่วง */
+  --primary: #b026ff;      /* สีม่วงหลัก */
+  --secondary: #00d2ff;    /* ฟ้าสดใส (สำหรับปุ่ม/เน้นข้อความ) */
+  --bg-main: #e0f7fa;      /* พื้นหลังเว็บ: สีฟ้าพาสเทล */
+  --bg-card: #eaf8fb;      /* พื้นหลังการ์ด: สีฟ้าพาสเทลสว่าง */
+  --header-bg: #e9d5ff;    /* พื้นหลังส่วนหัว: สีม่วงพาสเทล */
+  --border-color: rgba(176,38,255,0.2); 
+  --text-muted: #64748b; 
+  --text-dark: #1e293b;    /* ข้อความสีเข้มให้อ่านง่าย */
 }
 html { scroll-behavior: smooth; }
 body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(--text-dark); overflow-x: hidden; padding-bottom: 110px; }
 
-/* 1. Shop Status Pill */
-.shop-status { position: absolute; top: 15px; left: 15px; display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; transition: 0.3s; }
+/* Shop Status Pill */
+.shop-status { position: absolute; top: 15px; left: 15px; display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; background: #ffffff; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 100; transition: 0.3s; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; animation: pulseG 1.5s infinite; }
 .status-open { color: #10b981; } .status-open .status-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
 .status-closed { color: #ef4444; } .status-closed .status-dot { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
@@ -30,11 +31,12 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 @keyframes pulseG { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
 
 /* Hero & Tabs */
-.hero { background: var(--bg-card); padding: 50px 20px 55px; text-align: center; position: relative; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; box-shadow: 0 4px 30px rgba(176,38,255,0.1); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
-.hero-logo { width: 180px; height: 190px; object-fit: cover; border-radius: 20px; margin: 0 auto 15px; display: block; border: 2px solid var(--primary); box-shadow: 0 0 20px rgba(176,38,255,0.3); background: #fff; }
-.hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 4px; text-shadow: 0 0 15px var(--primary); }
-.hero-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; }
-.tab-container { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; padding: 4px; width: 95%; max-width: 500px; overflow-x: auto; white-space: nowrap; z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.hero { background: var(--header-bg); padding: 50px 20px 55px; text-align: center; position: relative; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; box-shadow: 0 4px 20px rgba(176,38,255,0.1); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+/* โลโก้ขนาด 180x190px */
+.hero-logo { width: 180px; height: 190px; object-fit: cover; border-radius: 20px; margin: 0 auto 15px; display: block; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(176,38,255,0.2); background: #fff; }
+.hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; cursor: pointer; }
+.hero-sub { font-size: 14px; color: var(--text-dark); font-weight: 500; opacity: 0.9; }
+.tab-container { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; background: #ffffff; border: 1px solid var(--border-color); border-radius: 30px; padding: 4px; width: 95%; max-width: 500px; overflow-x: auto; white-space: nowrap; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
 .tab-container::-webkit-scrollbar { display: none; }
 .tab-btn { flex: 0 0 auto; padding: 8px 16px; border-radius: 25px; border: none; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; background: transparent; color: var(--text-muted); }
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 2px 10px rgba(176,38,255,0.3); }
@@ -45,76 +47,79 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .view-section.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.info-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
-.info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); font-size: 14px; cursor: pointer; }
-.info-row span:first-child { color: var(--secondary); font-weight: 600; }
-.info-row span:last-child { font-weight: 500; display: flex; align-items: center; gap: 8px; }
-.copy-btn { background: rgba(176,38,255,0.2); border: 1px solid var(--primary); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+.info-card { background: var(--bg-card); border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px dashed rgba(0,0,0,0.1); font-size: 14px; cursor: pointer; }
+.info-row span:first-child { color: var(--primary); font-weight: 600; }
+.info-row span:last-child { font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--text-dark); }
+.copy-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+.copy-btn:hover { background: var(--primary); color: #fff; }
 
 /* Grid & Section Headers */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.sort-select { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: #fff; font-family: inherit; font-size: 12px; outline: none; }
+.sort-select { padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); background: #fff; color: var(--text-dark); font-family: inherit; font-size: 12px; outline: none; }
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; justify-items: center; }
 
-/* 1. Category Card (Step 1 - Premium/Game) */
-.cat-card { background: var(--bg-card); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 2px solid var(--border-color); width: 100%; transition: 0.2s; }
+/* Category Card (Step 1) */
+.cat-card { background: var(--bg-card); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 2px solid transparent; width: 100%; transition: 0.2s; }
 .cat-card:active { transform: scale(0.96); }
-.cat-icon { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); background:#fff; }
-.cat-name { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cat-icon { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05); background:#fff; }
+.cat-name { font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cat-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* 2. Package View (Step 2 - Premium/Game) */
+/* Package View (Step 2) */
 .pkg-header { text-align: center; margin-bottom: 20px; }
-.pkg-header-name { font-size: 20px; font-weight: 700; color: #fff; text-shadow: 0 0 10px var(--primary); }
+.pkg-header-name { font-size: 20px; font-weight: 700; color: var(--primary); }
 .pkg-header-desc { font-size: 13px; color: var(--text-muted); }
-.pkg-group-title { font-size: 14px; font-weight: 700; color: #fff; margin: 15px 0 8px; display: flex; align-items: center; gap: 8px; }
+.pkg-group-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 15px 0 8px; display: flex; align-items: center; gap: 8px; }
 .pkg-group-title::before { content: ''; width: 4px; height: 16px; background: var(--primary); border-radius: 4px; }
-.pkg-item { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; transition: 0.2s; position: relative; }
-.pkg-item.selected { border-color: var(--secondary); background: rgba(0,210,255,0.05); box-shadow: 0 0 15px rgba(0,210,255,0.2); }
-.pkg-item.selected::before { content: '✓'; position: absolute; top: -8px; left: -8px; background: var(--secondary); color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 5; }
-.pkg-info { flex: 1; text-align:left; }
-.pkg-name { font-size: 14px; font-weight: 600; color: #fff; }
-.pkg-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.pkg-price { font-size: 16px; font-weight: 700; color: var(--secondary); }
 
-/* สไตล์ OS Card พิเศษ (แสดงผลในหน้าแรกของแท็บ OS เลย) */
-.os-card { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px; padding: 15px 12px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 160px; height: 195px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-.os-card.selected { border-color: var(--secondary); background: rgba(0,210,255,0.05); box-shadow: 0 0 15px rgba(0,210,255,0.2); }
-.check-circle { position: absolute; top: -8px; left: -8px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border-color); background: var(--bg-main); display: flex; justify-content: center; align-items: center; transition: 0.2s; z-index: 5; }
-.os-card.selected .check-circle { background: var(--secondary); border-color: var(--secondary); }
+.pkg-item { background: #fff; border: 2px solid transparent; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; transition: 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+/* กรอบข้อความแพ็กเกจย่อยที่ถูกเลือก เป็นสีม่วง */
+.pkg-item.selected { border-color: var(--primary); background: #fdf8ff; box-shadow: 0 0 10px rgba(176,38,255,0.1); }
+.pkg-item.selected::before { content: '✓'; position: absolute; top: -8px; left: -8px; background: var(--primary); color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 5; }
+.pkg-info { flex: 1; text-align:left; }
+.pkg-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+.pkg-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.pkg-price { font-size: 16px; font-weight: 700; color: var(--primary); }
+
+/* OS Card (แท็บ OS แบบ Step เดียว) */
+.os-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 15px 12px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 160px; height: 195px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+.os-card.selected { border-color: var(--primary); background: #fdf8ff; }
+.check-circle { position: absolute; top: -8px; left: -8px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #ddd; background: #fff; display: flex; justify-content: center; align-items: center; transition: 0.2s; z-index: 5; }
+.os-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .check-circle::after { content: '✓'; color: #fff; font-size: 12px; font-weight: bold; opacity: 0; transform: scale(0.5); transition: 0.2s; }
 .os-card.selected .check-circle::after { opacity: 1; transform: scale(1); }
 .os-btn-group { display: flex; gap: 4px; width: 100%; margin: auto 0 8px; }
-.os-btn { flex: 1; font-size: 11px; padding: 6px 0; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); cursor: pointer; color: var(--text-muted); font-weight: 600; font-family: inherit; transition: 0.2s; }
+.os-btn { flex: 1; font-size: 11px; padding: 6px 0; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; color: var(--text-muted); font-weight: 600; font-family: inherit; transition: 0.2s; }
 .os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
 /* Bottom Bar */
-.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 14, 38, 0.95); backdrop-filter: blur(15px); border-top: 2px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: 0.3s; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-top: 2px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: 0.3s; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); }
 .bottom-bar.active { transform: translateY(0); }
-.bb-total { font-size: 20px; font-weight: 700; color: var(--secondary); }
+.bb-total { font-size: 20px; font-weight: 700; color: var(--primary); }
 .bb-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; border-radius: 25px; padding: 10px 24px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; box-shadow: 0 4px 15px rgba(176,38,255,0.3); transition: 0.2s; }
 .bb-btn:active { transform: scale(0.95); }
 
-/* Admin Floating Button (ปุ่มม่วงพาสเทล + สีขาว) */
-.admin-fab { position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%; background: #c084fc; /* สีม่วงพาสเทล */ color: #ffffff; font-size: 32px; font-weight: 300; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(192, 132, 252, 0.5); cursor: pointer; z-index: 999; border: 2px solid rgba(255,255,255,0.3); transition: 0.2s; }
+/* Admin Floating Button (ซ่อนไว้ก่อน) */
+.admin-fab { display: none; position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%; background: #d8b4fe; color: #ffffff; font-size: 32px; font-weight: 300; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(216, 180, 254, 0.6); cursor: pointer; z-index: 999; border: 2px solid #fff; transition: 0.2s; }
 .admin-fab:active { transform: scale(0.9); }
 
 /* Modals */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(3px); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
 .modal-overlay.show { opacity: 1; pointer-events: all; }
-.modal-box { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 20px; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; padding: 24px; transform: scale(0.9); transition: 0.3s; box-shadow: 0 10px 30px rgba(176,38,255,0.2); }
+.modal-box { background: #fff; border: 2px solid var(--primary); border-radius: 20px; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; padding: 24px; transform: scale(0.9); transition: 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 .modal-overlay.show .modal-box { transform: scale(1); }
-.modal-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; font-family: inherit; }
+.modal-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; font-family: inherit; }
 
 /* Admin Form */
 .admin-section { display: none; }
 .admin-section.active { display: block; }
 .admin-tabs { display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-.admin-tab-btn { padding: 6px 12px; border-radius: 15px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-muted); font-size: 12px; cursor: pointer; white-space: nowrap; font-family: inherit; }
+.admin-tab-btn { padding: 6px 12px; border-radius: 15px; border: 1px solid #ddd; background: #f8fafc; color: var(--text-muted); font-size: 12px; cursor: pointer; white-space: nowrap; font-family: inherit; }
 .admin-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 .admin-input-group { margin-bottom: 12px; text-align: left; }
 .admin-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-dark); }
-.admin-input, .admin-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-family: inherit; font-size: 13px; outline: none; background: rgba(0,0,0,0.2); color: #fff; }
+.admin-input, .admin-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; font-size: 13px; outline: none; background: #fff; color: var(--text-dark); }
 </style>
 </head>
 <body>
@@ -125,8 +130,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 <div class="hero">
   <img id="mainShopLogo" src="https://via.placeholder.com/180x190" class="hero-logo" alt="Shop Logo">
-  
-  <div class="hero-title">Wanderer_Shop</div>
+  <div class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</div>
   <div class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
   
   <div class="tab-container" id="mainTabs">
@@ -153,7 +157,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
   <div id="view-categories" class="view-section">
     <div class="section-header">
-      <h3 style="font-size:16px; border-left:4px solid var(--secondary); padding-left:8px;">เลือกรายการ</h3>
+      <h3 style="font-size:16px; border-left:4px solid var(--primary); padding-left:8px;">เลือกรายการ</h3>
       <select class="sort-select" id="catSort" onchange="renderCategories()">
         <option value="name">เรียงตามชื่อ</option>
         <option value="price">เรียงตามราคาเริ่มต้น</option>
@@ -163,14 +167,12 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   </div>
 
   <div id="view-packages" class="view-section">
-    <button onclick="backToCategories()" style="background:none; border:none; color:var(--secondary); font-weight:600; cursor:pointer; margin-bottom:15px; font-size:15px;">← กลับหน้ารายการ</button>
-    
+    <button onclick="backToCategories()" style="background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; margin-bottom:15px; font-size:15px;">← กลับหน้ารายการ</button>
     <div class="pkg-header">
-      <img id="pkgAppIcon" src="" style="width:60px; height:60px; border-radius:12px; margin-bottom:10px; object-fit:cover; border:1px solid rgba(255,255,255,0.1); background:#fff;">
+      <img id="pkgAppIcon" src="" style="width:60px; height:60px; border-radius:12px; margin-bottom:10px; object-fit:cover; border:1px solid #ddd; background:#fff;">
       <div class="pkg-header-name" id="pkgAppName">ชื่อแอป</div>
       <div class="pkg-header-desc" id="pkgAppDesc">รายละเอียดแอป</div>
     </div>
-
     <div id="packageListStandard"></div>
   </div>
 </div>
@@ -183,18 +185,18 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   <button class="bb-btn" onclick="checkout()">สั่งซื้อสินค้า ✨</button>
 </div>
 
-<div class="admin-fab" onclick="handleAdminLogin()">+</div>
+<div class="admin-fab" id="adminFab" onclick="openAdminModal()">+</div>
 
 <div class="modal-overlay" id="adminModal">
-  <div class="modal-box" style="border-color: #ef4444;">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
-      <h3 style="color:#ef4444; margin:0;">⚙️ จัดการระบบร้านค้า</h3>
+  <div class="modal-box" style="border-color: var(--primary);">
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:10px;">
+      <h3 style="color:var(--primary); margin:0;">⚙️ จัดการระบบร้านค้า</h3>
       <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:24px; color:#888;">×</span>
     </div>
 
     <div class="admin-tabs">
       <button class="admin-tab-btn active" onclick="switchAdminTab('info')">ข้อมูลร้าน</button>
-      <button class="admin-tab-btn" onclick="switchAdminTab('product')">สินค้า</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('product')">สินค้า (เพิ่ม/แก้ไข)</button>
     </div>
 
     <div id="admin-info" class="admin-section active">
@@ -212,31 +214,54 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       <div class="admin-input-group"><label class="admin-label">ไอดี Line:</label><input type="text" class="admin-input" id="admLine" onchange="previewShopInfo()"></div>
       <div class="admin-input-group"><label class="admin-label">เวลาทำการ:</label><input type="text" class="admin-input" id="admTime" onchange="previewShopInfo()"></div>
       <div class="admin-input-group"><label class="admin-label">การรับประกัน:</label><input type="text" class="admin-input" id="admWarranty" onchange="previewShopInfo()"></div>
-      <button class="modal-btn" style="background:#ef4444;" onclick="alert('บันทึกข้อมูลสำเร็จ')">💾 บันทึกข้อมูล</button>
+      <button class="modal-btn" onclick="alert('บันทึกข้อมูลเรียบร้อย')">💾 บันทึกข้อมูล</button>
     </div>
 
     <div id="admin-product" class="admin-section">
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">* ท่านสามารถเพิ่มสินค้าได้โดยตรงจากหน้าเว็บ (จำลอง) หรือจัดการใน Google Sheets</p>
+      
       <div class="admin-input-group">
-        <label class="admin-label">เลือกหมวดหมู่:</label>
-        <select class="admin-select" id="admTab"><option value="premium">แอพพรีเมี่ยม</option><option value="os">แอพ/เกม IOS-ANDROID</option></select>
+        <label class="admin-label">เลือกหมวดหมู่ที่ต้องการเพิ่ม:</label>
+        <select class="admin-select" id="admTabProd" onchange="toggleAdmProdFields()">
+          <option value="premium">แอพพรีเมี่ยม</option>
+          <option value="game">เติมเกม</option>
+          <option value="os">แอพ/เกม IOS-ANDROID</option>
+        </select>
       </div>
-      <button class="modal-btn" style="background:#ef4444;" onclick="alert('กรุณาไปเพิ่มหรือแก้ไขสินค้าที่ Google Sheets โดยตรง')">ไปยัง Google Sheets</button>
+      
+      <div class="admin-input-group"><label class="admin-label">ชื่อแอป / หมวดหมู่:</label><input type="text" id="admAppName" class="admin-input" placeholder="เช่น Netflix, RoV"></div>
+      <div class="admin-input-group" id="f-appDesc"><label class="admin-label">รายละเอียดใต้ชื่อแอป:</label><input type="text" id="admAppDesc" class="admin-input" placeholder="เช่น แอพดูหนัง"></div>
+
+      <div id="adm-fields-standard">
+        <div class="admin-input-group"><label class="admin-label">ตัวเลือกแพ็กเกจ (กลุ่มย่อย):</label><input type="text" id="admPkgOpt" class="admin-input" placeholder="เช่น จอส่วนตัว, 90 คูปอง"></div>
+        <div class="admin-input-group"><label class="admin-label">ชื่อแพ็กเกจย่อย:</label><input type="text" id="admSubPkg" class="admin-input" placeholder="เช่น 30 วัน"></div>
+        <div class="admin-input-group"><label class="admin-label">รายละเอียดย่อย:</label><input type="text" id="admSubDesc" class="admin-input" placeholder="เช่น ดูได้ 1 จอ"></div>
+      </div>
+
+      <div id="adm-fields-os" style="display:none;">
+        <div class="admin-input-group">
+          <label class="admin-label">ระบบ IOS-ANDROID:</label>
+          <select id="admOS" class="admin-select"><option value="iOS">iOS</option><option value="Android">Android</option></select>
+        </div>
+      </div>
+
+      <div class="admin-input-group"><label class="admin-label">ราคา (บาท):</label><input type="number" id="admPrice" class="admin-input" placeholder="0"></div>
+      <div class="admin-input-group"><label class="admin-label">ลิงก์รูปภาพ (Icon):</label><input type="text" id="admIcon" class="admin-input" placeholder="URL รูปภาพ"></div>
+
+      <button class="modal-btn" onclick="addNewProduct()">➕ เพิ่มสินค้าใหม่ (แสดงผลทันที)</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ตัวแปรเก็บสถานะต่างๆ
   let currentMainTab = 'info';
   let selectedAppCategory = null;
   let cart = [];
   let products = [];
-  let isAdminAuthed = false; // สถานะล็อกอินแอดมิน
+  let isAdminAuthed = false;
 
-  // อัปเดต Google Sheets URL ตามเงื่อนไขข้อ 2
   const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxmLNA72rOF70Cr5ltAgVJX013XQb4VyFRQl8ny6nvo1MzC1aGsJna5G5ZGX2jgVWe03Q/exec";
 
-  // ข้อมูลจำลองหากโหลด Sheet ไม่สำเร็จ
   const defaultProducts = [
     { id: 'p1', tab: 'premium', appCategory: 'Netflix', appDetails: 'แอพสตรีมมิ่ง 4K', packageOption: 'จอส่วนตัว', subPackage: '30 วัน', subDetails: 'ดูได้ 1 จอ', price: 150, icon: 'https://via.placeholder.com/60/E50914/fff?text=N' },
     { id: 'o1', tab: 'os', appCategory: 'Minecraft', appDetails: 'สร้างโลกสี่เหลี่ยม', os: 'iOS', price: 120, icon: 'https://via.placeholder.com/60/5B8B3D/fff?text=MC' },
@@ -249,14 +274,12 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       let data = await res.json();
       if(data && data.products) { products = data.products; } else { products = defaultProducts; }
     } catch(err) { 
-      console.log("ใช้ข้อมูลจำลอง (ดึง Sheet ไม่สำเร็จ)", err);
       products = defaultProducts;
     }
     renderCategories();
   }
   fetchGoogleSheetsData();
 
-  // จัดการการเปลี่ยนแท็บหลัก
   function switchMainTab(tab) {
     currentMainTab = tab;
     document.querySelectorAll('#mainTabs .tab-btn').forEach(b => b.classList.remove('active'));
@@ -271,15 +294,12 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     }
   }
 
-  // เรนเดอร์หน้าหมวดหมู่
   function renderCategories() {
     const grid = document.getElementById('categoryGrid');
     grid.innerHTML = '';
     let tabProducts = products.filter(p => p.tab === currentMainTab);
 
-    // --------------------------------------------------------
-    // เงื่อนไข 4: หากเป็นแท็บ OS ให้โชว์การ์ดแบบมีปุ่ม OS ในตัว (One-Step)
-    // --------------------------------------------------------
+    // แบบ OS 1-Step (ไม่มีหน้าย่อย)
     if (currentMainTab === 'os') {
       let uniqueOSApps = {};
       tabProducts.forEach(p => {
@@ -294,7 +314,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
         let andPkg = appVariants.find(p => p.os === 'Android' || p.os === 'android');
         let basePkg = appVariants[0];
 
-        // เช็คว่าระบบไหนถูกเลือกอยู่บ้าง
         const isIosSelected = iosPkg && cart.find(c => c.id === iosPkg.id);
         const isAndSelected = andPkg && cart.find(c => c.id === andPkg.id);
         const isCardSelected = isIosSelected || isAndSelected;
@@ -305,21 +324,18 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
           <div class="os-card ${isCardSelected ? 'selected' : ''}">
             <div class="check-circle"></div>
             <img src="${basePkg.icon}" style="width:55px; height:55px; border-radius:12px; margin-bottom:10px; background:#fff; object-fit:cover;">
-            <div style="font-size:14px; font-weight:700; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#fff;">${appName}</div>
+            <div style="font-size:14px; font-weight:700; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-dark);">${appName}</div>
             <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">เลือกระบบ</div>
             <div class="os-btn-group">
               ${iosPkg ? `<button class="os-btn ${isIosSelected ? 'active' : ''}" onclick="toggleOSCard(event, '${iosPkg.id}')">iOS</button>` : ''}
               ${andPkg ? `<button class="os-btn ${isAndSelected ? 'active' : ''}" onclick="toggleOSCard(event, '${andPkg.id}')">Android</button>` : ''}
             </div>
-            <div style="color:var(--secondary); font-weight:700; font-size:15px; margin-top:5px;">${currentPrice}฿</div>
+            <div style="color:var(--primary); font-weight:700; font-size:15px; margin-top:5px;">${currentPrice}฿</div>
           </div>
         `;
       }
-    } 
-    // --------------------------------------------------------
-    // กรณีเป็นแท็บอื่นๆ (Premium / Game) ให้กดเข้าหน้าย่อยปกติ
-    // --------------------------------------------------------
-    else {
+    } else {
+      // แบบปกติต้องเข้าหน้าย่อย (Premium/Game)
       let uniqueAppsMap = {};
       tabProducts.forEach(p => {
         const cleanName = p.appCategory.trim();
@@ -347,28 +363,23 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     }
   }
 
-  // ระบบ Toggle OS ภายในหน้าแรก (เงื่อนไข 4)
   function toggleOSCard(e, productId) {
     e.stopPropagation();
     const btn = e.target;
     const product = products.find(p => p.id === productId);
     
-    // ถ้ายกเลิกปุ่มเดิม
     if(btn.classList.contains('active')) {
       cart = cart.filter(c => c.id !== productId);
     } else {
-      // อนุญาตให้เลือกได้ทีละ 1 ระบบต่อแอป
       const siblings = products.filter(p => p.appCategory === product.appCategory && p.tab === 'os');
       cart = cart.filter(c => !siblings.find(s => s.id === c.id));
-      // เพิ่มลงตะกร้า
       cart.push(product);
     }
     
     updateBottomBar();
-    renderCategories(); // รีเฟรชเพื่อแสดงกรอบการ์ดใหม่
+    renderCategories();
   }
 
-  // ระบบหน้าย่อย (Step 2 - เฉพาะ Premium และ Game)
   function openApp(appName) {
     selectedAppCategory = appName;
     document.getElementById('view-categories').classList.remove('active');
@@ -377,7 +388,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     const appData = products.find(p => p.appCategory === appName);
     document.getElementById('pkgAppName').innerText = appName;
     document.getElementById('pkgAppDesc').innerText = appData.appDetails || '';
-    document.getElementById('pkgAppIcon').src = appData.icon;
+    document.getElementById('pkgAppIcon').src = appData.icon || 'https://via.placeholder.com/60';
 
     renderPackages();
   }
@@ -439,7 +450,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     }
   }
 
-  // ระบบ Checkout
   function checkout() {
     let total = 0;
     let text = "🛒 สรุปรายการสั่งซื้อ\n\n";
@@ -455,10 +465,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     const tempInput = document.createElement("textarea"); tempInput.value = text;
     document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
     alert('คัดลอกรายการสั่งซื้อแล้ว ระบบกำลังพาท่านไปยัง LINE ร้านค้า...');
-    window.location.href = "https://line.me"; // เด้งไป LINE ร้านค้า
+    window.location.href = "https://line.me"; 
   }
 
-  // คัดลอกข้อความ
   function copyText(e, text) {
     e.stopPropagation();
     const tempInput = document.createElement("input"); tempInput.value = text;
@@ -466,23 +475,34 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     alert('คัดลอก "' + text + '" ลงในคลิปบอร์ดแล้ว');
   }
 
-  // --------------------------------------------------------
-  // เงื่อนไข 1: ระบบเข้าแอดมิน (กดครั้งเดียวแล้วขึ้นค้าง)
-  // --------------------------------------------------------
-  function handleAdminLogin() {
-    if (!isAdminAuthed) {
-      // ถามรหัสผ่านแค่ครั้งเดียว
-      let pwd = prompt("🔒 ใส่รหัสผ่าน Admin:");
-      if (pwd === "170647") {
-        isAdminAuthed = true; // จำค่าว่าล็อกอินแล้ว
-        document.getElementById('adminModal').classList.add('show');
-      } else if (pwd !== null) {
-        alert("รหัสผ่านไม่ถูกต้อง");
+  // 1. ระบบกดชื่อ 5 ครั้งเพื่อปลดล็อกปุ่มแอดมิน
+  let adminClickCount = 0;
+  let adminTimer;
+  function checkAdminLogin() {
+    adminClickCount++;
+    clearTimeout(adminTimer);
+    adminTimer = setTimeout(() => { adminClickCount = 0; }, 2000); 
+    
+    if (adminClickCount >= 5) {
+      if (!isAdminAuthed) {
+        let pwd = prompt("🔒 ใส่รหัสผ่าน Admin:");
+        if (pwd === "170647") {
+          isAdminAuthed = true;
+          document.getElementById('adminFab').style.display = 'flex'; // แสดงปุ่ม +
+          openAdminModal();
+        } else if (pwd !== null) {
+          alert("รหัสผ่านไม่ถูกต้อง");
+        }
+      } else {
+        document.getElementById('adminFab').style.display = 'flex';
+        openAdminModal();
       }
-    } else {
-      // ถ้าเข้ารหัสถูกไปแล้ว กดครั้งต่อไปจะเด้งหน้าต่างขึ้นมาเลย (จนกว่าจะรีเว็บ)
-      document.getElementById('adminModal').classList.add('show');
+      adminClickCount = 0;
     }
+  }
+
+  function openAdminModal() {
+    document.getElementById('adminModal').classList.add('show');
   }
 
   function switchAdminTab(tab) {
@@ -510,6 +530,56 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     if(document.getElementById('admLine').value) document.getElementById('infoLine').innerHTML = `${document.getElementById('admLine').value} <button class="copy-btn" onclick="copyText(event, '${document.getElementById('admLine').value}')">Copy</button>`;
     if(document.getElementById('admTime').value) document.getElementById('infoTime').innerText = document.getElementById('admTime').value;
     if(document.getElementById('admWarranty').value) document.getElementById('infoWarranty').innerText = document.getElementById('admWarranty').value;
+  }
+
+  // 2. ฟังก์ชันเพิ่มสินค้าตรงหน้าเว็บ
+  function toggleAdmProdFields() {
+    const tab = document.getElementById('admTabProd').value;
+    if(tab === 'os') {
+      document.getElementById('adm-fields-standard').style.display = 'none';
+      document.getElementById('adm-fields-os').style.display = 'block';
+      document.getElementById('f-appDesc').style.display = 'none';
+    } else {
+      document.getElementById('adm-fields-standard').style.display = 'block';
+      document.getElementById('adm-fields-os').style.display = 'none';
+      document.getElementById('f-appDesc').style.display = 'block';
+    }
+  }
+
+  function addNewProduct() {
+    const tab = document.getElementById('admTabProd').value;
+    const newProd = {
+      id: 'n_' + Date.now(),
+      tab: tab,
+      appCategory: document.getElementById('admAppName').value || 'New App',
+      price: Number(document.getElementById('admPrice').value) || 0,
+      icon: document.getElementById('admIcon').value || 'https://via.placeholder.com/60'
+    };
+
+    if(tab === 'os') {
+      newProd.os = document.getElementById('admOS').value;
+      newProd.appDetails = '';
+    } else {
+      newProd.appDetails = document.getElementById('admAppDesc').value;
+      newProd.packageOption = document.getElementById('admPkgOpt').value;
+      newProd.subPackage = document.getElementById('admSubPkg').value;
+      newProd.subDetails = document.getElementById('admSubDesc').value;
+    }
+
+    products.push(newProd); // เพิ่มสินค้าเข้าไปใน Array จำลองหน้าเว็บ
+    alert('✅ เพิ่มสินค้าเรียบร้อยแล้ว สินค้าจะแสดงผลบนหน้าเว็บทันที');
+    
+    // อัปเดตหน้าจอทันที
+    if(currentMainTab === tab) {
+      renderCategories();
+    }
+    if (document.getElementById('view-packages').classList.contains('active') && selectedAppCategory === newProd.appCategory) {
+      renderPackages();
+    }
+
+    // ล้างข้อมูลฟอร์ม
+    document.getElementById('admAppName').value = '';
+    document.getElementById('admPrice').value = '';
   }
 </script>
 </body>
