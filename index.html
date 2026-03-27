@@ -560,13 +560,23 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     renderAllTabs(); syncDataToSheet(); alert('เพิ่มแท็บเรียบร้อย');
   }
 
-  function deleteTab(id) {
+ function deleteTab(id) {
     if(!confirm('🚨 แท็บและสินค้าจะถูกลบทิ้ง แน่ใจหรือไม่?')) return;
-    const tabToDelete = customTabs.find(t => t.id === id);
-    if(tabToDelete) { products = products.filter(p => p.tabId !== tabToDelete.id); }
-    customTabs = customTabs.filter(t => t.id !== id);
-    if(currentMainTabId === id) currentMainTabId = 'info'; 
-    renderAllTabs(); syncDataToSheet();
+    
+    // จัดการกรณีแท็บพัง (ค่า id เป็น undefined จากข้อมูลเก่า)
+    if (id === 'undefined' || !id) {
+      // ล้างแท็บที่ไม่มี ID หรือพังออกให้หมด
+      customTabs = customTabs.filter(t => t.id && t.id !== 'undefined');
+    } else {
+      // ลบแท็บปกติ
+      const tabToDelete = customTabs.find(t => t.id === id);
+      if(tabToDelete) { products = products.filter(p => p.tabId !== tabToDelete.id); }
+      customTabs = customTabs.filter(t => t.id !== id);
+    }
+    
+    if(currentMainTabId === id || id === 'undefined') currentMainTabId = 'info'; 
+    renderAllTabs(); 
+    syncDataToSheet();
   }
 
   function toggleAdmProdFields() {
