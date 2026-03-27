@@ -830,5 +830,161 @@ function renderAdminList() {
 }
 function resetData() { if(prompt('พิมพ์ "RESET" เพื่อยืนยันการล้างข้อมูลทั้งหมด') === "RESET") { localStorage.clear(); location.reload(); } }
 </script>
+<style>
+    /* =========================================
+       เงื่อนไขที่ 1: ขีดสีม่วงด้านหน้าตัวเลือกแพ็กเกจ 
+       (ดักจับหัวข้อในฟอร์มและป้ายกำกับ)
+    ========================================= */
+    .admin-label, .info-card-title, h3, h4 {
+        border-left: 4px solid var(--primary) !important;
+        padding-left: 10px !important;
+    }
+
+    /* =========================================
+       เงื่อนไขที่ 3 & 4: จัดการการ์ดสินค้า (ยกเว้นแท็บข้อมูลร้าน)
+       ใช้ ID #tab-products เพื่อเจาะจงเฉพาะหน้าสินค้า
+    ========================================= */
+    
+    /* ขนาดการ์ด 5*7 ทุกแบบในการขาย */
+    #tab-products .category-card,
+    #tab-products .os-card,
+    #tab-products .product-item {
+        aspect-ratio: 5 / 7 !important;
+        height: auto !important; /* ปลดล็อกความสูงเดิมที่ล็อกไว้ */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        overflow: hidden !important;
+    }
+
+    /* ชื่อแอพขนาด 15 เหมือนกันทุกแท็บ */
+    #tab-products .os-app-title,
+    #tab-products .product-item strong,
+    #tab-products .category-card div[style*="font-weight:600"] {
+        font-size: 15px !important;
+    }
+
+    /* =========================================
+       เงื่อนไขที่ 3 (เพิ่มเติม): ข้อความราคา ห่าง 2 ซม. บน-ล่าง
+    ========================================= */
+    #tab-products .os-app-price,
+    #tab-products .product-item small,
+    #tab-products .cat-price {
+        margin-top: 2cm !important;
+        margin-bottom: 2cm !important;
+        display: block !important;
+        font-size: 16px !important; /* ปรับราคาให้ใหญ่ขึ้นนิดนึงเพื่อให้สมดุลกับช่องว่าง */
+    }
+</style>
+<style>
+    /* =========================================
+       เงื่อนไขที่ 3 & 4: จัดการการ์ดสินค้า (เฉพาะหน้าสินค้า)
+    ========================================= */
+    
+    /* ขนาดการ์ด 5*7 ทุกแบบในการขาย */
+    #tab-products .category-card,
+    #tab-products .os-card,
+    #tab-products .product-item {
+        aspect-ratio: 5 / 7 !important;
+        height: auto !important; /* ปลดล็อกความสูงเดิมที่ล็อกไว้ */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        overflow: hidden !important;
+    }
+
+    /* ชื่อแอพขนาด 15 เหมือนกันทุกแท็บ */
+    #tab-products .os-app-title,
+    #tab-products .product-item strong,
+    #tab-products .category-card div[style*="font-weight: 600"],
+    #tab-products .category-card div[style*="font-weight:600"] {
+        font-size: 15px !important;
+    }
+
+    /* =========================================
+       เงื่อนไขที่ 3 (เพิ่มเติม): ข้อความราคา ห่าง 2 ซม. บน-ล่าง
+       *เจาะจงเฉพาะกล่องข้อความที่มีสีม่วง (ซึ่งเป็นตัวเลขราคาในระบบคุณ)*
+    ========================================= */
+    #tab-products .os-app-price,
+    #tab-products .category-card div[style*="color: var(--primary)"],
+    #tab-products .category-card div[style*="color:var(--primary)"],
+    #tab-products .product-item div[style*="color:var(--primary)"] {
+        margin-top: 2cm !important;
+        margin-bottom: 2cm !important;
+        display: block !important;
+        font-size: 16px !important;
+    }
+</style>
+
+<script>
+    /* =========================================
+       เงื่อนไขที่ 1: ขีดสีม่วงด้านหน้า "ตัวเลือกแพ็กเกจ"
+       (ใช้สคริปต์ค้นหาคำว่า "แพ็กเกจ" แล้วใส่ขีดให้โดยไม่แก้ HTML เดิม)
+    ========================================= */
+    function applyPurpleLine() {
+        const labels = document.querySelectorAll('.admin-label, h3, h4');
+        labels.forEach(label => {
+            if(label.textContent.includes('แพ็กเกจ') || label.textContent.includes('รายการสินค้า')) {
+                label.style.borderLeft = "4px solid var(--primary)";
+                label.style.paddingLeft = "10px";
+            }
+        });
+    }
+
+    /* =========================================
+       เงื่อนไขที่ 2: ระบบซิงค์ข้อมูล iPad กับคอม
+       (เขียนทับฟังก์ชันโหลดเว็บ เพื่อให้ดึงข้อมูลจาก Cloud เสมอ)
+    ========================================= */
+    window.onload = async function() {
+        // โหลดข้อมูลจากในเครื่องก่อน เพื่อให้เว็บขึ้นเร็ว
+        if(localStorage.getItem('shopInfo')) shopInfo = JSON.parse(localStorage.getItem('shopInfo'));
+        if(localStorage.getItem('products')) products = JSON.parse(localStorage.getItem('products'));
+        if(localStorage.getItem('tabs')) tabs = JSON.parse(localStorage.getItem('tabs'));
+        
+        renderShopInfo();
+        renderTabs();
+        if(tabs.length > 0) switchMainTab(tabs[0], document.querySelector('.tab-btn'));
+        applyPurpleLine();
+
+        // แอบดึงข้อมูลล่าสุดจาก Google Sheets มาอัปเดตทับ (แก้ไอแพดไม่ตรงคอม)
+        if(typeof GOOGLE_SHEET_API_URL !== 'undefined' && GOOGLE_SHEET_API_URL !== '') {
+            try {
+                let res = await fetch(GOOGLE_SHEET_API_URL);
+                let data = await res.json();
+                
+                if(data) {
+                    if(data.shopInfo) { shopInfo = data.shopInfo; localStorage.setItem('shopInfo', JSON.stringify(shopInfo)); }
+                    if(data.tabs) { tabs = data.tabs; localStorage.setItem('tabs', JSON.stringify(tabs)); }
+                    if(data.products) { products = data.products; localStorage.setItem('products', JSON.stringify(products)); }
+                    
+                    // โหลดหน้าเว็บซ้ำแบบเนียนๆ
+                    renderShopInfo();
+                    renderTabs();
+                    
+                    if(document.getElementById('productsView') && document.getElementById('productsView').style.display === 'block') {
+                        renderProductList();
+                    } else {
+                        // ปรับแก้ชื่อฟังก์ชันให้ตรงกับโค้ดต้นฉบับของคุณ 100%
+                        if(typeof renderCategories === 'function') renderCategories(); 
+                    }
+                    applyPurpleLine();
+                }
+            } catch(e) {
+                console.log("เข้าสู่โหมดออฟไลน์:", e);
+            }
+        }
+    };
+
+    // ฝังคำสั่งให้ตอนกดเปลี่ยนหน้า ก็ยังมีขีดสีม่วงอยู่
+    if(typeof renderCategories === 'function') {
+        const originalRenderCategories = renderCategories;
+        renderCategories = function() {
+            originalRenderCategories();
+            applyPurpleLine();
+        }
+    }
+</script>
 </body>
 </html>
