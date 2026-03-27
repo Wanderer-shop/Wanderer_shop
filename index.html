@@ -7,243 +7,339 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Mitr:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* --- Design System --- */
+/* --- โครงสร้างสีและ Design เดิม (คงไว้ทั้งหมด) --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root { --primary: #b026ff; --secondary: #00d2ff; --bg-main: #f4f5f7; --bg-card: #ffffff; --text-muted: #6b7280; --glow: rgba(176,38,255,0.5); --text-dark: #1f2937; --white: #ffffff; --success: #10b981; --danger: #ef4444; --warning: #f39c12; }
 body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(--text-dark); overflow-x: hidden; padding-bottom: 110px; }
 
-/* 1. การแสดงผลรูปภาพและไอคอน (UI/UX) */
-.category-card { 
+/* โครงสร้าง Hero และส่วนหัวเดิม */
+.hero { max-width: 1200px; margin: 0 auto 40px auto; background: linear-gradient(135deg, rgba(176,38,255,0.8) 0%, rgba(0,210,255,0.8) 100%); padding: 30px 20px 55px; text-align: center; position: relative; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; color: white; }
+.logo { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid var(--white); margin: 0 auto 15px; background: #fff; }
+.logo img { width: 100%; height: 100%; object-fit: cover; }
+.hero-title { font-family: 'Mitr', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+.hero-sub { font-size: 14px; opacity: 0.9; }
+
+/* แถบ Tab เดิม */
+.tab-container { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); display: flex; background: var(--bg-card); border-radius: 30px; padding: 6px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); white-space: nowrap; overflow-x: auto; max-width: 90%; }
+.tab-btn { padding: 8px 16px; border-radius: 25px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; background: transparent; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; }
+
+.content { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; justify-content: center; }
+
+/* --- 📝 เงื่อนไข 1: การแสดงผลรูปภาพและไอคอน (UI/UX) --- */
+.product-item { 
     background: var(--bg-card); 
     border-radius: 20px; /* มุมโค้ง 20px */
-    padding: 18px; /* Padding 18px */
+    padding: 18px; /* Padding ด้านใน 18px */
     text-align: center; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
     position: relative; 
     border: 2px solid transparent; 
-    transition: 0.3s;
-    width: 100%;
+    transition: 0.2s;
     cursor: pointer;
 }
 
-/* ขนาดรูปภาพ 50x70px ทรงแนวตั้ง */
+/* ขนาดรูป 50x70px ทรงแนวตั้ง */
 .cat-icon-wrapper {
     width: 50px;
     height: 70px;
     margin: 0 auto 10px;
     border-radius: 10px;
     overflow: hidden;
-    background: #eee;
+    background: #f0f0f0;
 }
 .cat-icon-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-/* การตัดคำ (Ellipsis) */
-.app-name-label {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* ซ่อนรูปเมื่ออยู่ในหน้ารายการสินค้า (แพ็กเกจย่อย) */
+#productsView .cat-icon-wrapper { display: none; }
+
+/* การตัดคำ: ชื่อแอปบรรทัดเดียว ... */
+.app-title { 
+    font-weight: 600; 
+    font-size: 14px; 
+    color: var(--text-dark); 
     display: block;
-    width: 100%;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
-/* สัญลักษณ์การเลือก (กรอบม่วง + ติ๊กถูก) */
-.category-card.selected {
-    border-color: var(--primary);
-    background: #fdf8ff;
-}
-.select-badge {
+/* --- 📝 เงื่อนไข 2: สัญลักษณ์การเลือก & กรอบสีม่วง --- */
+.product-item.selected { border-color: var(--primary); background: #fdf8ff; }
+.select-check {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 20px;
-    height: 20px;
+    top: -5px;
+    left: -5px;
+    width: 24px;
+    height: 24px;
     background: var(--primary);
     color: white;
     border-radius: 50%;
+    font-size: 14px;
     display: none; /* ซ่อนไว้ก่อน */
     align-items: center;
     justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(176,38,255,0.4);
+}
+.product-item.selected .select-check { display: flex; /* แสดงเมื่อถูกเลือก */ }
+
+/* ปุ่มระบบ iOS/Android (ไม่มีอีโมจิ) */
+.os-btn-group { display: flex; gap: 8px; margin-top: 10px; }
+.os-btn {
+    flex: 1;
+    padding: 8px 0;
     font-size: 12px;
-}
-.category-card.selected .select-badge { display: flex; }
-
-/* 2. ระบบ Logic iOS/ANDROID */
-.os-selector { display: flex; gap: 8px; margin-top: 10px; }
-.os-btn { 
-    flex: 1; 
-    padding: 6px 0; 
-    border: 1px solid #ddd; 
-    border-radius: 8px; 
-    background: #fff; 
-    font-size: 12px; 
-    font-weight: bold;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
     cursor: pointer;
+    font-weight: bold;
+    color: #4b5563;
+    transition: 0.2s;
 }
-.os-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-/* 3. การจัดวาง Layout */
-.section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px; }
-.sort-select { padding: 5px 10px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Kanit'; font-size: 12px; }
+/* --- 📝 เงื่อนไข 3: การจัดวาง Layout & กล่องข้อความ --- */
+.section-header {
+    display: flex;
+    justify-content: space-between; /* จัดเรียงซ้าย-ขวา ให้อยู่บรรทัดเดียวกัน */
+    align-items: center;
+    margin-bottom: 20px;
+}
+.section-title { font-family: 'Mitr', sans-serif; font-size: 18px; border-left: 4px solid var(--primary); padding-left: 10px; }
+.sort-dropdown { padding: 6px 12px; border-radius: 20px; border: 1px solid #e5e7eb; background: white; font-family: 'Kanit'; font-size: 13px; color: var(--text-muted); outline: none; }
 
-/* อื่นๆ */
-.hero { background: linear-gradient(135deg, #b026ff 0%, #00d2ff 100%); padding: 40px 20px; text-align: center; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-.logo-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; margin-bottom: 10px; }
-.category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 10px; }
-.product-list { display: flex; flex-direction: column; gap: 10px; }
-.package-item { background: white; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
-.bottom-bar { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 100; }
+/* เงื่อนไข 4: ปรับขนาดกล่องข้อความให้ใหญ่ขึ้น (ตัวอย่างสำหรับกล่อง Contact/Input) */
+.input-field { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 12px; font-family: 'Kanit'; font-size: 16px; margin-top: 10px; }
+
+/* Bottom Bar เดิม */
+.bottom-bar { position: fixed; bottom: 0; left: 50%; width: 100%; max-width: 1200px; background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; transform: translate(-50%, 100%); transition: 0.3s; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
+.bottom-bar.active { transform: translate(-50%, 0); }
 </style>
 </head>
 <body>
 
 <div class="hero">
-    <img src="https://via.placeholder.com/80" class="logo-img" id="shopLogo">
-    <h2 id="shopWelcome">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</h2>
+  <div class="logo"><img id="shopLogoImg" src="https://via.placeholder.com/150" alt="Logo"></div>
+  <div class="hero-title" id="shopNameTitle">Wanderer Shop</div>
+  <div class="hero-sub" id="shopDescTitle">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div> 
+  <div class="tab-container" id="tabBar">
+      <button class="tab-btn active" onclick="switchTab('games')">🎮 เติมเกม</button>
+      <button class="tab-btn" onclick="switchTab('apps')">📱 แอพพรีเมียม</button>
+  </div>
 </div>
 
-<div class="container" style="max-width: 600px; margin: 0 auto; padding: 15px;">
-    <div id="categoriesView">
-        <div class="section-header">
-            <h3 id="catTitle">รายการสินค้า</h3>
-            <select class="sort-select" id="sortDropdown" onchange="renderCategories()">
-                <option value="name">เรียงตามอักษร</option>
-                <option value="price">เรียงตามราคา</option>
-            </select>
-        </div>
-        <div class="category-grid" id="categoryGrid"></div>
-    </div>
-
-    <div id="productsView" style="display:none;">
-        <button onclick="goBack()" style="background:none; border:none; color:var(--primary); font-weight:bold; margin-bottom:15px; cursor:pointer;">← ย้อนกลับ</button>
-        <h3 id="selectedAppName" style="margin-bottom:15px;"></h3>
-        <div class="product-list" id="productList"></div>
-    </div>
+<div class="content">
+  <div id="categoriesView">
+      <div class="section-header">
+          <div class="section-title">รายการสินค้า</div>
+          <select id="sortDropdownCat" class="sort-dropdown" onchange="renderCategories()">
+              <option value="default">เรียงตามอักษร</option>
+              <option value="price">ราคา</option>
+          </select>
+      </div>
+      <div class="category-grid" id="categoryGrid">
+          </div>
+  </div>
+  
+  <div id="productsView" style="display:none;">
+      <div class="section-header">
+          <button onclick="goBackToCategories()" style="background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; font-size: 16px;">← กลับหน้ารายการ</button>
+      </div>
+      <h2 id="currentAppName" style="margin-bottom:15px; font-family: 'Mitr';"></h2>
+      <div id="productGrid" style="display: flex; flex-direction: column; gap: 10px;">
+          </div>
+  </div>
 </div>
 
-<div class="bottom-bar" id="bottomBar" style="display:none;">
-    <div>
-        <div style="font-size: 12px; color: #666;">ยอดชำระทั้งหมด</div>
-        <div style="font-size: 20px; font-weight: bold; color: var(--primary);" id="totalPrice">0฿</div>
-    </div>
-    <button onclick="checkout()" style="background:var(--primary); color:white; border:none; padding: 10px 25px; border-radius:25px; font-weight:bold;">สั่งซื้อเลย</button>
+<div class="bottom-bar" id="bottomBar">
+  <div>
+      <div style="font-size: 12px; color: var(--text-muted);">เลือกสินค้าแล้ว</div>
+      <div style="color:var(--primary); font-weight:bold; font-size:20px;" id="cartTotal">0฿</div>
+  </div>
+  <button onclick="checkout()" style="padding:10px 30px; border-radius:25px; border:none; background:var(--primary); color:white; font-weight:700; font-family: 'Kanit'; cursor: pointer; font-size: 16px;">สั่งซื้อ</button>
 </div>
 
 <script>
-let products = [];
-let shopInfo = {};
-let selectedApp = null;
-let currentOS = null;
-const GOOGLE_SHEET_API_URL = 'YOUR_GOOGLE_SHEET_WEB_APP_URL';
+    let products = [];
+    let shopInfo = {};
+    let currentAppSelected = null;
+    let selectedOS = null;
+    let selectedPackagePrice = 0;
 
-// 5. การซิงค์ข้อมูล (Real-time Sync & No-Cache)
-async function fetchData() {
-    const timestamp = new Date().getTime(); 
-    try {
-        const response = await fetch(`${GOOGLE_SHEET_API_URL}?t=${timestamp}`);
-        const data = await response.json();
-        products = data.products;
-        shopInfo = data.shopInfo;
-        renderCategories();
-        
-        // 4. ข้อมูลติดต่อ: เซ็ตลิงก์ให้แอปเปิดโดยตรง
-        if(shopInfo.contactUrl) {
-            window.adminContact = shopInfo.contactUrl;
-        }
-    } catch (e) { console.error("Sync Error", e); }
-}
+    const GOOGLE_SHEET_API_URL = 'ใส่_URL_WEB_APP_ของคุณที่นี่';
 
-function renderCategories() {
-    const grid = document.getElementById('categoryGrid');
-    grid.innerHTML = '';
-    
-    // ดึงรายชื่อแอปแบบ Unique
-    const uniqueApps = [...new Set(products.map(p => p.category))];
-    
-    uniqueApps.forEach(appName => {
-        const appData = products.find(p => p.category === appName);
-        const card = document.createElement('div');
-        card.className = `category-card ${selectedApp === appName ? 'selected' : ''}`;
-        
-        // 1. UI: แสดงไอคอนเฉพาะหน้าหมวดหมู่
-        card.innerHTML = `
-            <div class="select-badge">✓</div>
-            <div class="cat-icon-wrapper">
-                <img src="${appData.image}" alt="">
-            </div>
-            <span class="app-name-label">${appName.replace(/[^\u0E00-\u0E7Fa-zA-Z0-9 ]/g, '')}</span>
-        `;
-        
-        card.onclick = () => selectApp(appName);
-        grid.appendChild(card);
-    });
-}
-
-function selectApp(appName) {
-    selectedApp = appName;
-    document.getElementById('categoriesView').style.display = 'none';
-    document.getElementById('productsView').style.display = 'block';
-    document.getElementById('selectedAppName').innerText = appName;
-    renderProductList();
-}
-
-function renderProductList() {
-    const list = document.getElementById('productList');
-    list.innerHTML = '';
-    
-    // ฟิลเตอร์เฉพาะแอปที่เลือก
-    const appPackages = products.filter(p => p.category === selectedApp);
-    
-    // 2. Logic iOS/ANDROID
-    const osSelector = `
-        <div class="os-selector">
-            <button class="os-btn ${currentOS === 'iOS' ? 'active' : ''}" onclick="setOS('iOS')">iOS</button>
-            <button class="os-btn ${currentOS === 'Android' ? 'active' : ''}" onclick="setOS('Android')">Android</button>
-        </div>
-    `;
-    list.innerHTML = osSelector;
-
-    appPackages.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'package-item';
-        // 3. จัดกลุ่มแพ็กเกจ (เพิ่มสัญลักษณ์ |) และแก้รูปแบบราคา (75฿)
-        div.innerHTML = `
-            <div>
-                <span style="font-weight:bold; color:var(--primary);">|</span> ${item.name}
-            </div>
-            <div style="font-weight:bold;">${item.price}฿</div>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function setOS(os) {
-    // หากกดซ้ำที่เดิม ให้ยกเลิก (เอาออกจากตะกร้า/เคลียร์สถานะ)
-    if (currentOS === os) {
-        currentOS = null;
-        document.getElementById('bottomBar').style.display = 'none';
-    } else {
-        currentOS = os;
-        document.getElementById('bottomBar').style.display = 'flex';
-        // คำนวณราคาสินค้าที่เลือก (ตัวอย่าง)
-        const price = products.find(p => p.category === selectedApp && (p.os === os || !p.os))?.price || 0;
-        document.getElementById('totalPrice').innerText = price + '฿';
+    // 📝 เงื่อนไข 4: ตัดอีโมจิออกจากชื่อแอปอัตโนมัติ
+    function removeEmojis(str) {
+        if(!str) return '';
+        return str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim();
     }
-    renderProductList();
-}
 
-function goBack() {
-    selectedApp = null;
-    currentOS = null;
-    document.getElementById('categoriesView').style.display = 'block';
-    document.getElementById('productsView').style.display = 'none';
-    document.getElementById('bottomBar').style.display = 'none';
-    renderCategories();
-}
+    // 📝 เงื่อนไข 5: ระบบป้องกัน Cache (Real-time Sync)
+    async function forceSyncDataFromGoogle() {
+        if(typeof GOOGLE_SHEET_API_URL !== 'undefined' && GOOGLE_SHEET_API_URL !== '') {
+            try {
+                // เพิ่ม Timestamp ต่อท้าย URL เพื่อบังคับดึงข้อมูลใหม่เสมอ
+                const timestamp = new Date().getTime(); 
+                let res = await fetch(`${GOOGLE_SHEET_API_URL}?t=${timestamp}`);
+                let data = await res.json();
+                
+                if(data) {
+                    if(data.shopInfo) shopInfo = data.shopInfo;
+                    if(data.products) products = data.products;
+                    
+                    // อัปเดตข้อมูลร้าน
+                    if(shopInfo.shopName) document.getElementById('shopNameTitle').innerText = shopInfo.shopName;
+                    if(shopInfo.logoUrl) document.getElementById('shopLogoImg').src = shopInfo.logoUrl;
+                    
+                    renderCategories();
+                }
+            } catch(error) {
+                console.log("ซิงค์ข้อมูลไม่สำเร็จ", error);
+            }
+        }
+    }
 
-// โหลดข้อมูลครั้งแรก
-fetchData();
+    // เรนเดอร์หน้าหมวดหมู่หลัก
+    function renderCategories() {
+        const grid = document.getElementById('categoryGrid');
+        grid.innerHTML = '';
+        
+        // ดึงชื่อแอปที่ไม่ซ้ำกัน
+        const uniqueApps = [...new Set(products.map(p => p.category))];
+        
+        uniqueApps.forEach(appName => {
+            const cleanAppName = removeEmojis(appName);
+            const appProducts = products.filter(p => p.category === appName);
+            const minPrice = Math.min(...appProducts.map(p => p.price));
+            const image = appProducts[0].image || 'https://via.placeholder.com/50x70';
+            
+            const card = document.createElement('div');
+            card.className = 'product-item';
+            card.onclick = () => selectApp(appName);
+            
+            card.innerHTML = `
+                <div class="select-check">✓</div>
+                <div class="cat-icon-wrapper">
+                    <img src="${image}" alt="${cleanAppName}">
+                </div>
+                <div class="app-title">${cleanAppName}</div>
+                <div style="color:var(--primary); font-size:13px; font-weight:600; margin-top:5px;">เริ่มต้น ${minPrice}฿</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // เมื่อกดเลือกแอป -> ไปหน้าแพ็กเกจย่อย
+    function selectApp(appName) {
+        currentAppSelected = appName;
+        selectedOS = null; // เคลียร์ OS ทุกครั้งที่เข้าใหม่
+        
+        document.getElementById('categoriesView').style.display = 'none';
+        document.getElementById('productsView').style.display = 'block';
+        document.getElementById('currentAppName').innerText = removeEmojis(appName);
+        
+        renderProductList();
+        updateBottomBar(false);
+    }
+
+    function renderProductList() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+        
+        const appProducts = products.filter(p => p.category === currentAppSelected);
+        
+        // 📝 เงื่อนไข 2: เลือกระบบ iOS หรือ Android (ไม่มีอีโมจิ)
+        const osSelector = document.createElement('div');
+        osSelector.className = 'os-btn-group';
+        osSelector.innerHTML = `
+            <button class="os-btn ${selectedOS === 'iOS' ? 'active' : ''}" onclick="toggleOS('iOS')">iOS</button>
+            <button class="os-btn ${selectedOS === 'Android' ? 'active' : ''}" onclick="toggleOS('Android')">Android</button>
+        `;
+        grid.appendChild(osSelector);
+
+        // รายการแพ็กเกจ
+        appProducts.forEach(item => {
+            const div = document.createElement('div');
+            // สร้างกรอบม่วงถ้าสินค้านี้ถูกเลือก (เทียบชื่อแพ็กและ OS)
+            const isSelected = (selectedOS === item.os || !item.os) && selectedPackagePrice === item.price;
+            div.className = `product-item ${isSelected && selectedOS ? 'selected' : ''}`;
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'center';
+            div.style.padding = '15px 18px'; // แพดดิ้งแนวนอนแนบเงื่อนไข
+            
+            // 📝 เงื่อนไข 3: เติมขีดหนา | และจัดราคาแบบ 75฿
+            div.innerHTML = `
+                <div style="text-align: left; flex: 1;">
+                    <span style="font-weight: 800; color: var(--primary);">|</span> 
+                    <span style="font-weight: 500; font-size: 15px;">${item.name}</span>
+                </div>
+                <div style="font-weight: bold; color: var(--primary); font-size: 16px;">${item.price}฿</div>
+            `;
+            
+            // เลือกระบบก่อนถึงจะคิดราคาแพ็กเกจนี้
+            div.onclick = () => {
+                if(!selectedOS) {
+                    Swal.fire({ icon: 'warning', title: 'โปรดเลือกระบบ', text: 'กรุณาเลือกระบบ iOS หรือ Android ก่อนเลือกแพ็กเกจ', confirmButtonColor: '#b026ff' });
+                    return;
+                }
+                selectedPackagePrice = item.price;
+                renderProductList(); // รีเฟรชเพื่อแสดงกรอบม่วง
+                updateBottomBar(true, item.price);
+            };
+            
+            grid.appendChild(div);
+        });
+    }
+
+    // 📝 เงื่อนไข 2: การทำงานของปุ่มกดระบบ
+    function toggleOS(osName) {
+        if (selectedOS === osName) {
+            // หากกดซ้ำที่ปุ่มระบบเดิม -> ยกเลิกการเลือก/เอาออกจากตะกร้า
+            selectedOS = null;
+            selectedPackagePrice = 0;
+            updateBottomBar(false);
+        } else {
+            selectedOS = osName;
+            selectedPackagePrice = 0; // รีเซ็ตแพ็กเกจที่เลือกไว้ให้เลือกใหม่
+            updateBottomBar(false);
+        }
+        renderProductList(); // รีเฟรชปุ่ม
+    }
+
+    function goBackToCategories() {
+        currentAppSelected = null;
+        selectedOS = null;
+        document.getElementById('categoriesView').style.display = 'block';
+        document.getElementById('productsView').style.display = 'none';
+        updateBottomBar(false);
+    }
+
+    function updateBottomBar(show, price = 0) {
+        const bar = document.getElementById('bottomBar');
+        if(show) {
+            document.getElementById('cartTotal').innerText = `${price}฿`;
+            bar.classList.add('active');
+        } else {
+            bar.classList.remove('active');
+        }
+    }
+
+    // 📝 เงื่อนไข 4: เปิดลิงก์ตรงไปยังบัญชีแอดมินเมื่อกดติดต่อหรือสั่งซื้อ
+    function checkout() {
+        if (shopInfo.contactUrl) {
+            window.location.href = shopInfo.contactUrl; // เปลี่ยนหน้าไปยังลิงก์ (Facebook/Line)
+        } else {
+            Swal.fire('สำเร็จ!', 'คุณได้สั่งซื้อในราคา ' + selectedPackagePrice + '฿', 'success');
+        }
+    }
+
+    // เริ่มการทำงาน
+    setTimeout(() => { forceSyncDataFromGoogle(); }, 800);
+
 </script>
 </body>
 </html>
