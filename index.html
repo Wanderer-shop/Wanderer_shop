@@ -11,7 +11,7 @@
   --primary: #b026ff;      
   --secondary: #00d2ff;    
   --bg-main: #e0f7fa;      
-  --bg-card: #ffffff;      /* พื้นหลังการ์ดสีขาว */
+  --bg-card: #ffffff;      /* ล็อกพื้นหลังการ์ดเป็นสีขาวตามเงื่อนไข */
   --header-bg: #e9d5ff;    
   --border-color: rgba(176,38,255,0.2); 
   --text-muted: #64748b; 
@@ -52,7 +52,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .info-row span:last-child { font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--text-dark); text-align: right; word-break: break-word; justify-content: flex-end;}
 .copy-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: bold; flex-shrink: 0; }
 
-/* Banner Card (อยู่ใต้ข้อมูลร้าน) */
+/* Banner Card */
 .banner-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: none; margin-bottom: 15px; }
 .banner-media-holder { width: 100%; display: flex; justify-content: center; background: #000; }
 .banner-media-holder iframe, .banner-media-holder img { width: 100%; max-height: 250px; object-fit: cover; border: none; }
@@ -63,7 +63,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .sort-select { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color); background: #fff; color: var(--text-dark); font-family: inherit; font-size: 12px; outline: none; }
 .grid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
-/* Category Card (Premium/Game) 160x180px */
+/* Category Card 160x180px */
 .cat-card { background: var(--bg-card); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 2px solid transparent; width: 160px; height: 180px; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 .cat-card:active { transform: scale(0.96); }
 .cat-icon { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05); background:#fff; }
@@ -137,9 +137,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   <img id="mainShopLogo" src="https://via.placeholder.com/180x190" class="hero-logo" alt="Shop Logo">
   <div class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</div>
   <div class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
-  
-  <div class="tab-container" id="mainTabs">
-    </div>
+  <div class="tab-container" id="mainTabs"></div>
 </div>
 
 <div class="content">
@@ -156,10 +154,10 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       <div class="info-row"><span>เวลาทำการ</span> <span id="infoTime">11:00 - 00:00 น.</span></div>
       <div class="info-row" style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none;">
         <span>การรับประกัน</span> 
-        <span id="infoWarranty" style="text-align: left; width: 100%; white-space: pre-wrap; color: var(--text-muted); font-size: 13px; line-height: 1.5; justify-content: flex-start;">เคลมไว 24 ชม.</span>
+        <span id="infoWarranty" style="text-align: left; width: 100%; white-space: pre-wrap; color: var(--text-muted); font-size: 13px; line-height: 1.5;">เคลมไว 24 ชม.</span>
       </div>
     </div>
-
+    
     <div class="banner-card" id="infoBannerCard">
       <div class="banner-media-holder" id="infoBannerMedia"></div>
       <div class="banner-text" id="infoBannerText"></div>
@@ -227,7 +225,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
 
     <div id="admin-tabs" class="admin-section">
       <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
-        <div class="admin-input-group"><label class="admin-label">ชื่อแท็บใหม่:</label><input type="text" id="admNewTabName" class="admin-input" placeholder="เช่น บริการเพิ่มผู้ติดตาม"></div>
+        <div class="admin-input-group"><label class="admin-label">ชื่อแท็บใหม่ (ต้องตรงกับในชีตถ้าจะดึงข้อมูล):</label><input type="text" id="admNewTabName" class="admin-input" placeholder="เช่น บริการเพิ่มผู้ติดตาม"></div>
         <div class="admin-input-group">
           <label class="admin-label">รูปแบบการแสดงผล:</label>
           <select id="admNewTabType" class="admin-select">
@@ -255,7 +253,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
 
         <div id="adm-fields-os" style="display:none;">
           <div class="admin-input-group">
-            <label class="admin-label">ระบบ IOS-ANDROID (ติ๊กเลือกได้ทั้งคู่ หรืออันใดอันหนึ่ง):</label>
+            <label class="admin-label">ระบบ IOS-ANDROID (เลือกได้อย่างน้อย 1 หรือทั้ง 2):</label>
             <div class="checkbox-group">
               <label><input type="checkbox" id="admOS_ios" value="iOS"> 🍎 iOS</label>
               <label><input type="checkbox" id="admOS_android" value="Android"> 🤖 Android</label>
@@ -278,10 +276,9 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
 </div>
 
 <script>
-  // API URL ใหม่ล่าสุดที่ให้มา
   let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby6cEk5IyfFnSwTKmI3DjXJGu7O46vU-6gV0VRs8X1wamiO3lh9EnpuSbYVNbMKWOqqjw/exec";
   
-  let currentMainTab = 'info';
+  let currentMainTabId = 'info'; 
   let selectedAppCategory = null;
   let cart = [];
   
@@ -296,7 +293,6 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   let isAdminAuthed = false;
   let editingProductId = null;
 
-  // --- 1. ระบบดึงและบันทึกข้อมูล ---
   async function fetchGoogleSheetsData() {
     try {
       let res = await fetch(`${GOOGLE_SHEET_API_URL}?t=${Date.now()}`);
@@ -304,9 +300,8 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       if(data.products) products = data.products;
       if(data.customTabs && data.customTabs.length > 0) customTabs = data.customTabs;
       if(data.shopInfo && Object.keys(data.shopInfo).length > 0) shopInfo = data.shopInfo;
-      
       applyShopInfoData();
-    } catch(err) { console.log("โหลดข้อมูลชีตไม่สำเร็จ จะใช้ค่าเริ่มต้นแทน"); }
+    } catch(err) { console.log("โหลดข้อมูลชีตไม่สำเร็จ"); }
     renderAllTabs();
   }
   fetchGoogleSheetsData();
@@ -316,25 +311,17 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       await fetch(GOOGLE_SHEET_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'sync_data', 
-          shopInfo: shopInfo,
-          customTabs: customTabs,
-          products: products
-        })
+        body: JSON.stringify({ action: 'sync_data', shopInfo, customTabs, products })
       });
       console.log('✅ เซฟข้อมูลลง Sheet สำเร็จ!');
-    } catch(err) {
-      console.error('❌ เซฟข้อมูลล้มเหลว:', err);
-    }
+    } catch(err) { console.error('❌ เซฟข้อมูลล้มเหลว:', err); }
   }
 
-  // --- 2. ระบบจัดการหน้าและแท็บ ---
   function renderAllTabs() {
     const mainTabs = document.getElementById('mainTabs');
-    mainTabs.innerHTML = `<button class="tab-btn ${currentMainTab === 'info' ? 'active' : ''}" onclick="switchMainTab('info')">ข้อมูลร้าน</button>`;
+    mainTabs.innerHTML = `<button class="tab-btn ${currentMainTabId === 'info' ? 'active' : ''}" onclick="switchMainTab('info')">ข้อมูลร้าน</button>`;
     customTabs.forEach(t => {
-      mainTabs.innerHTML += `<button class="tab-btn ${currentMainTab === t.id ? 'active' : ''}" onclick="switchMainTab('${t.id}')">${t.name}</button>`;
+      mainTabs.innerHTML += `<button class="tab-btn ${currentMainTabId === t.id ? 'active' : ''}" onclick="switchMainTab('${t.id}')">${t.name}</button>`;
     });
 
     const admSel = document.getElementById('admTabProd');
@@ -355,12 +342,12 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       `;
     });
 
-    if(currentMainTab !== 'info') renderCategories();
+    if(currentMainTabId !== 'info') renderCategories();
     renderAdminProductList();
   }
 
   function switchMainTab(tabId) {
-    currentMainTab = tabId;
+    currentMainTabId = tabId;
     renderAllTabs(); 
     
     document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
@@ -372,13 +359,19 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
     }
   }
 
-  // --- 3. ระบบแสดงสินค้าลูกค้า ---
+  function matchTab(pTabStr, tabObj) {
+    const pTab = String(pTabStr || '').trim();
+    return pTab === String(tabObj.name).trim() || pTab === String(tabObj.id).trim();
+  }
+
   function renderCategories() {
     const grid = document.getElementById('categoryGrid');
     grid.innerHTML = '';
-    let tabProducts = products.filter(p => p.tab === currentMainTab);
-    const currentTabObj = customTabs.find(t => t.id === currentMainTab);
+    
+    const currentTabObj = customTabs.find(t => t.id === currentMainTabId);
     if(!currentTabObj) return;
+
+    let tabProducts = products.filter(p => matchTab(p.tab, currentTabObj));
 
     if (currentTabObj.type === 'os') {
       let uniqueApps = {};
@@ -396,12 +389,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
         const isIosSel = iosPkg && cart.find(c => c.id === iosPkg.id);
         const isAndSel = andPkg && cart.find(c => c.id === andPkg.id);
         
-        let priceText = '';
-        if(iosPkg && andPkg && iosPkg.price !== andPkg.price) {
-            priceText = `เริ่มต้น ${Math.min(iosPkg.price, andPkg.price)}฿`;
-        } else {
-            priceText = `${basePkg.price}฿`;
-        }
+        let priceText = (iosPkg && andPkg && iosPkg.price !== andPkg.price) ? `เริ่มต้น ${Math.min(iosPkg.price, andPkg.price)}฿` : `${basePkg.price}฿`;
 
         grid.innerHTML += `
           <div class="os-card ${isIosSel || isAndSel ? 'selected' : ''}">
@@ -444,8 +432,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   function toggleOSCard(e, productId) {
     e.stopPropagation();
     const index = cart.findIndex(c => c.id === productId);
-    if(index > -1) { cart.splice(index, 1); } 
-    else { cart.push(products.find(p => p.id === productId)); }
+    if(index > -1) { cart.splice(index, 1); } else { cart.push(products.find(p => p.id === productId)); }
     updateBottomBar(); renderCategories();
   }
 
@@ -468,7 +455,9 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   function renderPackages() {
     const listStandard = document.getElementById('packageListStandard');
     listStandard.innerHTML = '';
-    let appProducts = products.filter(p => p.appCategory === selectedAppCategory && p.tab === currentMainTab);
+    const currentTabObj = customTabs.find(t => t.id === currentMainTabId);
+    
+    let appProducts = products.filter(p => p.appCategory === selectedAppCategory && matchTab(p.tab, currentTabObj));
 
     const grouped = {};
     appProducts.forEach(p => {
@@ -528,12 +517,11 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
     if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
   }
 
-  // --- 4. ระบบแอดมิน ---
   let adminClickCount = 0, adminTimer;
   function checkAdminLogin() {
     adminClickCount++; clearTimeout(adminTimer); adminTimer = setTimeout(() => { adminClickCount = 0; }, 2000); 
     if (adminClickCount >= 5) {
-      if (!isAdminAuthed && prompt("🔒 รหัสแอดมิน (170647):") === "170647") { isAdminAuthed = true; }
+      if (!isAdminAuthed && prompt("🔒 รหัสแอดมิน:") === "170647") { isAdminAuthed = true; }
       if (isAdminAuthed) { document.getElementById('adminFab').style.display = 'flex'; openAdminModal(); }
       adminClickCount = 0;
     }
@@ -557,17 +545,24 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   }
 
   function deleteTab(id) {
-    if(!confirm('🚨 สินค้าในหมวดหมู่นี้จะหายไปทั้งหมด แน่ใจหรือไม่?')) return;
+    if(!confirm('🚨 แท็บและสินค้าทั้งหมดในหมวดหมู่นี้จะถูกลบทิ้ง แน่ใจหรือไม่?')) return;
+    
+    const tabToDelete = customTabs.find(t => t.id === id);
+    if(tabToDelete) {
+      products = products.filter(p => !matchTab(p.tab, tabToDelete));
+      cart = cart.filter(c => !matchTab(c.tab, tabToDelete)); 
+    }
+
     customTabs = customTabs.filter(t => t.id !== id);
-    products = products.filter(p => p.tab !== id);
-    renderAllTabs(); syncDataToSheet();
+    if(currentMainTabId === id) { currentMainTabId = 'info'; } 
+
+    updateBottomBar(); renderAllTabs(); syncDataToSheet(); alert('ลบแท็บและสินค้าเรียบร้อย');
   }
 
   function toggleAdmProdFields() {
     const sel = document.getElementById('admTabProd');
     if(!sel.options[sel.selectedIndex]) return;
     const type = sel.options[sel.selectedIndex].dataset.type;
-    
     document.getElementById('adm-fields-standard').style.display = type === 'standard' ? 'block' : 'none';
     document.getElementById('f-appDesc').style.display = type === 'standard' ? 'block' : 'none';
     document.getElementById('adm-fields-os').style.display = type === 'os' ? 'block' : 'none';
@@ -575,28 +570,20 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
 
   function saveShopInfo() {
     shopInfo = {
-      status: document.getElementById('admStatus').value,
-      logo: document.getElementById('admLogo').value,
-      banner: document.getElementById('admBanner').value,
-      bannerText: document.getElementById('admBannerText').value,
-      fb: document.getElementById('admFb').value,
-      line: document.getElementById('admLine').value,
-      time: document.getElementById('admTime').value,
-      warranty: document.getElementById('admWarranty').value
+      status: document.getElementById('admStatus').value, logo: document.getElementById('admLogo').value,
+      banner: document.getElementById('admBanner').value, bannerText: document.getElementById('admBannerText').value,
+      fb: document.getElementById('admFb').value, line: document.getElementById('admLine').value,
+      time: document.getElementById('admTime').value, warranty: document.getElementById('admWarranty').value
     };
     applyShopInfoData(); syncDataToSheet(); alert('บันทึกข้อมูลร้านเรียบร้อย');
   }
 
   function applyShopInfoData() {
     if(!shopInfo.status) return; 
-    document.getElementById('admStatus').value = shopInfo.status || 'open';
-    document.getElementById('admLogo').value = shopInfo.logo || '';
-    document.getElementById('admBanner').value = shopInfo.banner || '';
-    document.getElementById('admBannerText').value = shopInfo.bannerText || '';
-    document.getElementById('admFb').value = shopInfo.fb || '';
-    document.getElementById('admLine').value = shopInfo.line || '';
-    document.getElementById('admTime').value = shopInfo.time || '';
-    document.getElementById('admWarranty').value = shopInfo.warranty || '';
+    document.getElementById('admStatus').value = shopInfo.status || 'open'; document.getElementById('admLogo').value = shopInfo.logo || '';
+    document.getElementById('admBanner').value = shopInfo.banner || ''; document.getElementById('admBannerText').value = shopInfo.bannerText || '';
+    document.getElementById('admFb').value = shopInfo.fb || ''; document.getElementById('admLine').value = shopInfo.line || '';
+    document.getElementById('admTime').value = shopInfo.time || ''; document.getElementById('admWarranty').value = shopInfo.warranty || '';
     previewShopInfo();
   }
 
@@ -612,8 +599,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
     document.getElementById('infoTime').innerText = document.getElementById('admTime').value || '-';
     document.getElementById('infoWarranty').innerText = document.getElementById('admWarranty').value || '-';
 
-    const bUrl = document.getElementById('admBanner').value;
-    const bText = document.getElementById('admBannerText').value;
+    const bUrl = document.getElementById('admBanner').value; const bText = document.getElementById('admBannerText').value;
     const bCard = document.getElementById('infoBannerCard');
     if(bUrl || bText) {
       bCard.style.display = 'block';
@@ -625,13 +611,14 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
 
   function saveProduct() {
     const sel = document.getElementById('admTabProd');
-    const tab = sel.value;
+    const tabName = sel.options[sel.selectedIndex].text; 
     const type = sel.options[sel.selectedIndex].dataset.type;
     const name = document.getElementById('admAppName').value.trim();
-    if(!name) return alert('กรุณากรอกชื่อ');
+    if(!name) return alert('กรุณากรอกชื่อแอป');
 
     const baseObj = {
-      tab: tab, appCategory: name,
+      tab: tabName, 
+      appCategory: name,
       price: Number(document.getElementById('admPrice').value) || 0,
       icon: document.getElementById('admIcon').value || 'https://via.placeholder.com/60'
     };
@@ -642,7 +629,6 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       if(!isIos && !isAnd) return alert('กรุณาติ๊กระบบ iOS หรือ Android อย่างน้อย 1 อัน');
 
       if(editingProductId) { products = products.filter(p => p.id !== editingProductId); }
-
       if(isIos) products.push({...baseObj, id: 'p_'+Date.now()+'_ios', os: 'iOS'});
       if(isAnd) products.push({...baseObj, id: 'p_'+Date.now()+'_and', os: 'Android'});
     } else {
@@ -657,7 +643,7 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
       else { products.push(obj); }
     }
 
-    syncDataToSheet(); // ส่งข้อมูลไปเซฟที่ชีต
+    syncDataToSheet(); 
     clearProductForm(); renderAdminProductList(); renderCategories();
     if (document.getElementById('view-packages').classList.contains('active') && selectedAppCategory === name) renderPackages();
     alert('✅ บันทึกสินค้าและอัปเดตลง Sheet เรียบร้อย!');
@@ -666,30 +652,36 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   function editProduct(id) {
     const p = products.find(x => x.id === id); if(!p) return;
     editingProductId = p.id;
-    document.getElementById('admTabProd').value = p.tab; toggleAdmProdFields();
+    
+    const matchedTab = customTabs.find(t => matchTab(p.tab, t));
+    if(matchedTab) { document.getElementById('admTabProd').value = matchedTab.id; }
+    toggleAdmProdFields();
     
     document.getElementById('admAppName').value = p.appCategory;
     document.getElementById('admPrice').value = p.price;
-    document.getElementById('admIcon').value = p.icon;
+    document.getElementById('admIcon').value = p.icon || '';
 
     if(p.os) {
       document.getElementById('admOS_ios').checked = (p.os === 'iOS');
       document.getElementById('admOS_android').checked = (p.os === 'Android');
     } else {
-      document.getElementById('admAppDesc').value = p.appDetails;
-      document.getElementById('admPkgOpt').value = p.packageOption;
-      document.getElementById('admSubPkg').value = p.subPackage;
-      document.getElementById('admSubDesc').value = p.subDetails;
+      document.getElementById('admAppDesc').value = p.appDetails || '';
+      document.getElementById('admPkgOpt').value = p.packageOption || '';
+      document.getElementById('admSubPkg').value = p.subPackage || '';
+      document.getElementById('admSubDesc').value = p.subDetails || '';
     }
-    document.getElementById('btnSubmitProduct').innerHTML = '💾 อัปเดตสินค้า';
+
+    const btn = document.getElementById('btnSubmitProduct');
+    btn.innerHTML = '💾 อัปเดตข้อมูลสินค้า';
+    btn.style.background = '#eab308'; 
     document.querySelector('.modal-box').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function deleteProduct(id) {
-    if(confirm('ลบสินค้านี้?')) {
+    if(confirm('🚨 ลบสินค้านี้?')) {
       products = products.filter(p => p.id !== id);
       cart = cart.filter(c => c.id !== id);
-      syncDataToSheet(); // ส่งข้อมูลไปเซฟที่ชีต
+      syncDataToSheet(); 
       updateBottomBar(); renderAdminProductList(); renderCategories();
     }
   }
@@ -697,22 +689,51 @@ textarea.admin-input { resize: vertical; min-height: 65px; line-height: 1.4; }
   function clearProductForm() {
     editingProductId = null;
     document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้า';
+    document.getElementById('btnSubmitProduct').style.background = 'var(--primary)';
     document.querySelectorAll('#admin-product .admin-input').forEach(i => i.value = '');
     document.getElementById('admOS_ios').checked = false;
     document.getElementById('admOS_android').checked = false;
   }
 
   function renderAdminProductList() {
-    const list = document.getElementById('adminProductList'); list.innerHTML = '';
-    customTabs.forEach(tab => {
-      const gProd = products.filter(p => p.tab === tab.id);
-      let html = `<div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:10px; margin-bottom:10px;"><div style="font-size:13px; font-weight:700; color:var(--primary); margin-bottom:8px;">${tab.name}</div>`;
-      if(gProd.length === 0) html += `<div style="font-size:12px;color:#888;">ไม่มีสินค้า</div>`;
-      gProd.forEach(p => {
-        let det = p.os ? `ระบบ: ${p.os}` : `${p.packageOption} - ${p.subPackage}`;
-        html += `<div class="adm-list-item"><div class="adm-list-info"><b>${p.appCategory}</b><br><span style="color:#888">${det} | ฿${p.price}</span></div><div class="adm-list-actions"><button class="btn-edit" onclick="editProduct('${p.id}')">แก้ไข</button><button class="btn-delete" onclick="deleteProduct('${p.id}')">ลบ</button></div></div>`;
-      });
-      list.innerHTML += html + `</div>`;
+    const listContainer = document.getElementById('adminProductList');
+    listContainer.innerHTML = '';
+    
+    if(products.length === 0) {
+      listContainer.innerHTML = '<div style="text-align:center; color:#888; font-size:12px; padding:10px;">ยังไม่มีสินค้าในระบบ</div>';
+      return;
+    }
+
+    customTabs.forEach(group => {
+      const groupProducts = products.filter(p => matchTab(p.tab, group));
+      
+      let html = `
+        <div class="admin-cat-box">
+          <div class="admin-cat-title">${group.name}</div>
+      `;
+
+      if(groupProducts.length === 0) {
+        html += `<div style="font-size:12px; color:#888; text-align:center; padding:10px 0;">ยังไม่มีสินค้าในหมวดนี้</div>`;
+      } else {
+        groupProducts.forEach(p => {
+          let details = p.os ? `ระบบ: ${p.os}` : `แพ็กเกจ: ${p.packageOption} - ${p.subPackage}`;
+          html += `
+            <div class="adm-list-item">
+              <div class="adm-list-info">
+                <div style="font-weight:700; color:var(--primary); font-size:13px;">${p.appCategory}</div>
+                <div style="color:var(--text-muted); margin-top:2px;">${details} | <strong style="color:var(--text-dark);">฿${p.price}</strong></div>
+              </div>
+              <div class="adm-list-actions">
+                <button class="btn-edit" onclick="editProduct('${p.id}')">✏️ แก้ไข</button>
+                <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️ ลบ</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      html += `</div>`; 
+      listContainer.innerHTML += html;
     });
   }
 </script>
