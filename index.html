@@ -29,7 +29,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .status-slow { color: #eab308; } .status-slow .status-dot { background: #eab308; box-shadow: 0 0 8px #eab308; }
 @keyframes pulseG { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
 
-/* Hero - กรอบสี #e042ff */
+/* Hero */
 .hero { background: var(--header-bg); padding: 50px 20px 55px; text-align: center; position: relative; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(176,38,255,0.1); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border: 2px solid #e042ff; border-top: none; }
 .hero-logo { width: 180px; height: 190px; object-fit: cover; border-radius: 20px; margin: 0 auto 15px; display: block; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(176,38,255,0.2); background: #fff; position: relative; z-index: 2;}
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; cursor: pointer; user-select: none; }
@@ -64,7 +64,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .banner-media-holder img:hover { filter: brightness(0.9); }
 .banner-text { padding: 15px; font-size: 13px; color: var(--text-dark); text-align: center; white-space: pre-wrap; background: #fff; }
 
-/* Grid & Cards - สีกรอบการ์ดสีดำ #000000 */
+/* Grid & Cards - ขอบดำ 2px */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
 .sort-select { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color); background: #fff; font-size: 12px; outline: none; }
 .grid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 0 5px; }
@@ -99,7 +99,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .pkg-header-desc { font-size: 13px; color: var(--text-muted); white-space: pre-wrap; margin-top: 5px; }
 .pkg-group-title { font-size: 15px; font-weight: 700; color: var(--text-dark); margin: 20px 10px 10px; display: flex; align-items: center; gap: 8px; }
 .pkg-group-title::before { content: ''; width: 4px; height: 16px; background: var(--primary); border-radius: 4px; }
-.pkg-item { background: #fff; border: 1.5px solid #000000; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin: 0 10px 10px; cursor: pointer; position: relative; transition: 0.2s; }
+.pkg-item { background: #fff; border: 1.5px solid #464343; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin: 0 10px 10px; cursor: pointer; position: relative; transition: 0.2s; }
 .pkg-item.selected { border-color: var(--primary); background: #fdf8ff; }
 .pkg-item.selected::before { content: '✓'; position: absolute; top: -8px; left: -8px; background: var(--primary); color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 5; }
 .pkg-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
@@ -109,7 +109,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-top: 2px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: 0.3s; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); }
 .bottom-bar.active { transform: translateY(0); }
 .bb-total { font-size: 20px; font-weight: 700; color: var(--primary); }
-.bb-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; border-radius: 25px; padding: 10px 24px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(176,38,255,0.3); }
+.bb-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; border-radius: 25px; padding: 10px 24px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(176,38,255,0.3); transition: 0.3s; }
+.bb-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 /* Admin Modal */
 .admin-fab { display: none; position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%; background: #d8b4fe; color: #ffffff; font-size: 32px; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(216, 180, 254, 0.6); cursor: pointer; z-index: 999; border: 2px solid #fff; }
@@ -178,7 +179,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 <div class="bottom-bar" id="bottomBar">
   <div><div style="font-size: 12px; color: var(--text-muted);" id="cartCount">เลือก 0 รายการ</div><div class="bb-total"><span id="cartTotal">0</span><span style="font-size:16px;">฿</span></div></div>
-  <button class="bb-btn" onclick="checkout()">สั่งซื้อสินค้า ✨</button>
+  <button class="bb-btn" id="btnCheckout" onclick="checkout()">สั่งซื้อสินค้า ✨</button>
 </div>
 
 <div class="admin-fab" id="adminFab" onclick="openAdminModal()">+</div>
@@ -278,7 +279,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 <script>
   // ⚠️ อย่าลืมนำ URL อันใหม่ล่าสุดมาใส่ตรงนี้นะครับ ⚠️
-  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxN5o-aQr_RhdgKv5z3WNBQXnIPPOaauXp32bIPHTGCnY7kDgOHqxZAvxkf3W8JC4vPuQ/exec"; 
+  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyo_bXcRa2sPRr0ZzTL_di8pTUfF-HRHl10p1vAftYiQH4pP4DaSmRg0qE_gccw4aRFnw/exec"; 
   
   let currentMainTabId = 'info'; 
   let selectedAppCategory = null;
@@ -505,34 +506,141 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     updateBottomBar();
   }
 
+  // คำนวณยอดรวม (จัดการโปรโมชั่น OS ราคา 20-25)
+  function calculateCartTotal() {
+    let osItems = []; let otherItems = [];
+    cart.forEach(item => {
+        let tid = String(item.tabId).toLowerCase(); let tname = String(item.tab).toLowerCase();
+        if (tid === 't_os' || tname.includes('ios-android')) osItems.push(item);
+        else otherItems.push(item);
+    });
+    
+    let total = 0;
+    if (osItems.length > 0) {
+        let promoPrices = [];
+        osItems.forEach(item => {
+            if (item.price >= 20 && item.price <= 25) promoPrices.push(item.price);
+            else total += item.price;
+        });
+        promoPrices.sort((a, b) => b - a);
+        let pCount = promoPrices.length; let idx = 0;
+        
+        while (pCount >= 30) { total += 360; pCount -= 30; idx += 30; }
+        while (pCount >= 15) { total += 210; pCount -= 15; idx += 15; }
+        while (pCount >= 8)  { total += 80;  pCount -= 8;  idx += 8;  }
+        while (pCount >= 3)  { total += 45;  pCount -= 3;  idx += 3;  }
+        
+        let remainder = promoPrices.slice(idx);
+        if (remainder.length === 2 && remainder[0] === 25 && remainder[1] === 25) { total += 45; } 
+        else { remainder.forEach(p => total += p); }
+    }
+    otherItems.forEach(item => total += item.price);
+    return total;
+  }
+
   function updateBottomBar() {
     const bar = document.getElementById('bottomBar');
     if(cart.length > 0) {
       bar.classList.add('active');
       document.getElementById('cartCount').innerText = `เลือก ${cart.length} รายการ`;
-      document.getElementById('cartTotal').innerText = cart.reduce((s, i) => s + i.price, 0);
+      document.getElementById('cartTotal').innerText = calculateCartTotal();
     } else { bar.classList.remove('active'); }
   }
 
-  function checkout() {
-    checkDailyReset();
-    let text = "🛒 สรุปรายการสั่งซื้อ\n\n";
-    let total = 0;
-    let orderTypesArr = [];
-    let orderItemsArr = [];
+  // ฟังก์ชันสั่งซื้อ Async / Await ป้องกันข้อมูลหายตอนเปลี่ยนหน้า
+  async function checkout() {
+    const btn = document.getElementById('btnCheckout');
+    btn.disabled = true;
+    btn.innerText = 'กำลังประมวลผล...';
 
+    checkDailyReset();
+    let osItems = []; let gameItems = []; let premItems = []; let otherItems = [];
     cart.forEach(item => {
-      text += `สินค้า: ${item.appCategory}\n`;
-      text += item.os ? `ระบบ: ${item.os}\n` : `แพ็กเกจ: ${item.packageOption} - ${item.subPackage}\n`;
-      text += `ราคา: ${item.price} บาท\n\n`;
-      total += item.price;
-      
-      shopStats.revenue = (shopStats.revenue || 0) + item.price;
-      shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
-      
-      orderTypesArr.push(item.appCategory);
-      orderItemsArr.push(item.appCategory + (item.os ? ` (${item.os})` : ` (${item.subPackage})`));
+        let tid = String(item.tabId).toLowerCase(); let tname = String(item.tab).toLowerCase();
+        if (tid === 't_os' || tname.includes('ios-android')) osItems.push(item);
+        else if (tid === 't_game' || tname.includes('เติมเกม')) gameItems.push(item);
+        else if (tid === 't_premium' || tname.includes('พรีเมี่ยม')) premItems.push(item);
+        else otherItems.push(item);
     });
+    
+    let text = ""; let overallTotal = 0; let orderTypesArr = []; let orderItemsArr = [];
+    
+    // --- 1. บิล OS ---
+    if (osItems.length > 0) {
+        let osTotal = 0; let promoPrices = [];
+        osItems.forEach(item => {
+            if (item.price >= 20 && item.price <= 25) promoPrices.push(item.price);
+            else osTotal += item.price;
+            orderTypesArr.push(item.appCategory);
+            orderItemsArr.push(item.appCategory + (item.os ? ` [${item.os}]` : ``));
+            shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
+        });
+        
+        promoPrices.sort((a, b) => b - a); let pCount = promoPrices.length; let idx = 0;
+        while (pCount >= 30) { osTotal += 360; pCount -= 30; idx += 30; }
+        while (pCount >= 15) { osTotal += 210; pCount -= 15; idx += 15; }
+        while (pCount >= 8)  { osTotal += 80;  pCount -= 8;  idx += 8;  }
+        while (pCount >= 3)  { osTotal += 45;  pCount -= 3;  idx += 3;  }
+        let remainder = promoPrices.slice(idx);
+        if (remainder.length === 2 && remainder[0] === 25 && remainder[1] === 25) { osTotal += 45; } 
+        else { remainder.forEach(p => osTotal += p); }
+        overallTotal += osTotal;
+
+        text += `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
+        text += `✿  𓈒  รวมยอด    ꒰  ${osTotal}฿  ꒱   ݂🎐♡\n`;
+        osItems.forEach(item => {
+            let osName = item.os ? ` [${item.os}]` : '';
+            text += `🍃 ݂  ${item.appCategory}${osName} 𓈒\n`;
+        });
+        text += `---------------------------\nรบกวนรอแม่ค้าเช็คเมล-ยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏\n\n`;
+    }
+    
+    // --- 2. บิล เติมเกม ---
+    if (gameItems.length > 0) {
+        let gTotal = 0;
+        text += `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
+        gameItems.forEach((item, index) => {
+            gTotal += item.price;
+            let pkgStr = item.packageOption ? `${item.packageOption} ` : '';
+            pkgStr += item.subPackage || '';
+            text += `${index + 1}. ${item.appCategory}\n   แพ็กเกจ: ${pkgStr}\n   ราคา: ${item.price} บาท\n`;
+            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory + ` (${item.subPackage})`);
+            shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
+        });
+        overallTotal += gTotal;
+        text += `---------------------------\n *ยอดรวมทั้งสิ้น: ${gTotal} บาท*\n---------------------------\n *แจ้งไอดี ได้เลยค่ะ*\n\n`;
+    }
+    
+    // --- 3. บิล พรีเมี่ยม ---
+    if (premItems.length > 0) {
+        let pTotal = 0;
+        text += `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
+        premItems.forEach((item, index) => {
+            pTotal += item.price;
+            let detailStr = item.subDetails ? ` ( ${item.subDetails} )` : '';
+            text += `${index + 1}. ${item.appCategory}\n   แพ็กเกจ: ${item.subPackage}${detailStr}\n   ราคา: ${item.price} บาท\n`;
+            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory + ` (${item.subPackage})`);
+            shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
+        });
+        overallTotal += pTotal;
+        text += `---------------------------\n *ยอดรวมทั้งสิ้น: ${pTotal} บาท*\n---------------------------\nรบกวนรอแอดมินตอบก่อนค่อยโอนนะคะ\n\n`;
+    }
+    
+    // --- 4. บิล หมวดหมู่อื่นๆ ---
+    if (otherItems.length > 0) {
+        let oTotal = 0;
+        text += `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
+        otherItems.forEach((item, index) => {
+            oTotal += item.price;
+            text += `${index + 1}. ${item.appCategory} - ${item.subPackage || item.os} : ${item.price} บาท\n`;
+            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory);
+            shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
+        });
+        overallTotal += oTotal;
+        text += `---------------------------\nยอดรวมทั้งสิ้น: ${oTotal} บาท\n\n`;
+    }
+
+    shopStats.revenue = (shopStats.revenue || 0) + overallTotal;
     shopStats.orders = (shopStats.orders || 0) + 1;
 
     let topApp = ""; let maxCount = 0;
@@ -541,28 +649,31 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     }
 
     let payloadOrder = {
-      time: new Date().toLocaleTimeString('th-TH'),
-      type: [...new Set(orderTypesArr)].join(', '),
-      items: orderItemsArr.join(', '),
-      total: total
+      time: new Date().toLocaleTimeString('th-TH'), type: [...new Set(orderTypesArr)].join(', '),
+      items: orderItemsArr.join(', '), total: overallTotal
     };
     let payloadStats = { visits: shopStats.visits, date: shopStats.date, topApp: topApp, revenue: shopStats.revenue };
 
-    // ยิง API บันทึกสถิติแบบไม่บังหน้าจอโหลด
-    fetch(GOOGLE_SHEET_API_URL, {
-      method: 'POST', body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
-    });
-    
-    syncDataToSheet(); 
+    // รอให้บันทึกเสร็จสมบูรณ์ (ป้องกันบั๊กข้อมูลหายตอนเปลี่ยนหน้าเว็บ)
+    try {
+      await fetch(GOOGLE_SHEET_API_URL, {
+        method: 'POST', body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
+      });
+      await syncDataToSheet(); 
+    } catch(err) { console.log('Error logging order'); }
 
-    text += `--------------------\nยอดชำระทั้งหมด: ${total} บาท\n`;
-    copyText(null, text);
+    copyText(null, text.trim());
     
-    cart = []; 
-    updateBottomBar();
+    cart = []; updateBottomBar();
     if(currentMainTabId !== 'info') renderCategories();
-
-    window.location.href = "https://line.me"; 
+    
+    btn.disabled = false;
+    btn.innerText = 'สั่งซื้อสินค้า ✨';
+    
+    // ดีเลย์เล็กน้อยเพื่อให้ Clipboard คัดลอกสำเร็จ 100% ก่อนเด้ง
+    setTimeout(() => {
+      window.location.href = "https://line.me"; 
+    }, 500);
   }
 
   function copyText(e, text) {
