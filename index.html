@@ -290,9 +290,10 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 </div>
 
 <script>
-  // ⚠️ วาง URL ของ Apps Script ที่นี่ครับ ⚠️
-  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxxxxxxx/exec"; 
+// ⚠️ วาง URL ของ Apps Script ที่นี่ ⚠️
+  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxlz9Ku5zTSxoQNt6XWpRq2Yps37pKDUpvUzsmFoCwasi9evRKCo4lpfeTgzbTJ9sLmvQ/exec"; 
   
+  // ตัวแปรเดิม
   let currentMainTabId = 'info'; 
   let selectedAppCategory = null;
   let cart = [];
@@ -302,23 +303,16 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   let editingProductId = null;
   let currentAdminViewTab = null;
   let checkoutData = { text: "", overallTotal: 0, orderTypesArr: [], orderItemsArr: [], tempTopItems: {} };
-
   let customTabs = [];
   let todayDateStr = new Date().toLocaleDateString('th-TH');
   let shopStats = { date: todayDateStr, visits: 0, orders: 0, revenue: 0, topItems: {} };
 
+  // 🔒 เพิ่มตัวแปรล็อคการ Save (ป้องกันข้อมูลหาย)
+  let isDataLoaded = false; 
+
   function checkDailyReset() {
     let now = new Date().toLocaleDateString('th-TH');
     if (shopStats.date !== now) { shopStats = { date: now, visits: 0, orders: 0, revenue: 0, topItems: {} }; }
-  }
-
-  function matchTab(p, tabObj) {
-    if(!p || !tabObj) return false;
-    let pTab = String(p.tab || '').trim().toLowerCase();
-    let pTabId = String(p.tabId || '').trim().toLowerCase();
-    let tId = String(tabObj.id).trim().toLowerCase();
-    let tName = String(tabObj.name).trim().toLowerCase();
-    return (pTabId === tId) || (pTab === tName) || (pTab === tId);
   }
 
   async function fetchGoogleSheetsData() {
@@ -327,25 +321,43 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       let data = await res.json();
       
       if(data.products) products = data.products;
-      
-      if(data.customTabs && data.customTabs.length > 0) {
-        customTabs = data.customTabs;
-      } else {
-        customTabs = [
-          { id: 't_premium', name: 'แอพพรีเมี่ยม', type: 'standard' },
-          { id: 't_game', name: 'เติมเกม', type: 'standard' },
-          { id: 't_os', name: 'แอพ/เกม IOS-ANDROID', type: 'os' }
-        ];
-      }
-
+      if(data.customTabs && data.customTabs.length > 0) customTabs = data.customTabs;
       if(data.shopInfo && Object.keys(data.shopInfo).length > 0) shopInfo = data.shopInfo;
       if(data.shopStats && data.shopStats.date) shopStats = data.shopStats;
       
-      checkDailyReset(); applyShopInfoData(); recordVisit();
-    } catch(err) { console.log("โหลดข้อมูลชีตไม่สำเร็จ"); checkDailyReset(); }
+      checkDailyReset(); 
+      applyShopInfoData(); 
+      
+      // ✅ ดึงข้อมูลสำเร็จ ปลดล็อคให้เซฟได้
+      isDataLoaded = true; 
+      recordVisit();
+      
+    } catch(err) { 
+      console.log("โหลดข้อมูลชีตไม่สำเร็จ จะไม่มีการเซฟทับเพื่อป้องกันข้อมูลหาย"); 
+      isDataLoaded = false; // ❌ ป้องกันการเซฟทับถ้าเน็ตหลุดหรือโหลดไม่ขึ้น
+    }
     renderAllTabs();
   }
   fetchGoogleSheetsData();
+
+  async function syncDataToSheet() {
+    if(!isDataLoaded) return; // 🛡️ ถ้าข้อมูลยังโหลดไม่เสร็จ ห้ามเซฟเด็ดขาด!
+    try {
+      await fetch(GOOGLE_SHEET_API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'sync_data', shopInfo, customTabs, products, shopStats })
+      });
+    } catch(err) { console.error('เซฟข้อมูลล้มเหลว'); }
+  }
+
+  function recordVisit() {
+    if(!isDataLoaded) return; // 🛡️ ล็อคไว้
+    if(!sessionStorage.getItem('visited_today_' + shopStats.date)) {
+      shopStats.visits = (shopStats.visits || 0) + 1;
+      sessionStorage.setItem('visited_today_' + shopStats.date, 'true');
+      syncDataToSheet();
+    }
+  }  fetchGoogleSheetsData();
 
   async function syncDataToSheet() {
     try {
