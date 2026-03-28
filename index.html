@@ -143,7 +143,9 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 <div class="hero">
   <div class="floating-emoji">🎐 ๋࣭ ࣪ ˖</div>
   <img id="mainShopLogo" src="https://via.placeholder.com/180x190" class="hero-logo" alt="Shop Logo">
-  <div class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</div>
+  
+  <div class="hero-title" onclick="checkAdminLogin()" style="user-select:none;">Wanderer_Shop</div>
+  
   <div class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
   <div class="tab-container" id="mainTabs"></div>
 </div>
@@ -189,6 +191,17 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
     <div style="display:flex; flex-direction: column; gap:10px;">
       <button style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; padding:14px; border:none; border-radius:12px; font-weight:600; cursor:pointer;" onclick="confirmCheckout()">ยืนยันออเดอร์ & ไปที่ไลน์</button>
       <button style="background:#e2e8f0; color:var(--text-dark); padding:12px; border:none; border-radius:12px; font-weight:600; cursor:pointer;" onclick="document.getElementById('checkoutModal').classList.remove('show')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal-box" style="max-width: 320px; text-align: center; padding: 25px;">
+    <h3 style="color:var(--primary); margin-bottom:15px; font-size:18px;">🔒 เข้าสู่ระบบแอดมิน</h3>
+    <input type="password" id="adminPwdInput" class="adm-input" style="text-align:center; letter-spacing: 5px; font-size: 20px; margin-bottom: 15px;" placeholder="รหัสผ่าน">
+    <div style="display:flex; gap:10px;">
+      <button class="bb-btn" style="flex:1; padding:10px;" onclick="verifyAdminPassword()">ยืนยัน</button>
+      <button style="background:#e2e8f0; color:var(--text-dark); padding:10px; border:none; border-radius:25px; flex:1; font-weight:600; cursor:pointer;" onclick="document.getElementById('passwordModal').classList.remove('show')">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -353,7 +366,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 // ==========================================
 // 🔴 นำ URL ของ Google Apps Script มาใส่ตรงนี้ 🔴
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-8G8ZlYKDQ7kDZldOhPDGzmgvO8BqQT6U5H9ybeihlALvMBOBYSh3PX1l2NLNE8N0/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTk7m2hX1kPgYaxpSVRrbjxgKqItWSzvg-Ggaed12yL4WlMDFficwuODNbHnAet7hc/exec"; 
 
 let currentMainTabId = 'info';
 let selectedAppCategory = null;
@@ -611,30 +624,31 @@ function copyText(e, txt) {
   if(e) alert('คัดลอกสำเร็จ');
 }
 
-// ================= 1.1 ล็อกอินลับ (Hidden Login) =================
+// ================= 1.1 ล็อกอินลับ =================
 function checkAdminLogin() {
   adminClickCount++;
   if(adminClickCount >= 5) {
-    if(prompt("🔒 ใส่รหัสผ่านแอดมิน:") === "170647") {
-      document.getElementById('adminModal').classList.add('show');
-      toggleAdmProdFields(); 
-    } else {
-      alert("รหัสผ่านไม่ถูกต้อง");
-    }
-    adminClickCount = 0;
+    adminClickCount = 0; 
+    document.getElementById('adminPwdInput').value = ''; 
+    document.getElementById('passwordModal').classList.add('show'); 
   }
 }
 
-// ================= ออกจากระบบแอดมิน =================
+function verifyAdminPassword() {
+  let pwd = document.getElementById('adminPwdInput').value;
+  if (pwd === "170647") {
+    document.getElementById('passwordModal').classList.remove('show'); 
+    document.getElementById('adminModal').classList.add('show'); 
+    toggleAdmProdFields(); 
+  } else {
+    alert("รหัสผ่านไม่ถูกต้อง");
+  }
+}
+
 function logoutAdmin() {
   adminClickCount = 0; 
-  
-  // ปิดหน้าต่างแอดมิน
-  document.getElementById('adminModal').classList.remove('show');
-  
-  // ล้างฟอร์ม
-  clearProductForm();
-  
+  document.getElementById('adminModal').classList.remove('show'); 
+  clearProductForm(); 
   alert("🚪 ออกจากโหมดแอดมินเรียบร้อยแล้ว");
 }
 
@@ -736,18 +750,15 @@ function toggleAdmProdFields() {
   renderAdminProductsByTab(sel.value);
 }
 
-// 4. แสดงกรอบรายการสินค้าแยกตามแท็บให้แก้ไข/ลบ
 function renderAdminProductsByTab(tabId) {
   currentAdminViewTab = tabId;
   
-  // Render Filter Tabs
   let filterHtml = '';
   customTabs.forEach(t => {
     filterHtml += `<button class="adm-tab ${String(currentAdminViewTab) === String(t.id) ? 'active' : ''}" style="border:1px solid #ddd;" onclick="renderAdminProductsByTab('${t.id}')">${t.name}</button>`;
   });
   document.getElementById('admProdFilterTabs').innerHTML = filterHtml;
   
-  // Render List
   const listContainer = document.getElementById('adminProductList');
   const tObj = customTabs.find(t => String(t.id) === String(tabId));
   if(!tObj) { listContainer.innerHTML = ''; return; }
@@ -779,7 +790,7 @@ function editProduct(id) {
   editingProductId = p.id;
   
   document.getElementById('addProdTab').value = p.tabId;
-  document.getElementById('addProdTab').disabled = true; // ล็อกการเปลี่ยนแท็บขณะแก้ไข ป้องกันแก้ผิดหมวด
+  document.getElementById('addProdTab').disabled = true; 
   toggleAdmProdFields();
   
   document.getElementById('addProdName').value = p.appCategory || '';
@@ -804,7 +815,7 @@ function editProduct(id) {
 
 function clearProductForm() {
   editingProductId = null;
-  document.getElementById('addProdTab').disabled = false; // ปลดล็อก
+  document.getElementById('addProdTab').disabled = false; 
   document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้า';
   document.getElementById('addProdName').value = '';
   document.getElementById('addProdDesc').value = '';
