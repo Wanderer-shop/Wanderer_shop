@@ -290,10 +290,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 </div>
 
 <script>
-// ⚠️ วาง URL ของ Apps Script ที่นี่ ⚠️
-  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxlz9Ku5zTSxoQNt6XWpRq2Yps37pKDUpvUzsmFoCwasi9evRKCo4lpfeTgzbTJ9sLmvQ/exec"; 
+  // ⚠️ วาง URL ของ Apps Script ที่นี่ ⚠️
+  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby2Szm69F9DPx5V_b7Kb7o7mk_nqqGlc5P94IxrvkYTlXQOsNsJkK6hz71t0eZs4EJ5FQ/exec"; 
   
-  // ตัวแปรเดิม
   let currentMainTabId = 'info'; 
   let selectedAppCategory = null;
   let cart = [];
@@ -303,16 +302,29 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   let editingProductId = null;
   let currentAdminViewTab = null;
   let checkoutData = { text: "", overallTotal: 0, orderTypesArr: [], orderItemsArr: [], tempTopItems: {} };
+
   let customTabs = [];
   let todayDateStr = new Date().toLocaleDateString('th-TH');
   let shopStats = { date: todayDateStr, visits: 0, orders: 0, revenue: 0, topItems: {} };
 
-  // 🔒 เพิ่มตัวแปรล็อคการ Save (ป้องกันข้อมูลหาย)
+  // 🔒 ตัวแปรล็อคการ Save ป้องกันข้อมูลหาย
   let isDataLoaded = false; 
 
   function checkDailyReset() {
     let now = new Date().toLocaleDateString('th-TH');
     if (shopStats.date !== now) { shopStats = { date: now, visits: 0, orders: 0, revenue: 0, topItems: {} }; }
+  }
+
+  function matchTab(p, tabObj) {
+    if(!p || !tabObj) return false;
+    let pTabId = String(p.tabId || '').trim();
+    let tId = String(tabObj.id).trim();
+    if (pTabId && tId && pTabId === tId) return true;
+
+    // Fallback logic
+    let pTab = String(p.tab || '').trim().toLowerCase();
+    let tName = String(tabObj.name).trim().toLowerCase();
+    return (pTab === tName);
   }
 
   async function fetchGoogleSheetsData() {
@@ -321,27 +333,35 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       let data = await res.json();
       
       if(data.products) products = data.products;
-      if(data.customTabs && data.customTabs.length > 0) customTabs = data.customTabs;
+      
+      if(data.customTabs && data.customTabs.length > 0) {
+        customTabs = data.customTabs;
+      } else {
+        customTabs = [
+          { id: 't_premium', name: 'แอพพรีเมี่ยม', type: 'standard' },
+          { id: 't_game', name: 'เติมเกม', type: 'standard' },
+          { id: 't_os', name: 'แอพ/เกม IOS-ANDROID', type: 'os' }
+        ];
+      }
+
       if(data.shopInfo && Object.keys(data.shopInfo).length > 0) shopInfo = data.shopInfo;
       if(data.shopStats && data.shopStats.date) shopStats = data.shopStats;
       
-      checkDailyReset(); 
-      applyShopInfoData(); 
+      checkDailyReset(); applyShopInfoData(); 
       
-      // ✅ ดึงข้อมูลสำเร็จ ปลดล็อคให้เซฟได้
-      isDataLoaded = true; 
+      isDataLoaded = true; // ปลดล็อคการบันทึก
       recordVisit();
       
     } catch(err) { 
-      console.log("โหลดข้อมูลชีตไม่สำเร็จ จะไม่มีการเซฟทับเพื่อป้องกันข้อมูลหาย"); 
-      isDataLoaded = false; // ❌ ป้องกันการเซฟทับถ้าเน็ตหลุดหรือโหลดไม่ขึ้น
+      console.log("โหลดข้อมูลชีตไม่สำเร็จ"); 
+      isDataLoaded = false; 
     }
     renderAllTabs();
   }
   fetchGoogleSheetsData();
 
   async function syncDataToSheet() {
-    if(!isDataLoaded) return; // 🛡️ ถ้าข้อมูลยังโหลดไม่เสร็จ ห้ามเซฟเด็ดขาด!
+    if(!isDataLoaded) return; // 🛡️ บล็อคไม่ให้เซฟถ้าโหลดยังไม่เสร็จ
     try {
       await fetch(GOOGLE_SHEET_API_URL, {
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -351,24 +371,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   }
 
   function recordVisit() {
-    if(!isDataLoaded) return; // 🛡️ ล็อคไว้
-    if(!sessionStorage.getItem('visited_today_' + shopStats.date)) {
-      shopStats.visits = (shopStats.visits || 0) + 1;
-      sessionStorage.setItem('visited_today_' + shopStats.date, 'true');
-      syncDataToSheet();
-    }
-  }  fetchGoogleSheetsData();
-
-  async function syncDataToSheet() {
-    try {
-      await fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'sync_data', shopInfo, customTabs, products, shopStats })
-      });
-    } catch(err) { console.error('เซฟข้อมูลล้มเหลว'); }
-  }
-
-  function recordVisit() {
+    if(!isDataLoaded) return;
     if(!sessionStorage.getItem('visited_today_' + shopStats.date)) {
       shopStats.visits = (shopStats.visits || 0) + 1;
       sessionStorage.setItem('visited_today_' + shopStats.date, 'true');
@@ -422,7 +425,21 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       let uniqueApps = {};
       tabProducts.forEach(p => { if (!uniqueApps[p.appCategory]) uniqueApps[p.appCategory] = []; uniqueApps[p.appCategory].push(p); });
 
-      for (let appName in uniqueApps) {
+      let appNames = Object.keys(uniqueApps);
+      const sortMode = document.getElementById('catSort').value;
+      
+      // ✅ เรียงแอป OS ตามชื่อหรือราคาได้แล้ว
+      if (sortMode === 'name') {
+         appNames.sort((a, b) => a.localeCompare(b));
+      } else if (sortMode === 'price') {
+         appNames.sort((a, b) => {
+             let minA = Math.min(...uniqueApps[a].map(x => x.price));
+             let minB = Math.min(...uniqueApps[b].map(x => x.price));
+             return minA - minB;
+         });
+      }
+
+      appNames.forEach(appName => {
         let variants = uniqueApps[appName];
         let iosPkg = variants.find(p => p.os === 'iOS');
         let andPkg = variants.find(p => p.os === 'Android');
@@ -451,7 +468,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
             <div style="color:var(--primary); font-weight:700; font-size:16px; margin-top:auto;">${priceText}</div>
           </div>
         `;
-      }
+      });
     } else {
       let uniqueMap = {};
       tabProducts.forEach(p => {
@@ -724,21 +741,18 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     }, 500);
   }
 
-  // อัปเกรดฟังก์ชัน Copy ให้รองรับระบบมือถือรุ่นใหม่ได้ดีขึ้น
   function copyText(e, text) {
     if (e) e.stopPropagation();
-    
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text).then(() => {
             if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
-        }).catch(err => {
-            fallbackCopyTextToClipboard(text, e);
-        });
+        }).catch(err => { fallbackCopyTextToClipboard(text, e); });
     } else {
         fallbackCopyTextToClipboard(text, e);
     }
   }
 
+  // 🍏 อัปเกรดระบบก๊อปปี้ให้รองรับ iPhone/iPad
   function fallbackCopyTextToClipboard(text, e) {
     const temp = document.createElement("textarea"); 
     temp.value = text;
@@ -749,6 +763,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     document.body.appendChild(temp); 
     temp.focus();
     temp.select(); 
+    temp.setSelectionRange(0, 99999); // บังคับให้ iOS Safari ไฮไลท์ข้อความให้ครบ
     try {
         document.execCommand("copy");
         if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
@@ -863,23 +878,23 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
     const baseObj = { tabId: tabId, tab: tabName, appCategory: name, price: Number(document.getElementById('admPrice').value) || 0, icon: document.getElementById('admIcon').value || 'https://via.placeholder.com/60' };
 
-    if(type === 'os') {
-      const isIos = document.getElementById('admOS_ios').checked;
-      const isAnd = document.getElementById('admOS_android').checked;
-      const stockStat = document.getElementById('admOSStatus').value; 
-      if(!isIos && !isAnd) return alert('กรุณาติ๊กระบบ iOS หรือ Android');
-
-      if(editingProductId) {
+    if (editingProductId) {
         let baseId = String(editingProductId).replace('_i','').replace('_a','');
-        products = products.filter(p => String(p.id) !== baseId+'_i' && String(p.id) !== baseId+'_a');
-      }
-      let newBaseId = editingProductId ? String(editingProductId).replace('_i','').replace('_a','') : 'p_'+Date.now();
+        products = products.filter(p => p.id !== baseId && p.id !== baseId+'_i' && p.id !== baseId+'_a');
+    }
+    let newBaseId = editingProductId ? String(editingProductId).replace('_i','').replace('_a','') : 'p_'+Date.now();
 
-      if(isIos) products.push({...baseObj, id: newBaseId+'_i', os: 'iOS', stockStatus: stockStat});
-      if(isAnd) products.push({...baseObj, id: newBaseId+'_a', os: 'Android', stockStatus: stockStat});
+    if (type === 'os') {
+        const isIos = document.getElementById('admOS_ios').checked;
+        const isAnd = document.getElementById('admOS_android').checked;
+        const stockStat = document.getElementById('admOSStatus').value; 
+        if(!isIos && !isAnd) return alert('กรุณาติ๊กระบบ iOS หรือ Android');
+
+        if(isIos) products.push({...baseObj, id: newBaseId+'_i', os: 'iOS', stockStatus: stockStat});
+        if(isAnd) products.push({...baseObj, id: newBaseId+'_a', os: 'Android', stockStatus: stockStat});
     } else {
-      const obj = { ...baseObj, id: editingProductId || 'p_'+Date.now(), appDetails: document.getElementById('admAppDesc').value, packageOption: document.getElementById('admPkgOpt').value, subPackage: document.getElementById('admSubPkg').value, subDetails: document.getElementById('admSubDesc').value };
-      if (editingProductId) { const idx = products.findIndex(p => String(p.id) === String(editingProductId)); products[idx] = obj; } else { products.push(obj); }
+        const obj = { ...baseObj, id: newBaseId, appDetails: document.getElementById('admAppDesc').value, packageOption: document.getElementById('admPkgOpt').value, subPackage: document.getElementById('admSubPkg').value, subDetails: document.getElementById('admSubDesc').value };
+        products.push(obj);
     }
 
     syncDataToSheet(); clearProductForm(); renderAdminProductsByTab(tabId); renderCategories();
@@ -919,8 +934,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
   function deleteProduct(id) {
     if(confirm('🚨 ลบสินค้านี้?')) {
-      products = products.filter(p => String(p.id) !== String(id));
-      cart = cart.filter(c => String(c.id) !== String(id));
+      let baseId = String(id).replace('_i','').replace('_a','');
+      products = products.filter(p => p.id !== baseId && p.id !== baseId+'_i' && p.id !== baseId+'_a');
+      cart = cart.filter(c => c.id !== baseId && c.id !== baseId+'_i' && c.id !== baseId+'_a');
       syncDataToSheet(); updateBottomBar(); 
       if(currentAdminViewTab) renderAdminProductsByTab(currentAdminViewTab);
       renderCategories();
