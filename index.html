@@ -199,7 +199,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
       <h3 style="color:var(--primary); margin:0;">⚙️ จัดการร้านค้า</h3>
       <div style="display:flex; gap:10px; align-items:center;">
         <button onclick="logoutAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🚪 ออกจากระบบ</button>
-        <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
+        <span onclick="logoutAdmin()" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
       </div>
     </div>
     
@@ -425,7 +425,6 @@ function applyShopInfo() {
   const bFb = `<button class="copy-btn" onclick="copyText(event, '${shopInfo.fb}')">Copy</button>`;
   const bLine = `<button class="copy-btn" onclick="copyText(event, '${shopInfo.line}')">Copy</button>`;
   
-  // เปลี่ยนชื่อป้ายเป็น X (Twitter)
   document.getElementById('infoFb').innerHTML = `${shopInfo.fb || '-'} ${shopInfo.fb ? bFb : ''}`;
   document.getElementById('infoLine').innerHTML = `${shopInfo.line || '-'} ${shopInfo.line ? bLine : ''}`;
   document.getElementById('infoTime').innerText = shopInfo.time || '-';
@@ -618,12 +617,25 @@ function checkAdminLogin() {
   if(adminClickCount >= 5) {
     if(prompt("🔒 ใส่รหัสผ่านแอดมิน:") === "170647") {
       document.getElementById('adminModal').classList.add('show');
-      toggleAdmProdFields(); // รีเซ็ตฟอร์มสินค้า
+      toggleAdmProdFields(); 
     } else {
       alert("รหัสผ่านไม่ถูกต้อง");
     }
     adminClickCount = 0;
   }
+}
+
+// ================= ออกจากระบบแอดมิน =================
+function logoutAdmin() {
+  adminClickCount = 0; 
+  
+  // ปิดหน้าต่างแอดมิน
+  document.getElementById('adminModal').classList.remove('show');
+  
+  // ล้างฟอร์ม
+  clearProductForm();
+  
+  alert("🚪 ออกจากโหมดแอดมินเรียบร้อยแล้ว");
 }
 
 // ================= ADMIN SYSTEM =================
@@ -807,7 +819,6 @@ function clearProductForm() {
 
 async function submitAddProduct() {
   const sel = document.getElementById('addProdTab');
-  // กรณีแก้ไข เราจะยึด tabId ตามข้อมูลเดิม
   let targetTabId = editingProductId ? editingProductId.split('|')[0] : sel.value; 
   let tObj = customTabs.find(t => t.id === targetTabId);
   if (!tObj) return;
@@ -854,22 +865,6 @@ async function deleteProduct(id) {
     document.getElementById('loadingOverlay').style.display = 'flex';
     await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'DELETE_PRODUCT', data: {id: id} }) });
     await loadData();
-  }
-}
-// ================= ออกจากระบบแอดมิน =================
-function logoutAdmin() {
-  adminClickCount = 0; // รีเซ็ตการนับคลิก
-  
-  // 1. ซ่อนปุ่ม ⚙️ (adminFab) ที่ลอยอยู่มุมขวาล่าง
-  document.getElementById('adminFab').style.display = 'none';
-  
-  // 2. ปิดหน้าต่างแผงจัดการแอดมิน
-  document.getElementById('adminModal').classList.remove('show');
-  
-  // 3. เคลียร์ฟอร์มสินค้าให้ว่างเปล่า ป้องกันข้อมูลค้าง
-  clearProductForm();
-  
-  alert("🚪 ออกจากโหมดแอดมินเรียบร้อยแล้ว");
   }
 }
 </script>
