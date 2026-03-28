@@ -195,9 +195,12 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 
 <div class="modal-overlay" id="adminModal">
   <div class="modal-box">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-      <h3 style="color:var(--primary); margin:0;">⚙️ จัดการร้านค้าหลังบ้าน</h3>
-      <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:24px; color:#888;">×</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h3 style="color:var(--primary); margin:0;">⚙️ จัดการร้านค้า</h3>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="logoutAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🚪 ออกจากระบบ</button>
+        <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
+      </div>
     </div>
     
     <div class="adm-menu">
@@ -854,5 +857,21 @@ async function deleteProduct(id) {
   }
 }
 </script>
+// ================= ออกจากระบบแอดมิน =================
+function logoutAdmin() {
+  adminClickCount = 0; // รีเซ็ตการนับคลิก
+  
+  // 1. ซ่อนปุ่ม ⚙️ (adminFab) ที่ลอยอยู่มุมขวาล่าง
+  document.getElementById('adminFab').style.display = 'none';
+  
+  // 2. ปิดหน้าต่างแผงจัดการแอดมิน
+  document.getElementById('adminModal').classList.remove('show');
+  
+  // 3. เคลียร์ฟอร์มสินค้าให้ว่างเปล่า ป้องกันข้อมูลค้าง
+  clearProductForm();
+  
+  alert("🚪 ออกจากโหมดแอดมินเรียบร้อยแล้ว");
+  }
+}
 </body>
 </html>
