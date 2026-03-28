@@ -77,6 +77,15 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .os-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .check-circle::after { content: '✓'; color: #fff; font-size: 10px; font-weight: bold; opacity: 0; }
 .os-card.selected .check-circle::after { opacity: 1; }
+
+/* 🌟 ป้ายสถานะแอป iOS/Android มุมขวาบน 🌟 */
+.os-status-badge { position: absolute; top: -1px; right: -1px; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 0 14px 0 10px; z-index: 10; display: flex; align-items: center; gap: 4px; background: #ffffff; box-shadow: -2px 2px 8px rgba(0,0,0,0.05); }
+.os-status-badge.ready { color: #10b981; border: 2px solid #10b981; border-top: none; border-right: none; }
+.os-status-badge.not_ready { color: #ef4444; border: 2px solid #ef4444; border-top: none; border-right: none; }
+.os-dot { width: 6px; height: 6px; border-radius: 50%; animation: pulseG 1.5s infinite; }
+.os-status-badge.ready .os-dot { background: #10b981; box-shadow: 0 0 6px #10b981; }
+.os-status-badge.not_ready .os-dot { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+
 .os-btn-group { display: flex; gap: 4px; width: 100%; margin: 6px 0; }
 .os-btn { flex: 1; font-size: 10px; padding: 5px 0; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; color: var(--text-muted); font-weight: 600; }
 .os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
@@ -113,7 +122,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   width: 55px; 
   height: 55px; 
   border-radius: 50%; 
-  background: #d8b4fe; /* สีม่วงพาสเทล */
+  background: #d8b4fe; 
   color: #ffffff; 
   font-size: 36px; 
   justify-content: center; 
@@ -122,7 +131,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   cursor: pointer; 
   z-index: 999; 
   border: 2px solid #fff;
-  padding-bottom: 6px; /* จัดตำแหน่ง + ให้อยู่กึ่งกลาง */
+  padding-bottom: 6px; 
 }
 
 /* Admin Menu */
@@ -227,7 +236,9 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
   <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
       <h3 style="color:var(--primary); margin:0;">⚙️ จัดการร้านค้า</h3>
-      <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
+      </div>
     </div>
     
     <div class="adm-menu">
@@ -252,7 +263,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
         <input type="text" class="adm-input" id="admLogo" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
-        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ:</label>
+        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ (Banner):</label>
         <input type="text" class="adm-input" id="admBanner" placeholder="URL รูป หรือ <iframe>" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
@@ -301,7 +312,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
       <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
         
         <div class="adm-input-group">
-          <label>เลือกแท็บ (หมวดหมู่):</label>
+          <label>เลือกแท็บ:</label>
           <select id="addProdTab" class="adm-input" onchange="toggleAdmProdFields()"></select>
         </div>
         <div class="adm-input-group">
@@ -331,7 +342,14 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 
         <div id="adm-fields-os" style="display:none;">
           <div class="adm-input-group">
-            <label>ระบบ IOS-ANDROID (เลือกได้อย่างน้อย 1):</label>
+            <label>สถานะแอพ:</label>
+            <select id="admOSStatus" class="adm-input">
+              <option value="ready">🟢 พร้อมส่ง</option>
+              <option value="not_ready">🔴 เมลไม่พร้อม</option>
+            </select>
+          </div>
+          <div class="adm-input-group">
+            <label>ระบบ IOS-ANDROID (เลือกได้อย่างน้อย 1 หรือทั้ง 2):</label>
             <div style="display:flex; gap:15px; background:#fff; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
               <label><input type="checkbox" id="admOS_ios" value="iOS"> 🍎 iOS</label>
               <label><input type="checkbox" id="admOS_android" value="Android"> 🤖 Android</label>
@@ -515,15 +533,16 @@ function renderCategories() {
       let selAnd = pAnd ? cart.some(c=>c.id===pAnd.id) : false;
       let price = (pIos && pAnd && pIos.price !== pAnd.price) ? `${Math.min(pIos.price,pAnd.price)}-${Math.max(pIos.price,pAnd.price)}฿` : `${any.price}฿`;
       
-      // เราให้แสดงว่าพร้อมส่งเสมอในแท็บ OS ตามที่คุณต้องการให้ตัดส่วนสถานะออกในหลังบ้าน
-      let badge = `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>`;
+      // 🌟 ดึงสถานะมาโชว์ที่ป้ายมุมขวาบน 🌟
+      let badge = any.osStatus === 'ready' 
+        ? `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>` 
+        : `<div class="os-status-badge not_ready"><div class="os-dot"></div>เมลไม่พร้อม</div>`;
 
       html += `
       <div class="os-card ${selIos||selAnd ? 'selected' : ''}">
         ${badge} <div class="check-circle"></div>
         <img src="${any.icon}" class="cat-icon">
         <div class="cat-name">${name}</div>
-        <div class="cat-desc" style="display:none;"></div>
         <div class="os-btn-group">
           ${pIos ? `<button class="os-btn ${selIos?'active':''}" onclick="toggleCart('${pIos.id}', event)">iOS</button>` : ''}
           ${pAnd ? `<button class="os-btn ${selAnd?'active':''}" onclick="toggleCart('${pAnd.id}', event)">Android</button>` : ''}
@@ -660,7 +679,6 @@ function verifyAdminPassword() {
   }
 }
 
-// ฟังก์ชันเปิดแผงแอดมินผ่านปุ่ม +
 function openAdminPanel() {
   document.getElementById('adminModal').classList.add('show');
   toggleAdmProdFields(); 
@@ -755,12 +773,10 @@ function toggleAdmProdFields() {
   const type = sel.options[sel.selectedIndex].dataset.type;
   
   if (type === 'os') {
-    // โหมด 2.3 OS จะซ่อนรายละเอียดที่ไม่ได้ใช้
     document.getElementById('adm-fields-standard').style.display = 'none';
     document.getElementById('div-prod-desc').style.display = 'none';
     document.getElementById('adm-fields-os').style.display = 'block';
   } else {
-    // โหมด 2.1 & 2.2 โชว์ทุกช่อง
     document.getElementById('adm-fields-standard').style.display = 'block';
     document.getElementById('div-prod-desc').style.display = 'block';
     document.getElementById('adm-fields-os').style.display = 'none';
@@ -822,6 +838,7 @@ function editProduct(id) {
     document.getElementById('addProdOpt2').value = p.subPackage || '';
     document.getElementById('addProdSubDesc').value = p.subDetails || '';
   } else {
+    document.getElementById('admOSStatus').value = p.osStatus || 'ready';
     document.getElementById('admOS_ios').checked = String(p.os).includes('iOS');
     document.getElementById('admOS_android').checked = String(p.os).includes('Android');
   }
@@ -841,6 +858,7 @@ function clearProductForm() {
   document.getElementById('addProdSubDesc').value = '';
   document.getElementById('addProdPrice').value = '';
   document.getElementById('addProdIcon').value = '';
+  document.getElementById('admOSStatus').value = 'ready';
   document.getElementById('admOS_ios').checked = false;
   document.getElementById('admOS_android').checked = false;
 }
@@ -872,8 +890,7 @@ async function submitAddProduct() {
     if(document.getElementById('admOS_ios').checked) osArr.push('iOS');
     if(document.getElementById('admOS_android').checked) osArr.push('Android');
     pData.os = osArr.join(', ');
-    // ค่าเริ่มต้น status ของ OS ให้เป็น ready เสมอ
-    pData.osStatus = 'ready'; 
+    pData.osStatus = document.getElementById('admOSStatus').value; // 🌟 เก็บสถานะลงฐานข้อมูล 🌟
   }
 
   document.getElementById('loadingText').innerText = editingProductId ? "กำลังอัปเดตสินค้า..." : "กำลังบันทึกสินค้า...";
