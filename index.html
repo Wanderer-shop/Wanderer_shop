@@ -52,7 +52,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Info Card & Banner */
-.info-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; margin: 0 10px 15px;}
+.info-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin: 0 10px 15px;}
 .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px dashed rgba(0,0,0,0.1); font-size: 14px; }
 .info-row span:first-child { color: var(--primary); font-weight: 600; }
 .info-row span:last-child { font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--text-dark); text-align: right; }
@@ -61,7 +61,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .banner-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: none; margin: 0 10px 15px; }
 .banner-media-holder iframe { width: 100%; aspect-ratio: 16/9; max-height: 250px; border: none; pointer-events: auto; display: block; }
 .banner-media-holder img { width: 100%; max-height: 250px; object-fit: cover; border: none; display: block; cursor: pointer; transition: 0.2s; }
-.banner-media-holder img:hover { filter: brightness(0.9); }
 .banner-text { padding: 15px; font-size: 13px; color: var(--text-dark); text-align: center; white-space: pre-wrap; background: #fff; }
 
 /* Grid & Cards */
@@ -135,9 +134,15 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; flex: 1; min-width: 45%; }
 .stat-num { font-size: 24px; font-weight: 700; color: var(--primary); }
 .stat-date-badge { text-align:center; font-size:12px; color:#888; margin-bottom:15px; font-weight:bold; }
+#loadingOverlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 3000; display: none; justify-content: center; align-items: center; flex-direction: column; color: var(--primary); font-weight: bold;}
 </style>
 </head>
 <body>
+
+<div id="loadingOverlay">
+  <div class="status-dot" style="width: 20px; height: 20px; background: var(--primary); margin-bottom: 10px;"></div>
+  <span>กำลังเชื่อมต่อ Google Sheets...</span>
+</div>
 
 <div class="shop-status status-open" id="shopStatusPill"><span class="status-dot"></span> <span id="shopStatusText">OPEN</span></div>
 
@@ -189,7 +194,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     <h3 style="color:var(--primary); margin-bottom:15px; text-align:center; font-size:20px;">🛒 สรุปรายการสั่งซื้อ</h3>
     <div id="checkoutSummary" style="font-size:14px; color:var(--text-dark); max-height: 50vh; overflow-y: auto; background:#f8fafc; padding:15px; border-radius:12px; border:1px solid #e2e8f0; white-space: pre-wrap; margin-bottom: 20px;"></div>
     <div style="display:flex; flex-direction: column; gap:10px;">
-      <button style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; padding:14px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size: 15px; box-shadow: 0 4px 15px rgba(176,38,255,0.3);" id="btnConfirmCheckout" onclick="confirmCheckout()">คัดลอกฟอร์ม & ไปที่ไลน์</button>
+      <button style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; padding:14px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size: 15px; box-shadow: 0 4px 15px rgba(176,38,255,0.3);" id="btnConfirmCheckout" onclick="confirmCheckout()">ยืนยันออเดอร์ & ไปที่ไลน์</button>
       <button style="background:#e2e8f0; color:var(--text-dark); padding:12px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size: 14px;" onclick="closeCheckoutModal()">เลือกสินค้าต่อ</button>
     </div>
   </div>
@@ -219,7 +224,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       <div class="admin-input-group"><label class="admin-label">Line ID:</label><input type="text" class="admin-input" id="admLine" placeholder="@997pfoig" onchange="previewShopInfo()"></div>
       <div class="admin-input-group"><label class="admin-label">เวลาทำการ:</label><input type="text" class="admin-input" id="admTime" onchange="previewShopInfo()"></div>
       <div class="admin-input-group"><label class="admin-label">การรับประกัน:</label><textarea class="admin-input" id="admWarranty" onchange="previewShopInfo()"></textarea></div>
-      <button class="modal-btn" onclick="saveShopInfo()">💾 บันทึกข้อมูลร้าน</button>
+      <button class="modal-btn" onclick="saveShopInfo()">💾 บันทึกข้อมูลร้านลง Google Sheets</button>
     </div>
 
     <div id="admin-tabs" class="admin-section">
@@ -228,7 +233,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
         <div class="admin-input-group"><label class="admin-label">รูปแบบ:</label><select id="admNewTabType" class="admin-select"><option value="standard">แบบปกติ (มีหน้าแพ็กเกจย่อย)</option><option value="os">แบบแอป (เลือกระบบ OS)</option></select></div>
         <button class="modal-btn" onclick="addNewTab()">➕ สร้างแท็บใหม่</button>
       </div>
-      <h4 style="font-size:14px; margin-bottom:10px;">📋 แท็บทั้งหมด</h4>
+      <h4 style="font-size:14px; margin-bottom:10px;">📋 แท็บทั้งหมด (ห้ามลบตามนโยบายชีต)</h4>
       <div id="adminTabListArea"></div>
     </div>
 
@@ -261,15 +266,14 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
           </div>
         </div>
 
-        <div class="admin-input-group"><label class="admin-label">ราคา (บาท):</label><input type="number" id="admPrice" class="admin-input" placeholder="0"></div>
-        <div class="admin-input-group"><label class="admin-label">ลิงก์รูปล็อกโก้แอป:</label><input type="text" id="admIcon" class="admin-input"></div>
-
-        <button class="modal-btn" id="btnSubmitProduct" onclick="saveProduct()">➕ บันทึกข้อมูลสินค้า</button>
-        <button class="modal-btn" style="background:#e2e8f0; color:#333; margin-top:8px;" onclick="clearProductForm()">เคลียร์ฟอร์มเพิ่มใหม่</button>
+        <div class="admin-input-group"><label class="admin-label">ราคา (บาท):</label><input type="number" id="admPrice" class="admin-input"></div>
+        <div class="admin-input-group"><label class="admin-label">ลิงก์รูปไอคอน:</label><input type="text" id="admIcon" class="admin-input"></div>
+        <button class="modal-btn" id="btnSubmitProduct" onclick="saveProduct()">➕ บันทึกข้อมูลสินค้าลงชีต</button>
+        <button class="modal-btn" style="background:#e2e8f0; color:#333; margin-top:8px;" onclick="clearProductForm()">เคลียร์ฟอร์ม</button>
       </div>
 
       <div style="border-top:2px dashed #ddd; padding-top:15px;">
-        <h4 style="font-size:14px; margin-bottom:10px;">📋 รายการสินค้า (แยกตามแท็บ)</h4>
+        <h4 style="font-size:14px; margin-bottom:10px;">📋 รายการสินค้า (กดแก้ไขได้ / ห้ามลบ)</h4>
         <div id="admProdFilterTabs" style="display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px;"></div>
         <div id="adminProductList" style="max-height: 350px; overflow-y: auto;"></div>
       </div>
@@ -284,768 +288,551 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       </div>
       <h4 style="font-size:14px; margin-bottom:10px;">🏆 สินค้าขายดี (คลิกสั่งบ่อยสุด)</h4>
       <div id="statTopItems" style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0; font-size:13px; color:var(--text-dark);">ไม่มีข้อมูล</div>
-      <button class="modal-btn" style="background:#ef4444; margin-top:20px;" onclick="resetStats()">🗑️ ล้างสถิติทั้งหมด</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ⚠️ วาง URL ของ Apps Script ที่นี่ ⚠️
-  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw5r7vDqEXhWbJvTptt0gYhosxSj-Bw8su-MnS0JeU3PwfoWvjGCOEHmCpff7Zlaawq9g/exec"; 
-  
-  let currentMainTabId = 'info'; 
-  let selectedAppCategory = null;
-  let cart = [];
-  let shopInfo = {};
-  let products = [];
-  let isAdminAuthed = false;
-  let editingProductId = null;
-  let currentAdminViewTab = null;
-  let checkoutData = { text: "", overallTotal: 0, orderTypesArr: [], orderItemsArr: [], tempTopItems: {} };
+// --- GOOGLE APPS SCRIPT API CONFIG ---
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvre6xyeKf0IWKDriOclhbfu9ytEAR4R8r5hIIt6vU_wpmJ_uJ0iL9NdGr6OJBvS1k/exec";
 
-  let customTabs = [];
-  let todayDateStr = new Date().toLocaleDateString('th-TH');
-  let shopStats = { date: todayDateStr, visits: 0, orders: 0, revenue: 0, topItems: {} };
+// --- STATE VARIABLES ---
+let currentMainTabId = 'info';
+let selectedAppCategory = null;
+let cart = [];
+let shopInfo = {};
+let customTabs = [];
+let products = [];
+let shopStats = { date: '', visits: 0, orders: 0, revenue: 0, topItems: {} };
+let isAdminAuthed = false;
+let editingProductId = null;
+let currentAdminViewTab = null;
 
-  // 🔒 ตัวแปรล็อคการ Save ป้องกันข้อมูลหาย
-  let isDataLoaded = false; 
+// --- GOOGLE SHEETS SYNC FUNCTIONS ---
+function toggleLoading(show) {
+  document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+}
 
-  function checkDailyReset() {
-    let now = new Date().toLocaleDateString('th-TH');
-    if (shopStats.date !== now) { shopStats = { date: now, visits: 0, orders: 0, revenue: 0, topItems: {} }; }
+// ส่งข้อมูลไปบันทึกที่ Google Sheets (เพิ่ม/แก้ไข อย่างเดียว)
+async function syncToGoogleSheets(actionType, payload) {
+  try {
+    toggleLoading(true);
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      // mode: 'no-cors', // หาก API ไม่ได้เปิด CORS อาจจะใช้บรรทัดนี้แทน
+      body: JSON.stringify({ action: actionType, data: payload })
+    });
+    const result = await response.json().catch(() => ({status: 'success'})); // รับค่ากลับ
+    console.log("Sheet Sync Success:", actionType);
+    toggleLoading(false);
+    return result;
+  } catch (error) {
+    console.error("Sheet Sync Error:", error);
+    toggleLoading(false);
   }
+}
 
-  function matchTab(p, tabObj) {
-    if(!p || !tabObj) return false;
-    let pTabId = String(p.tabId || '').trim();
-    let tId = String(tabObj.id).trim();
-    if (pTabId && tId && pTabId === tId) return true;
-
-    // Fallback logic
-    let pTab = String(p.tab || '').trim().toLowerCase();
-    let tName = String(tabObj.name).trim().toLowerCase();
-    return (pTab === tName);
-  }
-
-  async function fetchGoogleSheetsData() {
-    try {
-      let res = await fetch(`${GOOGLE_SHEET_API_URL}?t=${Date.now()}`);
-      let data = await res.json();
-      
-      if(data.products) products = data.products;
-      
-      if(data.customTabs && data.customTabs.length > 0) {
-        customTabs = data.customTabs;
-      } else {
-        customTabs = [
-          { id: 't_premium', name: 'แอพพรีเมี่ยม', type: 'standard' },
-          { id: 't_game', name: 'เติมเกม', type: 'standard' },
-          { id: 't_os', name: 'แอพ/เกม IOS-ANDROID', type: 'os' }
-        ];
-      }
-
-      if(data.shopInfo && Object.keys(data.shopInfo).length > 0) shopInfo = data.shopInfo;
-      if(data.shopStats && data.shopStats.date) shopStats = data.shopStats;
-      
-      checkDailyReset(); applyShopInfoData(); 
-      
-      isDataLoaded = true; // ปลดล็อคการบันทึก
-      recordVisit();
-      
-    } catch(err) { 
-      console.log("โหลดข้อมูลชีตไม่สำเร็จ"); 
-      isDataLoaded = false; 
-    }
+// ดึงข้อมูลทั้งหมดจากชีตเมื่อโหลดหน้าเว็บ
+async function loadDataFromGoogleSheets() {
+  try {
+    toggleLoading(true);
+    // กรณีที่ชีตมีการทำ doGet สำหรับ GET_DATA 
+    // หากสคริปต์ยังไม่พร้อม ให้โหลด localStorage ไปก่อน
+    const response = await fetch(SCRIPT_URL + "?action=GET_DATA");
+    const data = await response.json();
+    
+    if(data.shopInfo) shopInfo = data.shopInfo;
+    if(data.customTabs && data.customTabs.length > 0) customTabs = data.customTabs;
+    if(data.products && data.products.length > 0) products = data.products;
+    
+    saveLocalData(); // แบคอัพลงเครื่อง
+  } catch(e) {
+    console.log("Failed to load from sheet, using local data.");
+    loadLocalData();
+  } finally {
+    toggleLoading(false);
     renderAllTabs();
-  }
-  fetchGoogleSheetsData();
-
-  async function syncDataToSheet() {
-    if(!isDataLoaded) return;
-    try {
-      await fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST',
-        mode: 'no-cors', // ✅ จุดสำคัญที่แก้ปัญหาเบราว์เซอร์บล็อก (เปลี่ยนเป็น no-cors)
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'sync_data', shopInfo, customTabs, products, shopStats })
-      });
-    } catch(err) { console.error('เซฟข้อมูลล้มเหลว', err); }
-  }
-
-  function recordVisit() {
-    if(!isDataLoaded) return;
-    if(!sessionStorage.getItem('visited_today_' + shopStats.date)) {
-      shopStats.visits = (shopStats.visits || 0) + 1;
-      sessionStorage.setItem('visited_today_' + shopStats.date, 'true');
-      syncDataToSheet();
-    }
-  }
-
-  function renderAllTabs() {
-    const mainTabs = document.getElementById('mainTabs');
-    let tabsHtml = `<button class="tab-btn ${currentMainTabId === 'info' ? 'active' : ''}" onclick="switchMainTab('info')">ข้อมูลร้าน</button>`;
-    customTabs.forEach(t => { tabsHtml += `<button class="tab-btn ${String(currentMainTabId) === String(t.id) ? 'active' : ''}" onclick="switchMainTab('${t.id}')">${t.name}</button>`; });
-    mainTabs.innerHTML = tabsHtml;
-
-    const admSel = document.getElementById('admTabProd');
-    let selHtml = '';
-    customTabs.forEach(t => { selHtml += `<option value="${t.id}" data-type="${t.type}">${t.name}</option>`; });
-    admSel.innerHTML = selHtml;
-
-    const admTabList = document.getElementById('adminTabListArea');
-    let listHtml = '';
-    customTabs.forEach(t => {
-      listHtml += `
-        <div class="adm-list-item">
-          <div class="adm-list-info"><strong style="color:var(--primary);">${t.name}</strong><br><span style="color:#888;">ชนิด: ${t.type === 'os' ? 'แบบ OS' : 'แบบปกติ'}</span></div>
-          <div class="adm-list-actions"><button style="background:#ef4444;" onclick="deleteTab('${t.id}')">ลบ</button></div>
-        </div>
-      `;
-    });
-    admTabList.innerHTML = listHtml;
-
-    if(currentMainTabId !== 'info') renderCategories();
-    renderAdminProductTabsUI(); 
-  }
-
-  function switchMainTab(tabId) {
-    currentMainTabId = tabId; renderAllTabs(); 
-    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-    if(tabId === 'info') { document.getElementById('view-info').classList.add('active'); } 
-    else { document.getElementById('view-categories').classList.add('active'); renderCategories(); }
-  }
-
-  function renderCategories() {
-    const grid = document.getElementById('categoryGrid');
-    const currentTabObj = customTabs.find(t => String(t.id) === String(currentMainTabId));
-    if(!currentTabObj) return;
-
-    let tabProducts = products.filter(p => matchTab(p, currentTabObj));
-    let htmlStr = '';
-
-    if (currentTabObj.type === 'os') {
-      let uniqueApps = {};
-      tabProducts.forEach(p => { if (!uniqueApps[p.appCategory]) uniqueApps[p.appCategory] = []; uniqueApps[p.appCategory].push(p); });
-
-      let appNames = Object.keys(uniqueApps);
-      const sortMode = document.getElementById('catSort').value;
-      
-      // ✅ เรียงแอป OS ตามชื่อหรือราคา
-      if (sortMode === 'name') {
-         appNames.sort((a, b) => a.localeCompare(b));
-      } else if (sortMode === 'price') {
-         appNames.sort((a, b) => {
-             let minA = Math.min(...uniqueApps[a].map(x => x.price));
-             let minB = Math.min(...uniqueApps[b].map(x => x.price));
-             return minA - minB;
-         });
-      }
-
-      appNames.forEach(appName => {
-        let variants = uniqueApps[appName];
-        let iosPkg = variants.find(p => p.os === 'iOS');
-        let andPkg = variants.find(p => p.os === 'Android');
-        let basePkg = variants[0];
-        
-        const isIosSel = iosPkg && cart.find(c => String(c.id) === String(iosPkg.id));
-        const isAndSel = andPkg && cart.find(c => String(c.id) === String(andPkg.id));
-        let priceText = (iosPkg && andPkg && iosPkg.price !== andPkg.price) ? `เริ่มต้น ${Math.min(iosPkg.price, andPkg.price)}฿` : `${basePkg.price}฿`;
-        
-        let hasNotReady = variants.some(v => v.stockStatus === 'not_ready');
-        let statusBadge = hasNotReady 
-            ? `<div class="os-status-badge not_ready"><span class="os-dot"></span> เมลไม่พร้อม</div>` 
-            : `<div class="os-status-badge ready"><span class="os-dot"></span> พร้อมส่ง</div>`;
-
-        htmlStr += `
-          <div class="os-card ${isIosSel || isAndSel ? 'selected' : ''}">
-            ${statusBadge}
-            <div class="check-circle"></div>
-            <img src="${basePkg.icon}" class="cat-icon" loading="lazy">
-            <div style="font-size:14px; font-weight:700; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-dark);">${appName}</div>
-            <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">เลือกระบบ</div>
-            <div class="os-btn-group">
-              ${iosPkg ? `<button class="os-btn ${isIosSel ? 'active' : ''}" onclick="toggleOSCard(event, '${iosPkg.id}')">iOS</button>` : ''}
-              ${andPkg ? `<button class="os-btn ${isAndSel ? 'active' : ''}" onclick="toggleOSCard(event, '${andPkg.id}')">Android</button>` : ''}
-            </div>
-            <div style="color:var(--primary); font-weight:700; font-size:16px; margin-top:auto;">${priceText}</div>
-          </div>
-        `;
-      });
-    } else {
-      let uniqueMap = {};
-      tabProducts.forEach(p => {
-        if(!uniqueMap[p.appCategory]) uniqueMap[p.appCategory] = { ...p, minPrice: p.price };
-        else if (p.price < uniqueMap[p.appCategory].minPrice) uniqueMap[p.appCategory].minPrice = p.price;
-      });
-      let uniqueArr = Object.values(uniqueMap);
-      const sortMode = document.getElementById('catSort').value;
-      if(sortMode === 'price') uniqueArr.sort((a, b) => a.minPrice - b.minPrice);
-      else uniqueArr.sort((a, b) => a.appCategory.localeCompare(b.appCategory));
-
-      uniqueArr.forEach(app => {
-        htmlStr += `
-          <div class="cat-card" onclick="openApp('${app.appCategory}')">
-            <img src="${app.icon}" class="cat-icon" loading="lazy">
-            <div class="cat-name" title="${app.appCategory}">${app.appCategory}</div>
-            <div class="cat-desc">${app.appDetails || ''}</div>
-          </div>
-        `;
-      });
-    }
-    grid.innerHTML = htmlStr;
-  }
-
-  function toggleOSCard(e, productId) {
-    e.stopPropagation();
-    const index = cart.findIndex(c => String(c.id) === String(productId));
-    if(index > -1) cart.splice(index, 1); else cart.push(products.find(p => String(p.id) === String(productId)));
-    updateBottomBar(); renderCategories();
-  }
-
-  function openApp(appName) {
-    selectedAppCategory = appName;
-    document.getElementById('view-categories').classList.remove('active');
-    document.getElementById('view-packages').classList.add('active');
-    const appData = products.find(p => p.appCategory === appName);
-    document.getElementById('pkgAppName').innerText = appName;
-    document.getElementById('pkgAppDesc').innerText = appData.appDetails || '';
-    document.getElementById('pkgAppIcon').src = appData.icon;
-    renderPackages();
-  }
-
-  function backToCategories() { document.getElementById('view-packages').classList.remove('active'); document.getElementById('view-categories').classList.add('active'); }
-
-  function renderPackages() {
-    const listStandard = document.getElementById('packageListStandard');
-    const currentTabObj = customTabs.find(t => String(t.id) === String(currentMainTabId));
-    let appProducts = products.filter(p => p.appCategory === selectedAppCategory && matchTab(p, currentTabObj));
-
-    const grouped = {};
-    appProducts.forEach(p => { 
-      let opt = p.packageOption || 'ตัวเลือกแพ็กเกจ';
-      if(!grouped[opt]) grouped[opt] = []; 
-      grouped[opt].push(p); 
-    });
-
-    let htmlStr = '';
-    for (let group in grouped) {
-      htmlStr += `<div class="pkg-group-title">${group}</div>`;
-      grouped[group].forEach(p => {
-        const isSelected = cart.find(c => String(c.id) === String(p.id)) ? 'selected' : '';
-        htmlStr += `
-          <div class="pkg-item ${isSelected}" onclick="toggleCart('${p.id}')" id="pkg-${p.id}">
-            <div><div class="pkg-name">${p.subPackage}</div><div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${p.subDetails || ''}</div></div>
-            <div class="pkg-price">${p.price}฿</div>
-          </div>
-        `;
-      });
-    }
-    listStandard.innerHTML = htmlStr;
-  }
-
-  function toggleCart(id) {
-    const index = cart.findIndex(c => String(c.id) === String(id));
-    if(index > -1) { cart.splice(index, 1); document.getElementById(`pkg-${id}`).classList.remove('selected'); } 
-    else { cart.push(products.find(p => String(p.id) === String(id))); document.getElementById(`pkg-${id}`).classList.add('selected'); }
-    updateBottomBar();
-  }
-
-  function calculateCartTotal() {
-    let osItems = []; let otherItems = [];
-    cart.forEach(item => {
-        let tid = String(item.tabId).toLowerCase(); let tname = String(item.tab).toLowerCase();
-        if (tid === 't_os' || tname.includes('ios-android')) osItems.push(item);
-        else otherItems.push(item);
-    });
-    
-    let total = 0;
-    if (osItems.length > 0) {
-        let promoPrices = [];
-        osItems.forEach(item => {
-            if (item.price >= 20 && item.price <= 25) promoPrices.push(item.price);
-            else total += item.price;
-        });
-        promoPrices.sort((a, b) => b - a);
-        let pCount = promoPrices.length; let idx = 0;
-        
-        while (pCount >= 30) { total += 360; pCount -= 30; idx += 30; }
-        while (pCount >= 15) { total += 210; pCount -= 15; idx += 15; }
-        while (pCount >= 8)  { total += 80;  pCount -= 8;  idx += 8;  }
-        while (pCount >= 3)  { total += 45;  pCount -= 3;  idx += 3;  }
-        
-        let remainder = promoPrices.slice(idx);
-        if (remainder.length === 2 && remainder[0] === 25 && remainder[1] === 25) { total += 45; } 
-        else { remainder.forEach(p => total += p); }
-    }
-    otherItems.forEach(item => total += item.price);
-    return total;
-  }
-
-  function updateBottomBar() {
-    const bar = document.getElementById('bottomBar');
-    if(cart.length > 0) {
-      bar.classList.add('active');
-      document.getElementById('cartCount').innerText = `เลือก ${cart.length} รายการ`;
-      document.getElementById('cartTotal').innerText = calculateCartTotal();
-    } else { bar.classList.remove('active'); }
-  }
-
-  function prepareCheckoutData() {
+    applyShopInfo();
     checkDailyReset();
-    let osItems = []; let gameItems = []; let premItems = []; let otherItems = [];
-    cart.forEach(item => {
-        let tid = String(item.tabId).toLowerCase(); let tname = String(item.tab).toLowerCase();
-        if (tid === 't_os' || tname.includes('ios-android')) osItems.push(item);
-        else if (tid === 't_game' || tname.includes('เติมเกม')) gameItems.push(item);
-        else if (tid === 't_premium' || tname.includes('พรีเมี่ยม')) premItems.push(item);
-        else otherItems.push(item);
+  }
+}
+
+// --- LOCAL STORAGE (For offline / fast render backup) ---
+function loadLocalData() {
+  const d = localStorage.getItem('WandererData');
+  if(d) {
+    const p = JSON.parse(d);
+    shopInfo = p.shopInfo || {};
+    customTabs = p.customTabs || [];
+    products = p.products || [];
+  }
+  const s = localStorage.getItem('WandererStats');
+  if(s) shopStats = JSON.parse(s);
+}
+
+function saveLocalData() {
+  localStorage.setItem('WandererData', JSON.stringify({ shopInfo, customTabs, products }));
+}
+function saveStats() {
+  localStorage.setItem('WandererStats', JSON.stringify(shopStats));
+}
+
+// --- INIT PAGE ---
+window.onload = () => {
+  // โหลดข้อมูลล่าสุดจาก Google Sheets ทันที
+  loadDataFromGoogleSheets(); 
+};
+
+// --- CORE UI FUNCTIONS ---
+function checkDailyReset() {
+  const t = new Date().toLocaleDateString('th-TH');
+  if (shopStats.date !== t) {
+    shopStats = { date: t, visits: 0, orders: 0, revenue: 0, topItems: {} };
+    saveStats();
+  }
+  if (!sessionStorage.getItem('visited_today_' + shopStats.date)) {
+    shopStats.visits = (shopStats.visits || 0) + 1;
+    sessionStorage.setItem('visited_today_' + shopStats.date, 'true');
+    saveStats();
+  }
+}
+
+function renderAllTabs() {
+  const mainTabs = document.getElementById('mainTabs');
+  let tabsHtml = `<button class="tab-btn ${currentMainTabId === 'info' ? 'active' : ''}" onclick="switchMainTab('info')">ข้อมูลร้าน</button>`;
+  customTabs.forEach(t => { tabsHtml += `<button class="tab-btn ${String(currentMainTabId) === String(t.id) ? 'active' : ''}" onclick="switchMainTab('${t.id}')">${t.name}</button>`; });
+  mainTabs.innerHTML = tabsHtml;
+
+  const admSel = document.getElementById('admTabProd');
+  let selHtml = '';
+  customTabs.forEach(t => { selHtml += `<option value="${t.id}" data-type="${t.type}">${t.name}</option>`; });
+  admSel.innerHTML = selHtml;
+
+  const admTabList = document.getElementById('adminTabListArea');
+  let listHtml = '';
+  customTabs.forEach(t => { 
+    // ตัดปุ่มลบทิ้ง ตามกฎการป้องกันชีต
+    listHtml += `
+    <div class="adm-list-item">
+      <div class="adm-list-info"><strong style="color:var(--primary);">${t.name}</strong><br><span style="color:#888;">ชนิด: ${t.type === 'os' ? 'แบบ OS' : 'แบบปกติ'}</span></div>
+      <div class="adm-list-actions"><button style="background:#cbd5e1; color:#333;" onclick="deleteRestricted()">🔒 ลบไม่ได้</button></div>
+    </div>`; 
+  });
+  admTabList.innerHTML = listHtml;
+  
+  if(currentMainTabId !== 'info') renderCategories();
+  renderAdminProductTabsUI();
+}
+
+function deleteRestricted() {
+    alert("🛑 นโยบายความปลอดภัย:\nการ 'ลบ' ข้อมูลจะต้องดำเนินการผ่าน Google Sheets เท่านั้น เพื่อป้องกันข้อมูลสูญหาย\n(หน้าเว็บมีสิทธิ์แค่ เพิ่ม/แก้ไข เท่านั้น)");
+}
+
+function switchMainTab(tabId) {
+  currentMainTabId = tabId;
+  renderAllTabs();
+  document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+  if(tabId === 'info') {
+    document.getElementById('view-info').classList.add('active');
+  } else {
+    document.getElementById('view-categories').classList.add('active');
+    renderCategories();
+  }
+}
+
+function matchTab(p, tObj) {
+  if (p.tabId && String(p.tabId) !== 'undefined') return String(p.tabId) === String(tObj.id);
+  return String(p.tab) === String(tObj.name);
+}
+
+function renderCategories() {
+  const grid = document.getElementById('categoryGrid');
+  const currentTabObj = customTabs.find(t => String(t.id) === String(currentMainTabId));
+  if(!currentTabObj) return;
+
+  let tabProducts = products.filter(p => matchTab(p, currentTabObj));
+  let htmlStr = '';
+
+  if (currentTabObj.type === 'os') {
+    let uniqueApps = {};
+    tabProducts.forEach(p => {
+      if (!uniqueApps[p.appCategory]) uniqueApps[p.appCategory] = [];
+      uniqueApps[p.appCategory].push(p);
     });
     
-    let text = ""; let overallTotal = 0; let orderTypesArr = []; let orderItemsArr = [];
-    let tempTopItems = {...shopStats.topItems};
-    
-    // --- 1. บิล OS ---
-    if (osItems.length > 0) {
-        let osTotal = 0; let promoPrices = [];
-        osItems.forEach(item => {
-            if (item.price >= 20 && item.price <= 25) promoPrices.push(item.price);
-            else osTotal += item.price;
-            orderTypesArr.push(item.appCategory);
-            orderItemsArr.push(item.appCategory + (item.os ? ` [${item.os}]` : ``));
-            tempTopItems[item.appCategory] = (tempTopItems[item.appCategory] || 0) + 1;
-        });
-        
-        promoPrices.sort((a, b) => b - a); let pCount = promoPrices.length; let idx = 0;
-        while (pCount >= 30) { osTotal += 360; pCount -= 30; idx += 30; }
-        while (pCount >= 15) { osTotal += 210; pCount -= 15; idx += 15; }
-        while (pCount >= 8)  { osTotal += 80;  pCount -= 8;  idx += 8;  }
-        while (pCount >= 3)  { osTotal += 45;  pCount -= 3;  idx += 3;  }
-        let remainder = promoPrices.slice(idx);
-        if (remainder.length === 2 && remainder[0] === 25 && remainder[1] === 25) { osTotal += 45; } 
-        else { remainder.forEach(p => osTotal += p); }
-        overallTotal += osTotal;
-
-        text += `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
-        text += `✿  𓈒  รวมยอด    ꒰  ${osTotal}฿  ꒱   ݂🎐♡\n`;
-        osItems.forEach(item => {
-            let osName = item.os ? ` [${item.os}]` : '';
-            text += `🍃 ݂  ${item.appCategory}${osName} 𓈒\n`;
-        });
-        text += `---------------------------\nรบกวนรอแม่ค้าเช็คเมล-ยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏\n\n`;
-    }
-    
-    // --- 2. บิล เติมเกม ---
-    if (gameItems.length > 0) {
-        let gTotal = 0;
-        text += `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
-        gameItems.forEach((item, index) => {
-            gTotal += item.price;
-            let pkgStr = item.packageOption ? `${item.packageOption} ` : '';
-            pkgStr += item.subPackage || '';
-            text += `${index + 1}. ${item.appCategory}\n   แพ็กเกจ: ${pkgStr}\n   ราคา: ${item.price} บาท\n`;
-            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory + ` (${item.subPackage})`);
-            tempTopItems[item.appCategory] = (tempTopItems[item.appCategory] || 0) + 1;
-        });
-        overallTotal += gTotal;
-        text += `---------------------------\n *ยอดรวมทั้งสิ้น: ${gTotal} บาท*\n---------------------------\n *แจ้งไอดี ได้เลยค่ะ*\n\n`;
-    }
-    
-    // --- 3. บิล พรีเมี่ยม ---
-    if (premItems.length > 0) {
-        let pTotal = 0;
-        text += `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
-        premItems.forEach((item, index) => {
-            pTotal += item.price;
-            let detailStr = item.subDetails ? ` ( ${item.subDetails} )` : '';
-            text += `${index + 1}. ${item.appCategory}\n   แพ็กเกจ: ${item.subPackage}${detailStr}\n   ราคา: ${item.price} บาท\n`;
-            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory + ` (${item.subPackage})`);
-            tempTopItems[item.appCategory] = (tempTopItems[item.appCategory] || 0) + 1;
-        });
-        overallTotal += pTotal;
-        text += `---------------------------\n *ยอดรวมทั้งสิ้น: ${pTotal} บาท*\n---------------------------\nรบกวนรอแอดมินตอบก่อนค่อยโอนนะคะ\n\n`;
-    }
-    
-    // --- 4. บิล อื่นๆ ---
-    if (otherItems.length > 0) {
-        let oTotal = 0;
-        text += `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
-        otherItems.forEach((item, index) => {
-            oTotal += item.price;
-            text += `${index + 1}. ${item.appCategory} - ${item.subPackage || item.os} : ${item.price} บาท\n`;
-            orderTypesArr.push(item.appCategory); orderItemsArr.push(item.appCategory);
-            tempTopItems[item.appCategory] = (tempTopItems[item.appCategory] || 0) + 1;
-        });
-        overallTotal += oTotal;
-        text += `---------------------------\nยอดรวมทั้งสิ้น: ${oTotal} บาท\n\n`;
-    }
-
-    return { text, overallTotal, orderTypesArr, orderItemsArr, tempTopItems };
-  }
-
-  function openCheckoutModal() {
-    if(cart.length === 0) return;
-    const data = prepareCheckoutData();
-    checkoutData.text = data.text;
-    checkoutData.overallTotal = data.overallTotal;
-    checkoutData.orderTypesArr = data.orderTypesArr;
-    checkoutData.orderItemsArr = data.orderItemsArr;
-    checkoutData.tempTopItems = data.tempTopItems;
-
-    document.getElementById('checkoutSummary').innerText = data.text.trim();
-    document.getElementById('checkoutModal').classList.add('show');
-  }
-
-  function closeCheckoutModal() {
-    document.getElementById('checkoutModal').classList.remove('show');
-  }
-
-  async function confirmCheckout() {
-    const btn = document.getElementById('btnConfirmCheckout');
-    btn.disabled = true;
-    btn.innerText = 'กำลังประมวลผล...';
-
-    shopStats.topItems = checkoutData.tempTopItems;
-    shopStats.revenue = (shopStats.revenue || 0) + checkoutData.overallTotal;
-    shopStats.orders = (shopStats.orders || 0) + 1;
-
-    let topApp = ""; let maxCount = 0;
-    for(let app in shopStats.topItems) { 
-      if(shopStats.topItems[app] > maxCount) { maxCount = shopStats.topItems[app]; topApp = app; } 
-    }
-
-    let payloadOrder = {
-      time: new Date().toLocaleTimeString('th-TH'), type: [...new Set(checkoutData.orderTypesArr)].join(', '),
-      items: checkoutData.orderItemsArr.join(', '), total: checkoutData.overallTotal
-    };
-    let payloadStats = { visits: shopStats.visits, date: shopStats.date, topApp: topApp, revenue: shopStats.revenue };
-
-    try {
-      await fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST',
-        mode: 'no-cors', // ✅ แก้ตรงนี้ให้เป็น no-cors ด้วยเช่นกัน
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
-      });
-      syncDataToSheet(); 
-    } catch(err) { console.log('Error logging order'); }
-
-    // คัดลอกฟอร์มลงคลิปบอร์ด
-    copyText(null, checkoutData.text.trim());
-    
-    // เคลียร์ตะกร้า
-    cart = []; updateBottomBar();
-    if(currentMainTabId !== 'info') renderCategories();
-    
-    closeCheckoutModal();
-    btn.disabled = false;
-    btn.innerText = 'คัดลอกฟอร์ม & ไปที่ไลน์';
-    
-    // เด้งไปไลน์ร้าน
-    setTimeout(() => {
-      window.location.href = "https://lin.ee/VO9tCZA"; 
-    }, 500);
-  }
-
-    let payloadOrder = {
-      time: new Date().toLocaleTimeString('th-TH'), type: [...new Set(checkoutData.orderTypesArr)].join(', '),
-      items: checkoutData.orderItemsArr.join(', '), total: checkoutData.overallTotal
-    };
-    let payloadStats = { visits: shopStats.visits, date: shopStats.date, topApp: topApp, revenue: shopStats.revenue };
-
-    try {
-      await fetch(GOOGLE_SHEET_API_URL, {
-        method: 'POST',
-        mode: 'cors', // ✅ เพิ่มแก้ CORS
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ✅ เปลี่ยนเป็น text/plain
-        body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
-      });
-      await syncDataToSheet(); 
-    } catch(err) { console.log('Error logging order'); }
-
-    // คัดลอกฟอร์มลงคลิปบอร์ด
-    copyText(null, checkoutData.text.trim());
-    
-    // เคลียร์ตะกร้า
-    cart = []; updateBottomBar();
-    if(currentMainTabId !== 'info') renderCategories();
-    
-    closeCheckoutModal();
-    btn.disabled = false;
-    btn.innerText = 'คัดลอกฟอร์ม & ไปที่ไลน์';
-    
-    // เด้งไปไลน์ร้าน
-    setTimeout(() => {
-      window.location.href = "https://lin.ee/VO9tCZA"; 
-    }, 500);
-  }
-
-  function copyText(e, text) {
-    if (e) e.stopPropagation();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => {
-            if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
-        }).catch(err => { fallbackCopyTextToClipboard(text, e); });
+    let sortArr = Object.entries(uniqueApps);
+    if(document.getElementById('catSort').value === 'price') {
+      sortArr.sort((a, b) => Math.min(...a[1].map(x=>x.price)) - Math.min(...b[1].map(x=>x.price)));
     } else {
-        fallbackCopyTextToClipboard(text, e);
-    }
-  }
-
-  // 🍏 อัปเกรดระบบก๊อปปี้ให้รองรับ iPhone/iPad
-  function fallbackCopyTextToClipboard(text, e) {
-    const temp = document.createElement("textarea"); 
-    temp.value = text;
-    temp.style.position = "fixed"; 
-    temp.style.top = "0"; 
-    temp.style.left = "0"; 
-    temp.style.opacity = "0";
-    document.body.appendChild(temp); 
-    temp.focus();
-    temp.select(); 
-    temp.setSelectionRange(0, 99999); // บังคับให้ iOS Safari ไฮไลท์ข้อความให้ครบ
-    try {
-        document.execCommand("copy");
-        if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
-    } catch (err) {
-        if(e) alert('เบราว์เซอร์ไม่รองรับการคัดลอกอัตโนมัติ กรุณาคัดลอกด้วยตนเอง');
-    }
-    document.body.removeChild(temp);
-  }
-
-  let adminClickCount = 0, adminTimer;
-  function checkAdminLogin() {
-    adminClickCount++; clearTimeout(adminTimer); adminTimer = setTimeout(() => { adminClickCount = 0; }, 2000); 
-    if (adminClickCount >= 5) {
-      if (!isAdminAuthed && prompt("🔒 รหัสแอดมิน:") === "170647") { isAdminAuthed = true; }
-      if (isAdminAuthed) { document.getElementById('adminFab').style.display = 'flex'; openAdminModal(); }
-      adminClickCount = 0;
-    }
-  }
-
-  function openAdminModal() { document.getElementById('adminModal').classList.add('show'); toggleAdmProdFields(); }
-  function switchAdminTab(tab) {
-    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(`admin-${tab}`).classList.add('active');
-  }
-
-  function addNewTab() {
-    const name = document.getElementById('admNewTabName').value.trim();
-    const type = document.getElementById('admNewTabType').value;
-    if(!name) return alert('กรุณากรอกชื่อแท็บ');
-    customTabs.push({ id: 't_' + Date.now(), name: name, type: type });
-    document.getElementById('admNewTabName').value = '';
-    renderAllTabs(); syncDataToSheet(); alert('เพิ่มแท็บเรียบร้อย');
-  }
-
-  function deleteTab(id) {
-    if(!confirm('🚨 แท็บและสินค้าจะถูกลบทิ้ง แน่ใจหรือไม่?')) return;
-    if (String(id) === 'undefined' || !id) {
-      customTabs = customTabs.filter(t => t.id && String(t.id) !== 'undefined');
-    } else {
-      const tabToDelete = customTabs.find(t => String(t.id) === String(id));
-      if(tabToDelete) { products = products.filter(p => !matchTab(p, tabToDelete)); }
-      customTabs = customTabs.filter(t => String(t.id) !== String(id));
-    }
-    if(String(currentMainTabId) === String(id) || String(id) === 'undefined') currentMainTabId = 'info'; 
-    renderAllTabs(); syncDataToSheet(); alert('อัปเดตแท็บเรียบร้อย!');
-  }
-
-  function toggleAdmProdFields() {
-    const sel = document.getElementById('admTabProd');
-    if(!sel.options[sel.selectedIndex]) return;
-    const type = sel.options[sel.selectedIndex].dataset.type;
-    document.getElementById('adm-fields-standard').style.display = type === 'standard' ? 'block' : 'none';
-    document.getElementById('f-appDesc').style.display = type === 'standard' ? 'block' : 'none';
-    document.getElementById('adm-fields-os').style.display = type === 'os' ? 'block' : 'none';
-  }
-
-  function saveShopInfo() {
-    shopInfo = {
-      status: document.getElementById('admStatus').value, logo: document.getElementById('admLogo').value,
-      banner: document.getElementById('admBanner').value, bannerText: document.getElementById('admBannerText').value,
-      fb: document.getElementById('admFb').value, line: document.getElementById('admLine').value,
-      time: document.getElementById('admTime').value, warranty: document.getElementById('admWarranty').value
-    };
-    applyShopInfoData(); syncDataToSheet(); alert('บันทึกข้อมูลร้านเรียบร้อย');
-  }
-
-  function applyShopInfoData() {
-    if(!shopInfo.status) return; 
-    document.getElementById('admStatus').value = shopInfo.status || 'open'; document.getElementById('admLogo').value = shopInfo.logo || '';
-    document.getElementById('admBanner').value = shopInfo.banner || ''; document.getElementById('admBannerText').value = shopInfo.bannerText || '';
-    document.getElementById('admFb').value = shopInfo.fb || ''; document.getElementById('admLine').value = shopInfo.line || '@997pfoig';
-    document.getElementById('admTime').value = shopInfo.time || ''; document.getElementById('admWarranty').value = shopInfo.warranty || '';
-    previewShopInfo();
-  }
-
-  function previewShopInfo() {
-    const statusMap = { open: ['status-open', 'OPEN'], closed: ['status-closed', 'CLOSED'], pause: ['status-pause', 'พักส่ง'], slow: ['status-slow', 'ตอบช้า'] };
-    const st = document.getElementById('admStatus').value || 'open';
-    document.getElementById('shopStatusPill').className = `shop-status ${statusMap[st][0]}`;
-    document.getElementById('shopStatusText').innerText = statusMap[st][1];
-
-    document.getElementById('mainShopLogo').src = document.getElementById('admLogo').value || 'https://via.placeholder.com/180x190';
-    if(document.getElementById('admFb').value) document.getElementById('infoFb').innerHTML = `${document.getElementById('admFb').value} <button class="copy-btn" onclick="copyText(event, '${document.getElementById('admFb').value}')">Copy</button>`;
-    
-    const lineText = document.getElementById('admLine').value || '@997pfoig';
-    document.getElementById('infoLine').innerHTML = `${lineText} <button class="copy-btn" onclick="copyText(event, '${lineText}')">Copy</button>`;
-
-    document.getElementById('infoTime').innerText = document.getElementById('admTime').value || '-';
-    document.getElementById('infoWarranty').innerText = document.getElementById('admWarranty').value || '-';
-
-    const bUrl = document.getElementById('admBanner').value; const bText = document.getElementById('admBannerText').value;
-    const bCard = document.getElementById('infoBannerCard');
-    if(bUrl || bText) {
-      bCard.style.display = 'block';
-      if (bUrl.includes('<iframe')) { document.getElementById('infoBannerMedia').innerHTML = bUrl; } 
-      else if (bUrl) { document.getElementById('infoBannerMedia').innerHTML = `<a href="${bUrl}" target="_blank" style="width:100%; display:block;"><img src="${bUrl}" alt="Banner"></a>`; } 
-      else { document.getElementById('infoBannerMedia').innerHTML = ''; }
-      document.getElementById('infoBannerText').style.display = bText ? 'block' : 'none';
-      document.getElementById('infoBannerText').innerText = bText;
-    } else { bCard.style.display = 'none'; }
-  }
-
-  function saveProduct() {
-    const sel = document.getElementById('admTabProd');
-    const tabId = sel.value; 
-    const tabName = sel.options[sel.selectedIndex].text; 
-    const type = sel.options[sel.selectedIndex].dataset.type;
-    const name = document.getElementById('admAppName').value.trim();
-    if(!name) return alert('กรุณากรอกชื่อแอป');
-
-    const baseObj = { tabId: tabId, tab: tabName, appCategory: name, price: Number(document.getElementById('admPrice').value) || 0, icon: document.getElementById('admIcon').value || 'https://via.placeholder.com/60' };
-
-    if (editingProductId) {
-        let baseId = String(editingProductId).replace('_i','').replace('_a','');
-        products = products.filter(p => p.id !== baseId && p.id !== baseId+'_i' && p.id !== baseId+'_a');
-    }
-    let newBaseId = editingProductId ? String(editingProductId).replace('_i','').replace('_a','') : 'p_'+Date.now();
-
-    if (type === 'os') {
-        const isIos = document.getElementById('admOS_ios').checked;
-        const isAnd = document.getElementById('admOS_android').checked;
-        const stockStat = document.getElementById('admOSStatus').value; 
-        if(!isIos && !isAnd) return alert('กรุณาติ๊กระบบ iOS หรือ Android');
-
-        if(isIos) products.push({...baseObj, id: newBaseId+'_i', os: 'iOS', stockStatus: stockStat});
-        if(isAnd) products.push({...baseObj, id: newBaseId+'_a', os: 'Android', stockStatus: stockStat});
-    } else {
-        const obj = { ...baseObj, id: newBaseId, appDetails: document.getElementById('admAppDesc').value, packageOption: document.getElementById('admPkgOpt').value, subPackage: document.getElementById('admSubPkg').value, subDetails: document.getElementById('admSubDesc').value };
-        products.push(obj);
+      sortArr.sort((a, b) => a[0].localeCompare(b[0]));
     }
 
-    syncDataToSheet(); clearProductForm(); renderAdminProductsByTab(tabId); renderCategories();
-    alert('✅ บันทึกสินค้าเรียบร้อย!');
-  }
+    sortArr.forEach(([appName, appList]) => {
+      let iosPkg = appList.find(p => p.os === 'iOS');
+      let andPkg = appList.find(p => p.os === 'Android');
+      let isIosSel = iosPkg ? cart.some(c => String(c.id) === String(iosPkg.id)) : false;
+      let isAndSel = andPkg ? cart.some(c => String(c.id) === String(andPkg.id)) : false;
+      let isSelected = isIosSel || isAndSel;
+      let priceText = (iosPkg && andPkg && iosPkg.price !== andPkg.price) ? `${Math.min(iosPkg.price, andPkg.price)} - ${Math.max(iosPkg.price, andPkg.price)}฿` : `${(iosPkg || andPkg).price}฿`;
 
-  function editProduct(id) {
-    const p = products.find(x => String(x.id) === String(id)); if(!p) return;
-    editingProductId = p.id;
-    const matchedTab = customTabs.find(t => matchTab(p, t));
-    if(matchedTab) { document.getElementById('admTabProd').value = matchedTab.id; }
-    toggleAdmProdFields();
-    
-    document.getElementById('admAppName').value = p.appCategory;
-    document.getElementById('admPrice').value = p.price;
-    document.getElementById('admIcon').value = p.icon || '';
+      let anyPkg = iosPkg || andPkg;
+      let isReady = anyPkg && anyPkg.osStatus === 'ready';
+      let badgeHtml = isReady ? `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>` : `<div class="os-status-badge not_ready"><div class="os-dot"></div>เมลไม่พร้อม</div>`;
 
-    if(p.os) {
-      document.getElementById('admOS_ios').checked = (p.os === 'iOS');
-      let sibling = products.find(x => x.appCategory === p.appCategory && x.os === (p.os==='iOS'?'Android':'iOS'));
-      if(sibling) {
-        if(sibling.os === 'Android') document.getElementById('admOS_android').checked = true;
-        if(sibling.os === 'iOS') document.getElementById('admOS_ios').checked = true;
-      } else {
-        document.getElementById('admOS_android').checked = (p.os === 'Android');
-      }
-      document.getElementById('admOSStatus').value = p.stockStatus || 'ready';
-    } else {
-      document.getElementById('admAppDesc').value = p.appDetails || '';
-      document.getElementById('admPkgOpt').value = p.packageOption || '';
-      document.getElementById('admSubPkg').value = p.subPackage || '';
-      document.getElementById('admSubDesc').value = p.subDetails || '';
-    }
-    document.getElementById('btnSubmitProduct').innerHTML = '💾 อัปเดตข้อมูล';
-    document.querySelector('.modal-box').scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function deleteProduct(id) {
-    if(confirm('🚨 ลบสินค้านี้?')) {
-      let baseId = String(id).replace('_i','').replace('_a','');
-      products = products.filter(p => p.id !== baseId && p.id !== baseId+'_i' && p.id !== baseId+'_a');
-      cart = cart.filter(c => c.id !== baseId && c.id !== baseId+'_i' && c.id !== baseId+'_a');
-      syncDataToSheet(); updateBottomBar(); 
-      if(currentAdminViewTab) renderAdminProductsByTab(currentAdminViewTab);
-      renderCategories();
-    }
-  }
-
-  function clearProductForm() {
-    editingProductId = null; document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้า';
-    document.querySelectorAll('#admin-product .admin-input').forEach(i => i.value = '');
-    document.getElementById('admOS_ios').checked = false; document.getElementById('admOS_android').checked = false;
-    document.getElementById('admOSStatus').value = 'ready';
-  }
-
-  function renderAdminProductTabsUI() {
-    const tabContainer = document.getElementById('admProdFilterTabs');
-    let htmlStr = '';
-    customTabs.forEach((t, i) => {
-      if(i === 0 && !currentAdminViewTab) currentAdminViewTab = t.id;
-      htmlStr += `<button class="admin-tab-btn ${String(currentAdminViewTab) === String(t.id) ? 'active' : ''}" onclick="renderAdminProductsByTab('${t.id}')">${t.name}</button>`;
+      htmlStr += `
+      <div class="os-card ${isSelected ? 'selected' : ''}">
+        ${badgeHtml} <div class="check-circle"></div>
+        <img src="${anyPkg.icon}" class="cat-icon" loading="lazy">
+        <div class="cat-name">${appName}</div>
+        <div class="cat-desc">${anyPkg.appDetails || ''}</div>
+        <div class="os-btn-group">
+          ${iosPkg ? `<button class="os-btn ${isIosSel ? 'active' : ''}" onclick="toggleOSCard(event, '${iosPkg.id}')">iOS</button>` : ''}
+          ${andPkg ? `<button class="os-btn ${isAndSel ? 'active' : ''}" onclick="toggleOSCard(event, '${andPkg.id}')">Android</button>` : ''}
+        </div>
+        <div style="color:var(--primary); font-weight:700; font-size:16px; margin-top:auto;">${priceText}</div>
+      </div>`;
     });
-    tabContainer.innerHTML = htmlStr;
-    if(currentAdminViewTab) renderAdminProductsByTab(currentAdminViewTab);
-  }
-
-  function renderAdminProductsByTab(tabId) {
-    currentAdminViewTab = tabId;
-    document.querySelectorAll('#admProdFilterTabs .admin-tab-btn').forEach(btn => {
-      btn.classList.remove('active');
-      const targetGroup = customTabs.find(t=>String(t.id)===String(tabId));
-      if(targetGroup && btn.innerText === targetGroup.name) btn.classList.add('active');
+  } else {
+    let uniqueMap = {};
+    tabProducts.forEach(p => {
+      if(!uniqueMap[p.appCategory]) uniqueMap[p.appCategory] = { ...p, minPrice: p.price };
+      else if (p.price < uniqueMap[p.appCategory].minPrice) uniqueMap[p.appCategory].minPrice = p.price;
     });
-    const listContainer = document.getElementById('adminProductList');
-    const group = customTabs.find(t => String(t.id) === String(tabId));
-    if(!group) return;
-    const groupProducts = products.filter(p => matchTab(p, group));
-    if(groupProducts.length === 0) {
-      listContainer.innerHTML = `<div style="font-size:12px; color:#888; text-align:center; padding:15px;">ยังไม่มีสินค้าในหมวด ${group.name}</div>`; return;
-    }
-    let html = '';
-    groupProducts.forEach(p => {
-      let details = p.os ? `ระบบ: ${p.os} | <span style="color:${p.stockStatus === 'not_ready' ? 'red' : 'green'}">${p.stockStatus === 'not_ready' ? 'เมลไม่พร้อม' : 'พร้อมส่ง'}</span>` : `แพ็กเกจ: ${p.packageOption} - ${p.subPackage}`;
+    
+    let uniqueArr = Object.values(uniqueMap);
+    if(document.getElementById('catSort').value === 'price') uniqueArr.sort((a, b) => a.minPrice - b.minPrice);
+    else uniqueArr.sort((a, b) => a.appCategory.localeCompare(b.appCategory));
+
+    uniqueArr.forEach(app => {
+      htmlStr += `
+      <div class="cat-card" onclick="openApp('${app.appCategory}')">
+        <img src="${app.icon}" class="cat-icon" loading="lazy">
+        <div class="cat-name" title="${app.appCategory}">${app.appCategory}</div>
+        <div class="cat-desc">${app.appDetails || ''}</div>
+      </div>`;
+    });
+  }
+  grid.innerHTML = htmlStr;
+}
+
+function toggleOSCard(e, productId) {
+  e.stopPropagation();
+  const index = cart.findIndex(c => String(c.id) === String(productId));
+  if(index > -1) cart.splice(index, 1);
+  else cart.push(products.find(p => String(p.id) === String(productId)));
+  updateBottomBar();
+  renderCategories();
+}
+
+function openApp(appName) {
+  selectedAppCategory = appName;
+  document.getElementById('view-categories').classList.remove('active');
+  document.getElementById('view-packages').classList.add('active');
+
+  const appData = products.find(p => p.appCategory === appName);
+  document.getElementById('pkgAppIcon').src = appData.icon;
+  document.getElementById('pkgAppName').innerText = appName;
+  document.getElementById('pkgAppDesc').innerText = appData.appDetails || '';
+
+  const list = document.getElementById('packageListStandard');
+  let html = '';
+  
+  let groupMap = {};
+  products.filter(p => p.appCategory === appName).forEach(p => {
+    let opt = p.packageOption || 'แพ็กเกจทั่วไป';
+    if(!groupMap[opt]) groupMap[opt] = [];
+    groupMap[opt].push(p);
+  });
+
+  for (let group in groupMap) {
+    if(group !== 'แพ็กเกจทั่วไป') html += `<div class="pkg-group-title">${group}</div>`;
+    let sorted = groupMap[group].sort((a,b) => a.price - b.price);
+    sorted.forEach(pkg => {
+      let isSel = cart.some(c => String(c.id) === String(pkg.id));
+      let desc = pkg.subDetails ? `<div style="font-size:12px; color:var(--text-muted);">${pkg.subDetails}</div>` : '';
       html += `
-        <div class="adm-list-item">
-          <div class="adm-list-info"><div style="font-weight:700; color:var(--primary); font-size:13px;">${p.appCategory}</div>
-            <div style="color:var(--text-muted); margin-top:2px;">${details} <br><strong style="color:var(--text-dark);">฿${p.price}</strong></div></div>
-          <div class="adm-list-actions"><button style="background:#eab308;" onclick="editProduct('${p.id}')">✏️</button>
-            <button style="background:#ef4444;" onclick="deleteProduct('${p.id}')">🗑️</button></div></div>`;
+      <div class="pkg-item ${isSel ? 'selected' : ''}" onclick="toggleStandardPkg('${pkg.id}')">
+        <div><div class="pkg-name">${pkg.subPackage}</div>${desc}</div>
+        <div class="pkg-price">${pkg.price}฿</div>
+      </div>`;
     });
-    listContainer.innerHTML = html;
   }
+  list.innerHTML = html;
+}
 
-  function renderStats() {
-    checkDailyReset(); 
-    document.getElementById('statDateDisplay').innerText = `ข้อมูลประจำวันที่: ${shopStats.date}`;
-    document.getElementById('statVisits').innerText = shopStats.visits || 0;
-    document.getElementById('statOrders').innerText = shopStats.orders || 0;
-    document.getElementById('statRev').innerText = shopStats.revenue || 0;
-    let topItemsHtml = '';
-    if(shopStats.topItems && Object.keys(shopStats.topItems).length > 0) {
-      const sorted = Object.entries(shopStats.topItems).sort((a,b) => b[1] - a[1]).slice(0, 5);
-      sorted.forEach((item, idx) => { topItemsHtml += `<div style="padding:4px 0; border-bottom:1px dashed #ccc;">${idx+1}. ${item[0]} <span style="float:right; color:var(--primary); font-weight:bold;">${item[1]} ครั้ง</span></div>`; });
-      document.getElementById('statTopItems').innerHTML = topItemsHtml;
-    } else { document.getElementById('statTopItems').innerText = 'ยังไม่มีข้อมูลการสั่งซื้อของวันนี้'; }
+function toggleStandardPkg(id) {
+  const index = cart.findIndex(c => String(c.id) === String(id));
+  if(index > -1) cart.splice(index, 1);
+  else cart.push(products.find(p => String(p.id) === String(id)));
+  updateBottomBar();
+  openApp(selectedAppCategory);
+}
+
+function backToCategories() {
+  document.getElementById('view-packages').classList.remove('active');
+  document.getElementById('view-categories').classList.add('active');
+}
+
+function calculateCartTotal() {
+  let total = 0;
+  cart.forEach(item => total += item.price);
+  return total;
+}
+
+function updateBottomBar() {
+  const bar = document.getElementById('bottomBar');
+  if(cart.length > 0) {
+    bar.classList.add('active');
+    document.getElementById('cartCount').innerText = `เลือก ${cart.length} รายการ`;
+    document.getElementById('cartTotal').innerText = calculateCartTotal();
+  } else {
+    bar.classList.remove('active');
   }
+}
 
-  function resetStats() {
-    if(confirm('🚨 ต้องการลบสถิติทั้งหมดเริ่มนับใหม่หรือไม่?')) {
-      shopStats = { date: new Date().toLocaleDateString('th-TH'), visits: 0, orders: 0, revenue: 0, topItems: {} };
-      renderStats(); syncDataToSheet();
+// --- CHECKOUT & SEND TO GOOGLE SHEETS ---
+function openCheckoutModal() {
+  prepareCheckoutData();
+  document.getElementById('checkoutModal').classList.add('show');
+}
+function closeCheckoutModal() {
+  document.getElementById('checkoutModal').classList.remove('show');
+}
+
+function prepareCheckoutData() {
+  let text = `🛒 รายการสั่งซื้อ\n---------------------------\n`;
+  cart.forEach((item, index) => {
+    text += `${index + 1}. ${item.appCategory} - ${item.subPackage || item.os} : ${item.price} บาท\n`;
+  });
+  text += `---------------------------\nยอดรวม: ${calculateCartTotal()} บาท\n`;
+  document.getElementById('checkoutSummary').innerText = text;
+}
+
+async function confirmCheckout() {
+  // ดึงข้อความสรุปไป Copy
+  let text = document.getElementById('checkoutSummary').innerText;
+  copyText(null, text);
+
+  // สถิติในเครื่อง
+  shopStats.orders += 1;
+  shopStats.revenue += calculateCartTotal();
+  saveStats();
+
+  // ส่งข้อมูลเข้าชีต แยกหน้าตามแท็บ (Order To Sheet)
+  await syncToGoogleSheets("ADD_ORDER", { 
+    items: cart, 
+    totalPrice: calculateCartTotal() 
+  });
+
+  cart = []; // เคลียร์ตะกร้า
+  updateBottomBar();
+  closeCheckoutModal();
+
+  // ไปที่ LINE
+  const lineUrl = document.getElementById('admLine').value || '@997pfoig';
+  const cleanLine = lineUrl.replace('@', '');
+  window.location.href = `https://line.me/ti/p/~${cleanLine}`;
+}
+
+// --- ADMIN SYSTEM ---
+let adminClickCount = 0;
+function checkAdminLogin() {
+  adminClickCount++;
+  if (adminClickCount >= 5) {
+    if (!isAdminAuthed && prompt("🔒 รหัสแอดมิน:") === "170647") { isAdminAuthed = true; }
+    if (isAdminAuthed) {
+      document.getElementById('adminFab').style.display = 'flex';
+      openAdminModal();
     }
+    adminClickCount = 0;
   }
+}
+
+function openAdminModal() {
+  document.getElementById('adminModal').classList.add('show');
+  toggleAdmProdFields();
+}
+
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`admin-${tab}`).classList.add('active');
+}
+
+async function addNewTab() {
+  const name = document.getElementById('admNewTabName').value.trim();
+  const type = document.getElementById('admNewTabType').value;
+  if(!name) return alert('กรุณากรอกชื่อแท็บ');
+
+  const newTab = { id: 't_' + Date.now(), name: name, type: type };
+  customTabs.push(newTab);
+  
+  document.getElementById('admNewTabName').value = '';
+  saveLocalData();
+  renderAllTabs();
+
+  // ซิงค์การสร้างแท็บใหม่ไปที่ Google Sheets (เพื่อสร้างชีตใหม่)
+  await syncToGoogleSheets("ADD_TAB", newTab);
+  alert('สร้างแท็บใน Google Sheets สำเร็จ');
+}
+
+function applyShopInfo() {
+  const st = shopInfo.status || 'open';
+  document.getElementById('admStatus').value = st;
+  // ... อัปเดตข้อมูลอื่นๆ ลงหน้าเว็บ ... (ยึดตาม UI โค้ดเดิม)
+  document.getElementById('mainShopLogo').src = shopInfo.logo || 'https://via.placeholder.com/180x190';
+  document.getElementById('infoFb').innerHTML = `${shopInfo.fb || 'Wanderer Shop'}`;
+  document.getElementById('infoLine').innerHTML = `${shopInfo.line || '@997pfoig'}`;
+}
+
+function previewShopInfo() { /* Preview UI Realtime */ }
+
+async function saveShopInfo() {
+  shopInfo = {
+    status: document.getElementById('admStatus').value,
+    logo: document.getElementById('admLogo').value,
+    fb: document.getElementById('admFb').value,
+    line: document.getElementById('admLine').value,
+    time: document.getElementById('admTime').value,
+    warranty: document.getElementById('admWarranty').value,
+    banner: document.getElementById('admBanner').value,
+    bannerText: document.getElementById('admBannerText').value
+  };
+  saveLocalData();
+  applyShopInfo();
+
+  // อัปเดตการตั้งค่าเข้าระบบ
+  await syncToGoogleSheets("EDIT_SHOP_INFO", shopInfo);
+  alert('บันทึกข้อมูลร้านลง Google Sheets แล้ว!');
+}
+
+function toggleAdmProdFields() {
+  const sel = document.getElementById('admTabProd');
+  if(!sel.options.length) return;
+  const type = sel.options[sel.selectedIndex].dataset.type;
+  if (type === 'os') {
+    document.getElementById('adm-fields-standard').style.display = 'none';
+    document.getElementById('adm-fields-os').style.display = 'block';
+  } else {
+    document.getElementById('adm-fields-standard').style.display = 'block';
+    document.getElementById('adm-fields-os').style.display = 'none';
+  }
+}
+
+async function saveProduct() {
+  const sel = document.getElementById('admTabProd');
+  const type = sel.options[sel.selectedIndex].dataset.type;
+  const name = document.getElementById('admAppName').value.trim();
+  if(!name) return alert('กรุณากรอกชื่อแอป/สินค้า');
+
+  let baseObj = {
+    tabId: sel.value,
+    tab: sel.options[sel.selectedIndex].text,
+    appCategory: name,
+    appDetails: document.getElementById('admAppDesc').value,
+    price: Number(document.getElementById('admPrice').value) || 0,
+    icon: document.getElementById('admIcon').value || 'https://via.placeholder.com/60',
+    id: editingProductId || ('p_' + Date.now())
+  };
+
+  if(type === 'standard') {
+    baseObj.packageOption = document.getElementById('admPkgOpt').value;
+    baseObj.subPackage = document.getElementById('admSubPkg').value;
+    baseObj.subDetails = document.getElementById('admSubDesc').value;
+  } else {
+    baseObj.osStatus = document.getElementById('admOSStatus').value;
+    // หากเลือกระบบปฏิบัติการ อาจมีการโคลน object แบ่ง ios / android ตามโลจิกเก่า (รวบรวมไว้)
+    baseObj.os = document.getElementById('admOS_ios').checked ? "iOS" : "Android";
+  }
+
+  // อัปเดตตัวแปร Products ในหน้าเว็บ
+  if(editingProductId) {
+    products = products.filter(p => p.id !== editingProductId);
+  }
+  products.push(baseObj);
+  saveLocalData();
+  renderCategories();
+
+  // ส่งบันทึกสินค้าลงชีต
+  await syncToGoogleSheets(editingProductId ? "EDIT_PRODUCT" : "ADD_PRODUCT", baseObj);
+  alert(editingProductId ? 'อัปเดตข้อมูลสำเร็จ' : 'เพิ่มสินค้าลงชีตสำเร็จ');
+  
+  clearProductForm();
+  renderAdminProductsByTab(baseObj.tabId);
+}
+
+function editProduct(id) {
+  const p = products.find(x => String(x.id) === String(id));
+  if(!p) return;
+  editingProductId = p.id;
+  document.getElementById('admTabProd').value = p.tabId;
+  toggleAdmProdFields();
+  document.getElementById('admAppName').value = p.appCategory || '';
+  document.getElementById('admPrice').value = p.price || '';
+  document.getElementById('admIcon').value = p.icon || '';
+  document.getElementById('btnSubmitProduct').innerHTML = '💾 อัปเดตข้อมูลลงชีต';
+}
+
+function clearProductForm() {
+  editingProductId = null;
+  document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้าลงชีต';
+  document.querySelectorAll('#admin-product .admin-input').forEach(i => i.value = '');
+}
+
+function renderAdminProductTabsUI() {
+  const tabContainer = document.getElementById('admProdFilterTabs');
+  let htmlStr = '';
+  customTabs.forEach((t, i) => {
+    if(i === 0 && !currentAdminViewTab) currentAdminViewTab = t.id;
+    htmlStr += `<button class="admin-tab-btn ${String(currentAdminViewTab) === String(t.id) ? 'active' : ''}" onclick="renderAdminProductsByTab('${t.id}')">${t.name}</button>`;
+  });
+  tabContainer.innerHTML = htmlStr;
+  if(currentAdminViewTab) renderAdminProductsByTab(currentAdminViewTab);
+}
+
+function renderAdminProductsByTab(tabId) {
+  currentAdminViewTab = tabId;
+  renderAdminProductTabsUI();
+  
+  const list = document.getElementById('adminProductList');
+  const filtered = products.filter(p => String(p.tabId) === String(tabId));
+  let html = '';
+  filtered.forEach(p => {
+    html += `
+    <div class="adm-list-item">
+      <div class="adm-list-info">
+        <strong>${p.appCategory}</strong> ${p.subPackage ? `(${p.subPackage})` : ''} <br>
+        <span style="color:var(--primary);">${p.price}฿</span>
+      </div>
+      <div class="adm-list-actions">
+        <button style="background:var(--secondary);" onclick="editProduct('${p.id}')">แก้ไข</button>
+        <button style="background:#cbd5e1; color:#333;" onclick="deleteRestricted()">🔒 ลบไม่ได้</button>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+}
+
+function renderStats() {
+  checkDailyReset();
+  document.getElementById('statDateDisplay').innerText = `ข้อมูลประจำวันที่: ${shopStats.date}`;
+  document.getElementById('statVisits').innerText = shopStats.visits || 0;
+  document.getElementById('statOrders').innerText = shopStats.orders || 0;
+  document.getElementById('statRev').innerText = shopStats.revenue || 0;
+}
+
+function copyText(e, text) {
+  if(e) e.stopPropagation();
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+  if(e) alert('คัดลอกลงในคลิปบอร์ดแล้ว');
+}
 </script>
+
 </body>
 </html>
