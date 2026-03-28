@@ -56,12 +56,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .info-row span:last-child { font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--text-dark); text-align: right; }
 .copy-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 12px; cursor: pointer; font-weight: bold; flex-shrink: 0; }
 
-/* 🌟 กรอบเงื่อนไขการรับประกัน 🌟 */
-.terms-box { background: #ffffff; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 20px; margin: 0 10px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: none; }
-.terms-text { font-size: 13.5px; color: var(--text-dark); line-height: 1.8; }
-
 .banner-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: none; margin: 0 10px 15px; }
-.banner-media-holder iframe { width: 100%; aspect-ratio: 16/9; max-height: 250px; border: none; pointer-events: none; display: block; }
+.banner-media-holder iframe { width: 100%; aspect-ratio: 16/9; max-height: 250px; border: none; pointer-events: auto; display: block; }
 .banner-media-holder img { width: 100%; max-height: 250px; object-fit: cover; border: none; display: block; cursor: pointer; transition: 0.2s; }
 .banner-text { padding: 15px; font-size: 13px; color: var(--text-dark); text-align: center; white-space: pre-wrap; background: #fff; }
 
@@ -82,7 +78,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .check-circle::after { content: '✓'; color: #fff; font-size: 10px; font-weight: bold; opacity: 0; }
 .os-card.selected .check-circle::after { opacity: 1; }
 
-/* ป้ายสถานะแอป iOS/Android */
+/* 🌟 ป้ายสถานะแอป iOS/Android มุมขวาบน 🌟 */
 .os-status-badge { position: absolute; top: -1px; right: -1px; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 0 14px 0 10px; z-index: 10; display: flex; align-items: center; gap: 4px; background: #ffffff; box-shadow: -2px 2px 8px rgba(0,0,0,0.05); }
 .os-status-badge.ready { color: #10b981; border: 2px solid #10b981; border-top: none; border-right: none; }
 .os-status-badge.not_ready { color: #ef4444; border: 2px solid #ef4444; border-top: none; border-right: none; }
@@ -155,7 +151,6 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
   <img id="mainShopLogo" src="https://via.placeholder.com/180x190" class="hero-logo" alt="Shop Logo">
   
   <div class="hero-title" onclick="checkAdminLogin()" style="user-select:none;">Wanderer_Shop</div>
-  
   <div class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
   <div class="tab-container" id="mainTabs"></div>
 </div>
@@ -165,13 +160,9 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
     <div class="info-card">
       <div class="info-row"><span>Facebook / เพจ</span> <span id="infoFb">-</span></div>
       <div class="info-row"><span>Line</span> <span id="infoLine">-</span></div>
-      <div class="info-row" style="border:none;"><span>เวลาทำการ</span> <span id="infoTime">-</span></div>
+      <div class="info-row"><span>เวลาทำการ</span> <span id="infoTime">-</span></div>
+      <div class="info-row" style="flex-direction: column; align-items: flex-start; border:none;"><span>การรับประกัน</span> <span id="infoWarranty" style="text-align: left; width: 100%; color: var(--text-muted); font-size: 13px; white-space: pre-wrap;">-</span></div>
     </div>
-
-    <div class="terms-box" id="termsBox">
-      <div class="terms-text" id="infoWarranty"></div>
-    </div>
-
     <div class="banner-card" id="infoBannerCard"><div class="banner-media-holder" id="infoBannerMedia"></div><div class="banner-text" id="infoBannerText"></div></div>
   </div>
 
@@ -260,8 +251,8 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
         <input type="text" class="adm-input" id="admLogo" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
-        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ (วางลิงก์ YouTube ได้เลย):</label>
-        <input type="text" class="adm-input" id="admBanner" placeholder="เช่น https://youtu.be/..." onchange="previewShopInfo()">
+        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ (Banner):</label>
+        <input type="text" class="adm-input" id="admBanner" placeholder="URL รูป หรือ <iframe>" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
         <label>กล่องข้อความใต้การ์ดรูปวิดีโอ:</label>
@@ -281,7 +272,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
       </div>
       <div class="adm-input-group">
         <label>การรับประกัน:</label>
-        <textarea class="adm-input" id="admWarranty" placeholder="ระบุเงื่อนไขการรับประกัน... (รองรับ HTML)" onchange="previewShopInfo()"></textarea>
+        <textarea class="adm-input" id="admWarranty" placeholder="ระบุเงื่อนไขการรับประกัน..." onchange="previewShopInfo()"></textarea>
       </div>
       <button class="bb-btn" style="width:100%; padding:12px; margin-top:10px;" onclick="saveShopInfo()">💾 บันทึกข้อมูลร้าน</button>
     </div>
@@ -317,12 +308,11 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
           <input type="text" id="addProdName" class="adm-input" placeholder="เช่น Netflix, RoV">
         </div>
 
-        <div class="adm-input-group" id="div-prod-desc">
-          <label>รายละเอียดใต้ชื่อแอป:</label>
-          <textarea id="addProdDesc" class="adm-input" placeholder="คำอธิบายแอปเพิ่มเติม..."></textarea>
-        </div>
-
         <div id="adm-fields-standard">
+          <div class="adm-input-group">
+            <label>รายละเอียดใต้ชื่อแอป:</label>
+            <textarea id="addProdDesc" class="adm-input" placeholder="คำอธิบายแอปเพิ่มเติม..."></textarea>
+          </div>
           <div class="adm-input-group">
             <label>ตัวเลือกแพ็กเกจ (เพื่อใช้จัดกลุ่มสินค้าเข้าด้วยกัน):</label>
             <input type="text" id="addProdOpt1" class="adm-input" placeholder="เช่น จอส่วนตัว, 90 คูปอง">
@@ -391,7 +381,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 // ==========================================
 // 🔴 นำ URL ของ Google Apps Script มาใส่ตรงนี้ 🔴
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYZfuKXR3uWMx1ZKC8f2QWItSxRmU0IRvGd9FhxuWG3hNG1bQPGII6aDMHj9VBmGu2/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXo57o4G_tjMAYkKsjFmDdSYs432SI__htMpEJX4bFS4yoTP7XnQzybw6SFTBrzKz9/exec"; 
 
 let currentMainTabId = 'info';
 let selectedAppCategory = null;
@@ -466,49 +456,14 @@ function applyShopInfo() {
   document.getElementById('infoFb').innerHTML = `${shopInfo.fb || '-'} ${shopInfo.fb ? bFb : ''}`;
   document.getElementById('infoLine').innerHTML = `${shopInfo.line || '-'} ${shopInfo.line ? bLine : ''}`;
   document.getElementById('infoTime').innerText = shopInfo.time || '-';
+  document.getElementById('infoWarranty').innerText = shopInfo.warranty || '-';
 
-  // 🌟 ส่วนกรอบการรับประกัน 🌟
-  const warrantyText = shopInfo.warranty || '';
-  if(warrantyText.trim() !== '') {
-    document.getElementById('termsBox').style.display = 'block';
-    document.getElementById('infoWarranty').innerHTML = warrantyText.replace(/\n/g, '<br>');
-  } else {
-    document.getElementById('termsBox').style.display = 'none';
-  }
-
-  // 🌟 ส่วนแบนเนอร์วิดีโอ (Auto-play) 🌟
   if (shopInfo.banner || shopInfo.bannerText) {
     document.getElementById('infoBannerCard').style.display = 'block';
-    
     if(shopInfo.banner) {
-      let bStr = shopInfo.banner.trim();
-      let mHtml = '';
-      
-      if (bStr.includes('<iframe')) {
-        mHtml = bStr;
-      } else if (bStr.match(/\.(mp4|webm|ogg)$/i)) {
-        // วิดีโอโดยตรง
-        mHtml = `<video src="${bStr}" autoplay loop muted playsinline style="width:100%; max-height:250px; object-fit:cover; background:#000; display:block; pointer-events:none;"></video>`;
-      } else if (bStr.includes('youtube.com') || bStr.includes('youtu.be')) {
-        // YouTube อัตโนมัติ (ดึง ID มาฝัง iframe ให้เล่นเอง)
-        let vId = '';
-        if (bStr.includes('youtu.be/')) vId = bStr.split('youtu.be/')[1].split(/[?#]/)[0];
-        else if (bStr.includes('v=')) vId = bStr.split('v=')[1].split('&')[0];
-
-        if (vId) {
-          mHtml = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=1&loop=1&playlist=${vId}&controls=0&playsinline=1" allow="autoplay; encrypted-media" style="width:100%; aspect-ratio:16/9; max-height:250px; border:none; pointer-events:none; display:block;"></iframe>`;
-        } else {
-          mHtml = `<img src="${bStr}">`;
-        }
-      } else {
-        // รูปภาพปกติ
-        mHtml = `<img src="${bStr}">`;
-      }
-      document.getElementById('infoBannerMedia').innerHTML = mHtml;
-    } else { 
-      document.getElementById('infoBannerMedia').innerHTML = ''; 
-    }
-    
+      if(shopInfo.banner.includes('<iframe')) document.getElementById('infoBannerMedia').innerHTML = shopInfo.banner;
+      else document.getElementById('infoBannerMedia').innerHTML = `<img src="${shopInfo.banner}">`;
+    } else { document.getElementById('infoBannerMedia').innerHTML = ''; }
     document.getElementById('infoBannerText').innerText = shopInfo.bannerText || '';
     document.getElementById('admBanner').value = shopInfo.banner || '';
     document.getElementById('admBannerText').value = shopInfo.bannerText || '';
@@ -551,6 +506,7 @@ function renderCategories() {
 
   let tabProds = products.filter(p => matchTab(p, tObj));
   
+  // 🌟 ระบบการจัดเรียง 🌟
   const sortVal = document.getElementById('sortOption') ? document.getElementById('sortOption').value : 'default';
   if (sortVal === 'az') tabProds.sort((a,b) => a.appCategory.localeCompare(b.appCategory, 'th'));
   else if (sortVal === 'za') tabProds.sort((a,b) => b.appCategory.localeCompare(a.appCategory, 'th'));
@@ -572,6 +528,7 @@ function renderCategories() {
       let selAnd = pAnd ? cart.some(c=>c.id===pAnd.id) : false;
       let price = (pIos && pAnd && pIos.price !== pAnd.price) ? `${Math.min(pIos.price,pAnd.price)}-${Math.max(pIos.price,pAnd.price)}฿` : `${any.price}฿`;
       
+      // ดึงสถานะมาโชว์ที่ป้ายมุมขวาบน
       let badge = any.osStatus === 'ready' 
         ? `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>` 
         : `<div class="os-status-badge not_ready"><div class="os-dot"></div>เมลไม่พร้อม</div>`;
@@ -644,6 +601,7 @@ function backToCategories() {
   document.getElementById('view-categories').classList.add('active');
 }
 
+// ================= CART & CHECKOUT =================
 function toggleCart(id, e) {
   if(e) e.stopPropagation();
   let idx = cart.findIndex(c => c.id === id);
@@ -691,6 +649,7 @@ function copyText(e, txt) {
   if(e) alert('คัดลอกสำเร็จ');
 }
 
+// ================= 1. ล็อกอินลับและหน้าต่างแอดมิน =================
 function checkAdminLogin() {
   adminClickCount++;
   if(adminClickCount >= 5) {
@@ -704,7 +663,11 @@ function verifyAdminPassword() {
   let pwd = document.getElementById('adminPwdInput').value;
   if (pwd === "170647") {
     document.getElementById('passwordModal').classList.remove('show'); 
+    
+    // โชว์ปุ่ม + สีม่วงพาสเทลแบบค้างจนกว่าจะรีเว็บ
     document.getElementById('adminFab').style.display = 'flex';
+    
+    // เปิดแผงแอดมินให้ทันที
     openAdminPanel();
   } else {
     alert("รหัสผ่านไม่ถูกต้อง");
@@ -730,6 +693,7 @@ function renderStats() {
   document.getElementById('statRev').innerText = shopStats.revenue;
 }
 
+// --- 2.4 บันทึกข้อมูลร้าน ---
 async function saveShopInfo() {
   shopInfo = {
     status: document.getElementById('admStatus').value,
@@ -752,6 +716,7 @@ async function saveShopInfo() {
   document.getElementById('loadingOverlay').style.display = 'none';
 }
 
+// --- จัดการแท็บ ---
 function renderAdminTabList() {
   let html = '';
   customTabs.forEach(t => {
@@ -789,6 +754,7 @@ async function deleteTab(id) {
   }
 }
 
+// --- จัดการสินค้า ---
 function populateAdminTabsSelect() {
   let select = document.getElementById('addProdTab');
   select.innerHTML = '';
@@ -803,11 +769,9 @@ function toggleAdmProdFields() {
   
   if (type === 'os') {
     document.getElementById('adm-fields-standard').style.display = 'none';
-    document.getElementById('div-prod-desc').style.display = 'none';
     document.getElementById('adm-fields-os').style.display = 'block';
   } else {
     document.getElementById('adm-fields-standard').style.display = 'block';
-    document.getElementById('div-prod-desc').style.display = 'block';
     document.getElementById('adm-fields-os').style.display = 'none';
   }
   renderAdminProductsByTab(sel.value);
@@ -911,6 +875,7 @@ async function submitAddProduct() {
   if(!pData.appCategory) return alert('กรุณาระบุชื่อแอป');
 
   if(type === 'standard') {
+    // 🌟 ระบบเพิ่ม "แพ็คเกจทั่วไป" อัตโนมัติถ้าลืมใส่
     pData.packageOption = document.getElementById('addProdOpt1').value.trim() || 'แพ็คเกจทั่วไป';
     pData.subPackage = document.getElementById('addProdOpt2').value.trim() || 'แพ็คเกจทั่วไป';
     pData.subDetails = document.getElementById('addProdSubDesc').value.trim(); 
@@ -919,7 +884,7 @@ async function submitAddProduct() {
     if(document.getElementById('admOS_ios').checked) osArr.push('iOS');
     if(document.getElementById('admOS_android').checked) osArr.push('Android');
     pData.os = osArr.join(', ');
-    pData.osStatus = document.getElementById('admOSStatus').value; 
+    pData.osStatus = document.getElementById('admOSStatus').value;
   }
 
   document.getElementById('loadingText').innerText = editingProductId ? "กำลังอัปเดตสินค้า..." : "กำลังบันทึกสินค้า...";
