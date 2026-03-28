@@ -29,8 +29,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .status-slow { color: #eab308; } .status-slow .status-dot { background: #eab308; box-shadow: 0 0 8px #eab308; }
 @keyframes pulseG { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
 
-/* Hero */
-.hero { background: var(--header-bg); padding: 50px 20px 55px; text-align: center; position: relative; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(176,38,255,0.1); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+/* Hero - กรอบสี #e042ff */
+.hero { background: var(--header-bg); padding: 50px 20px 55px; text-align: center; position: relative; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(176,38,255,0.1); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border: 2px solid #e042ff; border-top: none; }
 .hero-logo { width: 180px; height: 190px; object-fit: cover; border-radius: 20px; margin: 0 auto 15px; display: block; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(176,38,255,0.2); background: #fff; position: relative; z-index: 2;}
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; cursor: pointer; user-select: none; }
 .hero-sub { font-size: 14px; color: var(--text-dark); font-weight: 500; opacity: 0.9; }
@@ -64,20 +64,20 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .banner-media-holder img:hover { filter: brightness(0.9); }
 .banner-text { padding: 15px; font-size: 13px; color: var(--text-dark); text-align: center; white-space: pre-wrap; background: #fff; }
 
-/* Grid & Cards */
+/* Grid & Cards - สีกรอบการ์ดสีดำ #000000 */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
 .sort-select { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color); background: #fff; font-size: 12px; outline: none; }
 .grid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 0 5px; }
 
-.cat-card { background: var(--bg-card); border-radius: 16px; padding: 15px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 2px solid transparent; width: 140px; height: 215px; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+.cat-card { background: var(--bg-card); border-radius: 16px; padding: 15px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 2px solid #000000; width: 140px; height: 215px; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
 .cat-card:active { transform: scale(0.96); }
 .cat-icon { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); background:#C0C0C0; } 
 .cat-name { font-size: 13px; font-weight: 700; color: var(--text-dark); width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 .cat-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
 
-.os-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 15px 10px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 140px; height: 230px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+.os-card { background: var(--bg-card); border: 2px solid #000000; border-radius: 16px; padding: 15px 10px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 140px; height: 230px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
 .os-card.selected { border-color: var(--primary); background: #fdf8ff; }
-.check-circle { position: absolute; top: 8px; left: 8px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd; background: #fff; display: flex; justify-content: center; align-items: center; z-index: 5; }
+.check-circle { position: absolute; top: 8px; left: 8px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #000000; background: #fff; display: flex; justify-content: center; align-items: center; z-index: 5; }
 .os-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .check-circle::after { content: '✓'; color: #fff; font-size: 10px; font-weight: bold; opacity: 0; }
 .os-card.selected .check-circle::after { opacity: 1; }
@@ -99,7 +99,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .pkg-header-desc { font-size: 13px; color: var(--text-muted); white-space: pre-wrap; margin-top: 5px; }
 .pkg-group-title { font-size: 15px; font-weight: 700; color: var(--text-dark); margin: 20px 10px 10px; display: flex; align-items: center; gap: 8px; }
 .pkg-group-title::before { content: ''; width: 4px; height: 16px; background: var(--primary); border-radius: 4px; }
-.pkg-item { background: #fff; border: 1.5px solid #464343; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin: 0 10px 10px; cursor: pointer; position: relative; transition: 0.2s; }
+.pkg-item { background: #fff; border: 1.5px solid #000000; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin: 0 10px 10px; cursor: pointer; position: relative; transition: 0.2s; }
 .pkg-item.selected { border-color: var(--primary); background: #fdf8ff; }
 .pkg-item.selected::before { content: '✓'; position: absolute; top: -8px; left: -8px; background: var(--primary); color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 5; }
 .pkg-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
@@ -277,8 +277,8 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 </div>
 
 <script>
-  // ⚠️ วาง URL ของ Apps Script ที่นี่ ⚠️
-  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxtddV6JtchnQQa-TiVru9gDaYnTyRQNZ0ZQIwHewOrUvYiSQVklHsvaS7L4PW-LITTrQ/exec";
+  // ⚠️ อย่าลืมนำ URL อันใหม่ล่าสุดมาใส่ตรงนี้นะครับ ⚠️
+  let GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxN5o-aQr_RhdgKv5z3WNBQXnIPPOaauXp32bIPHTGCnY7kDgOHqxZAvxkf3W8JC4vPuQ/exec"; 
   
   let currentMainTabId = 'info'; 
   let selectedAppCategory = null;
@@ -298,7 +298,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     if (shopStats.date !== now) { shopStats = { date: now, visits: 0, orders: 0, revenue: 0, topItems: {} }; }
   }
 
-  // ระบบตรวจสอบแท็บ (มีความแม่นยำสูง)
   function matchTab(p, tabObj) {
     if(!p || !tabObj) return false;
     let pTab = String(p.tab || '').trim().toLowerCase();
@@ -317,14 +316,11 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       
       if(data.customTabs && data.customTabs.length > 0) {
         customTabs = data.customTabs;
-      } else if (data.tabs && data.tabs.length > 0) {
-        customTabs = data.tabs.map(t => { return typeof t === 'string' ? { id: t, name: t, type: 'standard' } : t; });
       } else {
         customTabs = [
-          { id: 't_premium', name: ' แอพพรีเมี่ยม', type: 'standard' },
-          { id: 't_game', name: ' เติมเกม', type: 'standard' },
-          { id: 't_os', name: ' แอพ/เกม IOS-ANDROID', type: 'os' },
-          { id: 't_fiction', name: ' เติมเหรียญนิยาย', type: 'standard' }
+          { id: 't_premium', name: 'แอพพรีเมี่ยม', type: 'standard' },
+          { id: 't_game', name: 'เติมเกม', type: 'standard' },
+          { id: 't_os', name: 'แอพ/เกม IOS-ANDROID', type: 'os' }
         ];
       }
 
@@ -419,7 +415,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
           <div class="os-card ${isIosSel || isAndSel ? 'selected' : ''}">
             ${statusBadge}
             <div class="check-circle"></div>
-            <img src="${basePkg.icon}" class="cat-icon" loading="lazy" style="width:55px; height:55px; border-radius:12px; margin-bottom:10px; object-fit:cover;">
+            <img src="${basePkg.icon}" class="cat-icon" loading="lazy">
             <div style="font-size:14px; font-weight:700; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-dark);">${appName}</div>
             <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">เลือกระบบ</div>
             <div class="os-btn-group">
@@ -522,6 +518,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     checkDailyReset();
     let text = "🛒 สรุปรายการสั่งซื้อ\n\n";
     let total = 0;
+    let orderTypesArr = [];
+    let orderItemsArr = [];
+
     cart.forEach(item => {
       text += `สินค้า: ${item.appCategory}\n`;
       text += item.os ? `ระบบ: ${item.os}\n` : `แพ็กเกจ: ${item.packageOption} - ${item.subPackage}\n`;
@@ -530,8 +529,30 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       
       shopStats.revenue = (shopStats.revenue || 0) + item.price;
       shopStats.topItems[item.appCategory] = (shopStats.topItems[item.appCategory] || 0) + 1;
+      
+      orderTypesArr.push(item.appCategory);
+      orderItemsArr.push(item.appCategory + (item.os ? ` (${item.os})` : ` (${item.subPackage})`));
     });
     shopStats.orders = (shopStats.orders || 0) + 1;
+
+    let topApp = ""; let maxCount = 0;
+    for(let app in shopStats.topItems) { 
+      if(shopStats.topItems[app] > maxCount) { maxCount = shopStats.topItems[app]; topApp = app; } 
+    }
+
+    let payloadOrder = {
+      time: new Date().toLocaleTimeString('th-TH'),
+      type: [...new Set(orderTypesArr)].join(', '),
+      items: orderItemsArr.join(', '),
+      total: total
+    };
+    let payloadStats = { visits: shopStats.visits, date: shopStats.date, topApp: topApp, revenue: shopStats.revenue };
+
+    // ยิง API บันทึกสถิติแบบไม่บังหน้าจอโหลด
+    fetch(GOOGLE_SHEET_API_URL, {
+      method: 'POST', body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
+    });
+    
     syncDataToSheet(); 
 
     text += `--------------------\nยอดชำระทั้งหมด: ${total} บาท\n`;
@@ -580,7 +601,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
   function deleteTab(id) {
     if(!confirm('🚨 แท็บและสินค้าจะถูกลบทิ้ง แน่ใจหรือไม่?')) return;
-    
     if (String(id) === 'undefined' || !id) {
       customTabs = customTabs.filter(t => t.id && String(t.id) !== 'undefined');
     } else {
@@ -588,7 +608,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       if(tabToDelete) { products = products.filter(p => !matchTab(p, tabToDelete)); }
       customTabs = customTabs.filter(t => String(t.id) !== String(id));
     }
-    
     if(String(currentMainTabId) === String(id) || String(id) === 'undefined') currentMainTabId = 'info'; 
     renderAllTabs(); syncDataToSheet(); alert('อัปเดตแท็บเรียบร้อย!');
   }
@@ -637,13 +656,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     const bCard = document.getElementById('infoBannerCard');
     if(bUrl || bText) {
       bCard.style.display = 'block';
-      if (bUrl.includes('<iframe')) {
-        document.getElementById('infoBannerMedia').innerHTML = bUrl;
-      } else if (bUrl) {
-        document.getElementById('infoBannerMedia').innerHTML = `<a href="${bUrl}" target="_blank" style="width:100%; display:block;"><img src="${bUrl}" alt="Banner"></a>`;
-      } else {
-        document.getElementById('infoBannerMedia').innerHTML = '';
-      }
+      if (bUrl.includes('<iframe')) { document.getElementById('infoBannerMedia').innerHTML = bUrl; } 
+      else if (bUrl) { document.getElementById('infoBannerMedia').innerHTML = `<a href="${bUrl}" target="_blank" style="width:100%; display:block;"><img src="${bUrl}" alt="Banner"></a>`; } 
+      else { document.getElementById('infoBannerMedia').innerHTML = ''; }
       document.getElementById('infoBannerText').style.display = bText ? 'block' : 'none';
       document.getElementById('infoBannerText').innerText = bText;
     } else { bCard.style.display = 'none'; }
@@ -678,9 +693,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
       if (editingProductId) { const idx = products.findIndex(p => String(p.id) === String(editingProductId)); products[idx] = obj; } else { products.push(obj); }
     }
 
-    syncDataToSheet(); clearProductForm(); 
-    renderAdminProductsByTab(tabId); 
-    renderCategories();
+    syncDataToSheet(); clearProductForm(); renderAdminProductsByTab(tabId); renderCategories();
     alert('✅ บันทึกสินค้าเรียบร้อย!');
   }
 
@@ -726,11 +739,9 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   }
 
   function clearProductForm() {
-    editingProductId = null;
-    document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้า';
+    editingProductId = null; document.getElementById('btnSubmitProduct').innerHTML = '➕ บันทึกข้อมูลสินค้า';
     document.querySelectorAll('#admin-product .admin-input').forEach(i => i.value = '');
-    document.getElementById('admOS_ios').checked = false;
-    document.getElementById('admOS_android').checked = false;
+    document.getElementById('admOS_ios').checked = false; document.getElementById('admOS_android').checked = false;
     document.getElementById('admOSStatus').value = 'ready';
   }
 
@@ -747,39 +758,27 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
   function renderAdminProductsByTab(tabId) {
     currentAdminViewTab = tabId;
-    
     document.querySelectorAll('#admProdFilterTabs .admin-tab-btn').forEach(btn => {
       btn.classList.remove('active');
       const targetGroup = customTabs.find(t=>String(t.id)===String(tabId));
       if(targetGroup && btn.innerText === targetGroup.name) btn.classList.add('active');
     });
-    
     const listContainer = document.getElementById('adminProductList');
     const group = customTabs.find(t => String(t.id) === String(tabId));
     if(!group) return;
-
     const groupProducts = products.filter(p => matchTab(p, group));
-    
     if(groupProducts.length === 0) {
-      listContainer.innerHTML = `<div style="font-size:12px; color:#888; text-align:center; padding:15px;">ยังไม่มีสินค้าในหมวด ${group.name}</div>`;
-      return;
+      listContainer.innerHTML = `<div style="font-size:12px; color:#888; text-align:center; padding:15px;">ยังไม่มีสินค้าในหมวด ${group.name}</div>`; return;
     }
-
     let html = '';
     groupProducts.forEach(p => {
       let details = p.os ? `ระบบ: ${p.os} | <span style="color:${p.stockStatus === 'not_ready' ? 'red' : 'green'}">${p.stockStatus === 'not_ready' ? 'เมลไม่พร้อม' : 'พร้อมส่ง'}</span>` : `แพ็กเกจ: ${p.packageOption} - ${p.subPackage}`;
       html += `
         <div class="adm-list-item">
-          <div class="adm-list-info">
-            <div style="font-weight:700; color:var(--primary); font-size:13px;">${p.appCategory}</div>
-            <div style="color:var(--text-muted); margin-top:2px;">${details} <br><strong style="color:var(--text-dark);">฿${p.price}</strong></div>
-          </div>
-          <div class="adm-list-actions">
-            <button style="background:#eab308;" onclick="editProduct('${p.id}')">✏️</button>
-            <button style="background:#ef4444;" onclick="deleteProduct('${p.id}')">🗑️</button>
-          </div>
-        </div>
-      `;
+          <div class="adm-list-info"><div style="font-weight:700; color:var(--primary); font-size:13px;">${p.appCategory}</div>
+            <div style="color:var(--text-muted); margin-top:2px;">${details} <br><strong style="color:var(--text-dark);">฿${p.price}</strong></div></div>
+          <div class="adm-list-actions"><button style="background:#eab308;" onclick="editProduct('${p.id}')">✏️</button>
+            <button style="background:#ef4444;" onclick="deleteProduct('${p.id}')">🗑️</button></div></div>`;
     });
     listContainer.innerHTML = html;
   }
@@ -790,15 +789,12 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     document.getElementById('statVisits').innerText = shopStats.visits || 0;
     document.getElementById('statOrders').innerText = shopStats.orders || 0;
     document.getElementById('statRev').innerText = shopStats.revenue || 0;
-    
     let topItemsHtml = '';
     if(shopStats.topItems && Object.keys(shopStats.topItems).length > 0) {
       const sorted = Object.entries(shopStats.topItems).sort((a,b) => b[1] - a[1]).slice(0, 5);
       sorted.forEach((item, idx) => { topItemsHtml += `<div style="padding:4px 0; border-bottom:1px dashed #ccc;">${idx+1}. ${item[0]} <span style="float:right; color:var(--primary); font-weight:bold;">${item[1]} ครั้ง</span></div>`; });
       document.getElementById('statTopItems').innerHTML = topItemsHtml;
-    } else {
-      document.getElementById('statTopItems').innerText = 'ยังไม่มีข้อมูลการสั่งซื้อของวันนี้';
-    }
+    } else { document.getElementById('statTopItems').innerText = 'ยังไม่มีข้อมูลการสั่งซื้อของวันนี้'; }
   }
 
   function resetStats() {
