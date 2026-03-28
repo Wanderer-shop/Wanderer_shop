@@ -361,15 +361,15 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
   fetchGoogleSheetsData();
 
   async function syncDataToSheet() {
-    if(!isDataLoaded) return; // 🛡️ บล็อคไม่ให้เซฟถ้าโหลดยังไม่เสร็จ
+    if(!isDataLoaded) return;
     try {
       await fetch(GOOGLE_SHEET_API_URL, {
         method: 'POST',
-        mode: 'cors', // ✅ เพิ่มแก้ CORS
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ✅ เปลี่ยนเป็น text/plain
+        mode: 'no-cors', // ✅ จุดสำคัญที่แก้ปัญหาเบราว์เซอร์บล็อก (เปลี่ยนเป็น no-cors)
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'sync_data', shopInfo, customTabs, products, shopStats })
       });
-    } catch(err) { console.error('เซฟข้อมูลล้มเหลว'); }
+    } catch(err) { console.error('เซฟข้อมูลล้มเหลว', err); }
   }
 
   function recordVisit() {
@@ -712,6 +712,39 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
     for(let app in shopStats.topItems) { 
       if(shopStats.topItems[app] > maxCount) { maxCount = shopStats.topItems[app]; topApp = app; } 
     }
+
+    let payloadOrder = {
+      time: new Date().toLocaleTimeString('th-TH'), type: [...new Set(checkoutData.orderTypesArr)].join(', '),
+      items: checkoutData.orderItemsArr.join(', '), total: checkoutData.overallTotal
+    };
+    let payloadStats = { visits: shopStats.visits, date: shopStats.date, topApp: topApp, revenue: shopStats.revenue };
+
+    try {
+      await fetch(GOOGLE_SHEET_API_URL, {
+        method: 'POST',
+        mode: 'no-cors', // ✅ แก้ตรงนี้ให้เป็น no-cors ด้วยเช่นกัน
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'log_order', order: payloadOrder, stats: payloadStats })
+      });
+      syncDataToSheet(); 
+    } catch(err) { console.log('Error logging order'); }
+
+    // คัดลอกฟอร์มลงคลิปบอร์ด
+    copyText(null, checkoutData.text.trim());
+    
+    // เคลียร์ตะกร้า
+    cart = []; updateBottomBar();
+    if(currentMainTabId !== 'info') renderCategories();
+    
+    closeCheckoutModal();
+    btn.disabled = false;
+    btn.innerText = 'คัดลอกฟอร์ม & ไปที่ไลน์';
+    
+    // เด้งไปไลน์ร้าน
+    setTimeout(() => {
+      window.location.href = "https://lin.ee/VO9tCZA"; 
+    }, 500);
+  }
 
     let payloadOrder = {
       time: new Date().toLocaleTimeString('th-TH'), type: [...new Set(checkoutData.orderTypesArr)].join(', '),
