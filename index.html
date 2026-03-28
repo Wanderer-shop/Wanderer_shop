@@ -294,7 +294,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 
 <script>
 // --- GOOGLE APPS SCRIPT API CONFIG ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvre6xyeKf0IWKDriOclhbfu9ytEAR4R8r5hIIt6vU_wpmJ_uJ0iL9NdGr6OJBvS1k/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyhHTQPZvtZi3Fr-mjt9aAMncmz2ih3YY3TSj8air-_z6JLp4kDPrI5RHv5jz3WALP/exec";
 
 // --- STATE VARIABLES ---
 let currentMainTabId = 'info';
@@ -529,7 +529,13 @@ function openApp(appName) {
   document.getElementById('view-categories').classList.remove('active');
   document.getElementById('view-packages').classList.add('active');
 
-  const appData = products.find(p => p.appCategory === appName);
+  // 🟢 1. ดึงข้อมูลแท็บปัจจุบันมาอ้างอิง
+  const currentTabObj = customTabs.find(t => String(t.id) === String(currentMainTabId));
+  
+  // 🟢 2. ค้นหาข้อมูลแอป โดยเช็คให้ตรงทั้ง "ชื่อแอป" และ "ต้องอยู่ในแท็บปัจจุบันเท่านั้น"
+  const appData = products.find(p => p.appCategory === appName && matchTab(p, currentTabObj));
+  if(!appData) return; // กันระบบพังกรณีหาไม่เจอ
+
   document.getElementById('pkgAppIcon').src = appData.icon;
   document.getElementById('pkgAppName').innerText = appName;
   document.getElementById('pkgAppDesc').innerText = appData.appDetails || '';
@@ -538,7 +544,9 @@ function openApp(appName) {
   let html = '';
   
   let groupMap = {};
-  products.filter(p => p.appCategory === appName).forEach(p => {
+  
+  // 🟢 3. กรองเอาเฉพาะแพ็กเกจที่ชื่อแอปตรงกัน "และ" ต้องอยู่หมวดหมู่แท็บเดียวกันเท่านั้น (แก้ปัญหาข้อมูลทะลุกัน)
+  products.filter(p => p.appCategory === appName && matchTab(p, currentTabObj)).forEach(p => {
     let opt = p.packageOption || 'แพ็กเกจทั่วไป';
     if(!groupMap[opt]) groupMap[opt] = [];
     groupMap[opt].push(p);
@@ -559,7 +567,6 @@ function openApp(appName) {
   }
   list.innerHTML = html;
 }
-
 function toggleStandardPkg(id) {
   const index = cart.findIndex(c => String(c.id) === String(id));
   if(index > -1) cart.splice(index, 1);
