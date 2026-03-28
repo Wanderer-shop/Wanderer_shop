@@ -77,12 +77,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .os-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .check-circle::after { content: '✓'; color: #fff; font-size: 10px; font-weight: bold; opacity: 0; }
 .os-card.selected .check-circle::after { opacity: 1; }
-.os-status-badge { position: absolute; top: 0; right: 0; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 0 14px 0 10px; z-index: 10; display: flex; align-items: center; gap: 4px; background: #ffffff; }
-.os-status-badge.ready { color: #10b981; border: 1px solid #10b981; border-top: none; border-right: none; }
-.os-status-badge.not_ready { color: #ef4444; border: 1px solid #ef4444; border-top: none; border-right: none; }
-.os-dot { width: 6px; height: 6px; border-radius: 50%; animation: pulseG 1.5s infinite; }
-.os-status-badge.ready .os-dot { background: #10b981; }
-.os-status-badge.not_ready .os-dot { background: #ef4444; }
 .os-btn-group { display: flex; gap: 4px; width: 100%; margin: 6px 0; }
 .os-btn { flex: 1; font-size: 10px; padding: 5px 0; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; color: var(--text-muted); font-weight: 600; }
 .os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
@@ -109,6 +103,27 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: var(
 .modal-overlay.show { opacity: 1; pointer-events: all; }
 .modal-box { background: #fff; border: 2px solid var(--primary); border-radius: 20px; width: 95%; max-width: 450px; padding: 20px; transform: scale(0.9); transition: 0.3s; max-height: 85vh; overflow-y: auto;}
 .modal-overlay.show .modal-box { transform: scale(1); }
+
+/* Admin Floating Button (สีม่วงพาสเทล พร้อมเครื่องหมาย +) */
+.admin-fab { 
+  display: none; 
+  position: fixed; 
+  bottom: 25px; 
+  right: 25px; 
+  width: 55px; 
+  height: 55px; 
+  border-radius: 50%; 
+  background: #d8b4fe; /* สีม่วงพาสเทล */
+  color: #ffffff; 
+  font-size: 36px; 
+  justify-content: center; 
+  align-items: center; 
+  box-shadow: 0 4px 15px rgba(216, 180, 254, 0.6); 
+  cursor: pointer; 
+  z-index: 999; 
+  border: 2px solid #fff;
+  padding-bottom: 6px; /* จัดตำแหน่ง + ให้อยู่กึ่งกลาง */
+}
 
 /* Admin Menu */
 .adm-menu { display: flex; gap: 5px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: 12px; overflow-x: auto;}
@@ -153,7 +168,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 <div class="content">
   <div id="view-info" class="view-section active">
     <div class="info-card">
-      <div class="info-row"><span>X (Twitter)</span> <span id="infoFb">-</span></div>
+      <div class="info-row"><span>Facebook / เพจ</span> <span id="infoFb">-</span></div>
       <div class="info-row"><span>Line</span> <span id="infoLine">-</span></div>
       <div class="info-row"><span>เวลาทำการ</span> <span id="infoTime">-</span></div>
       <div class="info-row" style="flex-direction: column; align-items: flex-start; border:none;"><span>การรับประกัน</span> <span id="infoWarranty" style="text-align: left; width: 100%; color: var(--text-muted); font-size: 13px; white-space: pre-wrap;">-</span></div>
@@ -206,14 +221,13 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
   </div>
 </div>
 
+<div class="admin-fab" id="adminFab" onclick="openAdminPanel()">+</div>
+
 <div class="modal-overlay" id="adminModal">
   <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
       <h3 style="color:var(--primary); margin:0;">⚙️ จัดการร้านค้า</h3>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button onclick="logoutAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🚪 ออกจากระบบ</button>
-        <span onclick="logoutAdmin()" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
-      </div>
+      <span onclick="document.getElementById('adminModal').classList.remove('show')" style="cursor:pointer; font-size:26px; color:#888; line-height:1;">×</span>
     </div>
     
     <div class="adm-menu">
@@ -238,15 +252,15 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
         <input type="text" class="adm-input" id="admLogo" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
-        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ (Banner):</label>
+        <label>ช่องใส่ลิงก์วิดีโอ/รูปภาพ:</label>
         <input type="text" class="adm-input" id="admBanner" placeholder="URL รูป หรือ <iframe>" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
-        <label>กล่องข้อความใต้การ์ดรูปวิดีโอ (โปรโมชัน):</label>
+        <label>กล่องข้อความใต้การ์ดรูปวิดีโอ:</label>
         <textarea class="adm-input" id="admBannerText" placeholder="พิมพ์ข้อความโปรโมชัน..." onchange="previewShopInfo()"></textarea>
       </div>
       <div class="adm-input-group">
-        <label>X (Twitter):</label>
+        <label>ชื่อ Facebook / เพจ:</label>
         <input type="text" class="adm-input" id="admFb" onchange="previewShopInfo()">
       </div>
       <div class="adm-input-group">
@@ -273,7 +287,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
         <div class="adm-input-group">
           <label>รูปแบบหน้าตาแท็บ:</label>
           <select id="addTabType" class="adm-input">
-            <option value="standard">แบบปกติ (มีหน้าแพ็กเกจย่อย)</option>
+            <option value="standard">แบบปกติ (แอพพรีเมี่ยม, เติมเกม)</option>
             <option value="os">แบบระบบ (ให้ลูกค้ากดเลือก iOS / Android)</option>
           </select>
         </div>
@@ -285,6 +299,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
 
     <div id="adm-sec-prod" class="adm-section">
       <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+        
         <div class="adm-input-group">
           <label>เลือกแท็บ (หมวดหมู่):</label>
           <select id="addProdTab" class="adm-input" onchange="toggleAdmProdFields()"></select>
@@ -293,7 +308,8 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
           <label>ชื่อแอป / หมวดหมู่:</label>
           <input type="text" id="addProdName" class="adm-input" placeholder="เช่น Netflix, RoV">
         </div>
-        <div class="adm-input-group">
+
+        <div class="adm-input-group" id="div-prod-desc">
           <label>รายละเอียดใต้ชื่อแอป:</label>
           <textarea id="addProdDesc" class="adm-input" placeholder="คำอธิบายแอปเพิ่มเติม..."></textarea>
         </div>
@@ -321,13 +337,6 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
               <label><input type="checkbox" id="admOS_android" value="Android"> 🤖 Android</label>
             </div>
           </div>
-          <div class="adm-input-group">
-            <label>สถานะไอดี (เฉพาะระบบ OS):</label>
-            <select id="admOSStatus" class="adm-input">
-              <option value="ready">🟢 พร้อมส่ง</option>
-              <option value="not_ready">🔴 เมลไม่พร้อม</option>
-            </select>
-          </div>
         </div>
 
         <div style="display:flex; gap:10px;">
@@ -340,6 +349,7 @@ textarea.adm-input { resize: vertical; min-height: 80px; }
             <input type="text" id="addProdIcon" class="adm-input" placeholder="https://...">
           </div>
         </div>
+
         <button class="bb-btn" id="btnSubmitProduct" style="width:100%; padding:12px; margin-top:10px;" onclick="submitAddProduct()">➕ บันทึกข้อมูลสินค้า</button>
         <button class="bb-btn" style="width:100%; padding:10px; margin-top:8px; background:#e2e8f0; color:#333; box-shadow:none;" onclick="clearProductForm()">เคลียร์ฟอร์ม</button>
       </div>
@@ -505,14 +515,15 @@ function renderCategories() {
       let selAnd = pAnd ? cart.some(c=>c.id===pAnd.id) : false;
       let price = (pIos && pAnd && pIos.price !== pAnd.price) ? `${Math.min(pIos.price,pAnd.price)}-${Math.max(pIos.price,pAnd.price)}฿` : `${any.price}฿`;
       
-      let badge = any.osStatus === 'ready' ? `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>` : `<div class="os-status-badge not_ready"><div class="os-dot"></div>เมลไม่พร้อม</div>`;
+      // เราให้แสดงว่าพร้อมส่งเสมอในแท็บ OS ตามที่คุณต้องการให้ตัดส่วนสถานะออกในหลังบ้าน
+      let badge = `<div class="os-status-badge ready"><div class="os-dot"></div>พร้อมส่ง</div>`;
 
       html += `
       <div class="os-card ${selIos||selAnd ? 'selected' : ''}">
         ${badge} <div class="check-circle"></div>
         <img src="${any.icon}" class="cat-icon">
         <div class="cat-name">${name}</div>
-        <div class="cat-desc">${any.appDetails || ''}</div>
+        <div class="cat-desc" style="display:none;"></div>
         <div class="os-btn-group">
           ${pIos ? `<button class="os-btn ${selIos?'active':''}" onclick="toggleCart('${pIos.id}', event)">iOS</button>` : ''}
           ${pAnd ? `<button class="os-btn ${selAnd?'active':''}" onclick="toggleCart('${pAnd.id}', event)">Android</button>` : ''}
@@ -624,7 +635,7 @@ function copyText(e, txt) {
   if(e) alert('คัดลอกสำเร็จ');
 }
 
-// ================= 1.1 ล็อกอินลับ =================
+// ================= 1. ล็อกอินลับและหน้าต่างแอดมิน =================
 function checkAdminLogin() {
   adminClickCount++;
   if(adminClickCount >= 5) {
@@ -638,21 +649,23 @@ function verifyAdminPassword() {
   let pwd = document.getElementById('adminPwdInput').value;
   if (pwd === "170647") {
     document.getElementById('passwordModal').classList.remove('show'); 
-    document.getElementById('adminModal').classList.add('show'); 
-    toggleAdmProdFields(); 
+    
+    // โชว์ปุ่ม + สีม่วงพาสเทลแบบค้างจนกว่าจะรีเว็บ
+    document.getElementById('adminFab').style.display = 'flex';
+    
+    // เปิดแผงแอดมินให้ทันที
+    openAdminPanel();
   } else {
     alert("รหัสผ่านไม่ถูกต้อง");
   }
 }
 
-function logoutAdmin() {
-  adminClickCount = 0; 
-  document.getElementById('adminModal').classList.remove('show'); 
-  clearProductForm(); 
-  alert("🚪 ออกจากโหมดแอดมินเรียบร้อยแล้ว");
+// ฟังก์ชันเปิดแผงแอดมินผ่านปุ่ม +
+function openAdminPanel() {
+  document.getElementById('adminModal').classList.add('show');
+  toggleAdmProdFields(); 
 }
 
-// ================= ADMIN SYSTEM =================
 function switchAdminMenu(menuId) {
   document.querySelectorAll('.adm-tab').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.adm-section').forEach(el => el.classList.remove('active'));
@@ -667,7 +680,7 @@ function renderStats() {
   document.getElementById('statRev').innerText = shopStats.revenue;
 }
 
-// --- 3.4 บันทึกข้อมูลร้าน ---
+// --- 2.4 บันทึกข้อมูลร้าน ---
 async function saveShopInfo() {
   shopInfo = {
     status: document.getElementById('admStatus').value,
@@ -690,7 +703,7 @@ async function saveShopInfo() {
   document.getElementById('loadingOverlay').style.display = 'none';
 }
 
-// --- 3. จัดการแท็บ ---
+// --- จัดการแท็บ ---
 function renderAdminTabList() {
   let html = '';
   customTabs.forEach(t => {
@@ -728,7 +741,7 @@ async function deleteTab(id) {
   }
 }
 
-// --- 3. จัดการสินค้า ---
+// --- จัดการสินค้า ---
 function populateAdminTabsSelect() {
   let select = document.getElementById('addProdTab');
   select.innerHTML = '';
@@ -740,11 +753,16 @@ function toggleAdmProdFields() {
   const sel = document.getElementById('addProdTab');
   if(!sel.options.length) return;
   const type = sel.options[sel.selectedIndex].dataset.type;
+  
   if (type === 'os') {
+    // โหมด 2.3 OS จะซ่อนรายละเอียดที่ไม่ได้ใช้
     document.getElementById('adm-fields-standard').style.display = 'none';
+    document.getElementById('div-prod-desc').style.display = 'none';
     document.getElementById('adm-fields-os').style.display = 'block';
   } else {
+    // โหมด 2.1 & 2.2 โชว์ทุกช่อง
     document.getElementById('adm-fields-standard').style.display = 'block';
+    document.getElementById('div-prod-desc').style.display = 'block';
     document.getElementById('adm-fields-os').style.display = 'none';
   }
   renderAdminProductsByTab(sel.value);
@@ -806,7 +824,6 @@ function editProduct(id) {
   } else {
     document.getElementById('admOS_ios').checked = String(p.os).includes('iOS');
     document.getElementById('admOS_android').checked = String(p.os).includes('Android');
-    document.getElementById('admOSStatus').value = p.osStatus || 'ready';
   }
   
   document.getElementById('btnSubmitProduct').innerHTML = '💾 อัปเดตข้อมูลสินค้า';
@@ -855,7 +872,8 @@ async function submitAddProduct() {
     if(document.getElementById('admOS_ios').checked) osArr.push('iOS');
     if(document.getElementById('admOS_android').checked) osArr.push('Android');
     pData.os = osArr.join(', ');
-    pData.osStatus = document.getElementById('admOSStatus').value;
+    // ค่าเริ่มต้น status ของ OS ให้เป็น ready เสมอ
+    pData.osStatus = 'ready'; 
   }
 
   document.getElementById('loadingText').innerText = editingProductId ? "กำลังอัปเดตสินค้า..." : "กำลังบันทึกสินค้า...";
