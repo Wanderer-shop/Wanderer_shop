@@ -475,9 +475,15 @@ function openPackageView(tabName, catName) {
       const inCart = cart.some(c => c.id === item.id) ? 'background:#FF4B7E;' : (isOutstock ? 'background:#ccc; cursor:not-allowed;' : 'background:var(--primary);');
       const btnText = isOutstock ? 'หมด' : (cart.some(c => c.id === item.id) ? 'ลบออก' : `${item.price} ฿`);
       html += `
-      <div style="background:#fff; color:#000; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
-        <div><strong>${item.name}</strong><br><small style="color:#666; white-space: pre-line;">${item.desc}</small></div></div>
-        <button id="btn_${item.id}" onclick="${isOutstock ? '' : `addToCart('${item.id}')`}" style="${inCart} color:#fff; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; transition:0.2s;">${btnText}</button>
+      html += `
+      <div style="background:#fff; color:#000; padding:12px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; width: 100%;">
+        <div style="flex: 1; min-width: 0; padding-right: 15px; word-break: break-word;">
+          <strong style="display: block; font-size: 1.05em; color: #333;">${item.name}</strong>
+          <small style="display: block; color:#666; white-space: pre-line; margin-top: 4px; line-height: 1.4;">${item.desc}</small>
+        </div>
+        <div style="flex-shrink: 0;">
+          <button id="btn_${item.id}" onclick="${isOutstock ? '' : `addToCart('${item.id}')`}" style="${inCart} color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; transition:0.2s;">${btnText}</button>
+        </div>
       </div>`;
     });
   });
