@@ -44,6 +44,7 @@ body {
 .hero-logo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .hero-title-container { text-align: center; }
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 0 15px rgba(59,150,245,0.6); margin-bottom: 5px; cursor: pointer; }
+.hero-sub { font-size: 14px; color: #ddd; margin-top: 5px; }
 
 /* Tabs Navigation */
 .tab-nav { display: flex; overflow-x: auto; gap: 10px; padding: 0 20px 15px; justify-content: center; scrollbar-width: none; position: relative; z-index: 10; margin-top: -15px; }
@@ -128,6 +129,7 @@ body {
   
   <div class="hero-title-container">
     <h1 class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</h1>
+    <p id="welcomeMsg" class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</p>
   </div>
 </div>
 
@@ -158,11 +160,11 @@ body {
 </div>
 
 <script>
-// ใส่ลิงก์ API ของ Google Apps Script ของคุณตรงนี้
-const API_URL = "https://script.google.com/macros/s/AKfycbw-giw20vcVQCEERtpkWFj-9Wmx0tAAyMzvE6aZVsFvPPWpmWXX8yPsDxwln0sQ1Hsa/exec"; 
+// 📌 นำลิงก์ API ของ Google Apps Script มาใส่ตรงนี้ครับ
+const API_URL = "https://script.google.com/macros/s/AKfycbzgtjrkxS0zyH51tYnkl2YV6oAFFkzASRVeoLTCXcInz_SQX8Ipa4vtZq9lb_BFLzYR/exec"; 
 
 let products = [];
-let storeInfo = { status: 'open', line: '@wanderer', customCards: [] };
+let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer', customCards: [] };
 let cart = [];
 let currentTab = "IOS-ANDROID";
 let adminMode = false;
@@ -207,6 +209,11 @@ function applyStoreInfo() {
   
   if(storeInfo.logo) {
     document.querySelector('.hero-logo-img').src = storeInfo.logo;
+  }
+  
+  const welcomeEl = document.getElementById('welcomeMsg');
+  if(welcomeEl) {
+    welcomeEl.innerText = storeInfo.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
   }
 }
 
@@ -299,7 +306,6 @@ function switchMainTab(tabName) {
     for(let appName in apps) {
       const app = apps[appName];
       let isReady = app.osList.some(p => p.status !== 'outstock' && p.status !== 'not_ready');
-      // 📌 ป้ายสถานะโชว์เฉพาะแท็บ iOS/Android
       let badgeHtml = isReady ? `<div class="app-badge ready">พร้อมส่ง</div>` : `<div class="app-badge not-ready">เมลไม่พร้อม</div>`;
 
       html += `
@@ -328,7 +334,6 @@ function switchMainTab(tabName) {
 
     let html = `<div class="app-grid">`;
     for(let cat in apps) {
-      // 📌 แท็บหมวดอื่นๆ ซ่อนป้ายสถานะของการ์ดแอปหลักออก
       html += `
         <div class="app-card" onclick="openPackageView('${tabName}', '${cat}')">
           <img src="${apps[cat].icon || 'https://via.placeholder.com/70'}" alt="icon">
@@ -359,7 +364,6 @@ function openPackageView(tabName, catName) {
   for(let sub in subCats) {
     html += `<div class="package-group-title">${sub}</div>`;
     subCats[sub].forEach(item => {
-      // 📌 ซ่อนป้ายสถานะตรงแพ็กเกจย่อย ถ้าสินค้าหมดเปลี่ยนปุ่มเป็นสีเทา "หมด"
       const isOutstock = item.status === 'outstock';
       const inCart = cart.some(c => c.id === item.id) ? 'background:#FF4B7E;' : (isOutstock ? 'background:#ccc; cursor:not-allowed;' : 'background:var(--primary);');
       const btnText = isOutstock ? 'หมด' : (cart.some(c => c.id === item.id) ? 'ลบออก' : `${item.price} ฿`);
@@ -567,6 +571,9 @@ function openAdmin() {
             <option value="slow" ${storeInfo.status==='slow'?'selected':''}>ตอบช้า (Slow)</option>
           </select>
           
+          <label style="font-size:13px; font-weight:bold; color:#555;">ข้อความต้อนรับ (ใต้ชื่อร้าน):</label>
+          <input type="text" id="st_welcome" placeholder="เช่น ยินดีต้อนรับสู่ร้าน Wanderer_Shop" value="${storeInfo.welcome || ''}">
+          
           <label style="font-size:13px; font-weight:bold; color:#555;">Line ID ติดต่อ:</label>
           <input type="text" id="st_line" placeholder="Line ID (เช่น @wanderer)" value="${storeInfo.line || ''}">
           
@@ -727,6 +734,7 @@ async function saveStoreInfo(e) {
   let payload = {
     action: "save_store",
     status: document.getElementById('st_status').value,
+    welcome: document.getElementById('st_welcome').value,
     line: document.getElementById('st_line').value,
     hours: document.getElementById('st_hours').value,
     logo: document.getElementById('st_logo').value,
@@ -776,7 +784,6 @@ function renderAdminProductList() {
   for(let gName in groups) {
     let gStatus = '';
     
-    // 📌 โชว์วงเล็บสถานะหลังชื่อแอปในหน้าแอดมินสำหรับแท็บอื่นๆ
     if (targetTabName !== 'แอพ-เกม iOS/Android') {
       let hasNotReady = groups[gName].some(p => p.status === 'not_ready');
       let allOut = groups[gName].every(p => p.status === 'outstock');
