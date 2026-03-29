@@ -109,14 +109,10 @@ body {
   <div class="hero-sub" id="welcomeMsg">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
 </div>
 
-<div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" onclick="switchTab('IOS-ANDROID')">IOS-ANDROID</button>
-  <button class="tab-btn" onclick="switchTab('แอพพรีเมี่ยม')">แอพพรีเมี่ยม</button>
-  <button class="tab-btn" onclick="switchTab('เติมเกม')">เติมเกม</button>
-  <button class="tab-btn" onclick="switchTab('ข้อมูลร้าน')">ติดต่อเรา</button>
-  <button class="tab-btn" onclick="switchTab('สตรีมมิ่ง')">สตรีมมิ่ง</button>
-</div>
+<div class="tab-nav" id="tab-navigation"></div>
 
+<div class="content" id="main-content">
+  </div>
 <div class="content">
   <div class="sort-container" id="sortContainer">
     <div class="sort-title" id="currentTabTitle">รายการสินค้า</div>
@@ -157,26 +153,58 @@ const P = document.getElementById('pts');
   }
 });
 
+/* --- App List & iOS Card Styles --- */
+.app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
+.app-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s; color: #000; border: 2px solid transparent; }
+.app-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+.app-card img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-bottom: 10px; }
+.app-card h4 { font-size: 16px; margin-bottom: 5px; }
+.app-card .app-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+
+/* สำหรับปุ่ม OS หน้าการ์ด iOS/Android */
+.os-btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.os-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); padding: 6px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; }
+.os-btn.outstock { background: #eee; border-color: #ccc; color: #999; cursor: not-allowed; }
+.os-btn:hover:not(.outstock) { background: var(--primary); color: #fff; }
+
+.back-btn { background: var(--text-muted); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; }
+.package-group-title { background: #2a3d59; color: #fff; padding: 8px 15px; border-radius: 8px; margin: 20px 0 10px 0; font-size: 15px; }
+
+let currentTabList = []; // เก็บแท็บที่ดึงมาจากชีต
+
 async function loadData() {
-  let cache = localStorage.getItem("shopData");
-  if(cache) {
-    let data = JSON.parse(cache);
-    products = data.products || [];
-    storeInfo = data.storeInfo || storeInfo;
-    applyStoreInfo();
-    renderProducts();
-  }
-  try {
-    const res = await fetch(API_URL + "?t=" + Date.now());
-    const data = await res.json();
-    products = data.products;
-    storeInfo = Object.assign(storeInfo, data.storeInfo);
-    localStorage.setItem("shopData", JSON.stringify(data));
-    applyStoreInfo();
-    renderProducts();
-  } catch(e) { console.log("Offline mode"); }
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  products = data.products;
+  storeInfo = data.storeInfo;
+  currentTabList = data.tabs;
+  
+  renderTabsNav(); // สร้างปุ่มแท็บ
+  switchMainTab('ข้อมูลร้าน'); // บังคับให้หน้าแรกเป็นข้อมูลร้าน
 }
 
+function renderTabsNav() {
+  const tabNav = document.getElementById('tab-navigation'); // ต้องมี <div id="tab-navigation"></div> ใน HTML
+  let html = `<button class="tab-btn active" id="btn_tab_ข้อมูลร้าน" onclick="switchMainTab('ข้อมูลร้าน')">ข้อมูลร้าน</button>`;
+  
+  // เรียงแท็บตามที่ต้องการ (ถ้ามี)
+  const priorityTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
+  
+  priorityTabs.forEach(t => {
+    if(currentTabList.includes(t)) {
+      html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
+    }
+  });
+
+  // แท็บอื่นๆ ที่แอดมินสร้างใหม่
+  currentTabList.forEach(t => {
+    if(!priorityTabs.includes(t)) {
+      html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
+    }
+  });
+  
+  tabNav.innerHTML = html;
+}
 function applyStoreInfo() {
   const st = document.getElementById('shopStatus');
   st.className = `status ${storeInfo.status}`;
@@ -184,56 +212,104 @@ function applyStoreInfo() {
   document.getElementById('welcomeMsg').innerText = storeInfo.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
 }
 
-function switchTab(tab) {
-  currentTab = tab;
+function switchMainTab(tabName) {
+  currentTab = tabName;
+  // เปลี่ยนสีปุ่ม
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.getElementById('btn_tab_' + tabName).classList.add('active');
+
+
+  const contentArea = document.getElementById('main-content'); // พื้นที่แสดงผลหลัก
   
-  if(tab === 'ข้อมูลร้าน') {
-    document.getElementById('productGrid').style.display = 'none';
-    document.getElementById('sortContainer').style.display = 'none';
-    document.getElementById('infoGrid').style.display = 'block';
-    renderInfo();
-  } else {
-    document.getElementById('productGrid').style.display = 'grid';
-    document.getElementById('sortContainer').style.display = 'flex';
-    document.getElementById('infoGrid').style.display = 'none';
-    document.getElementById('currentTabTitle').innerText = tab;
-    renderProducts();
+ if (tabName === 'ข้อมูลร้าน') {
+    contentArea.innerHTML = `<div style="text-align:center; padding: 40px;">
+      <img src="${storeInfo.logo}" style="width:100px; border-radius:50%; margin-bottom:15px;">
+      <h2>ยินดีต้อนรับสู่ร้าน!</h2>
+      <p>สถานะ: ${storeInfo.status}</p>
+      <p>ติดต่อ: ${storeInfo.line} | เวลาทำการ: ${storeInfo.hours}</p>
+      
+      ${isAdmin ? `<br><button onclick="openAdmin()" style="background:var(--primary); color:#fff; padding:8px 15px; border:none; border-radius:5px; margin-top:15px; cursor:pointer;">⚙️ จัดการร้านค้า</button>` : ''}
+    </div>`;
+  }
+  else if (tabName === 'แอพ-เกม iOS/Android') {
+    // โหมดการ์ดที่มีปุ่ม OS เลย (ไม่ต้องเข้าแพ็กเกจย่อย)
+    let apps = {};
+    products.filter(p => p.tab === tabName).forEach(p => {
+      if(!apps[p.name]) apps[p.name] = { icon: p.icon, desc: p.desc, osList: [] };
+      apps[p.name].osList.push(p);
+    });
+
+    let html = `<div class="app-grid">`;
+    for(let appName in apps) {
+      const app = apps[appName];
+      html += `
+        <div class="app-card">
+          <img src="${app.icon || 'https://via.placeholder.com/70'}" alt="icon">
+          <h4>${appName}</h4>
+          <p class="app-desc">${app.desc}</p>
+          <div class="os-btn-group">`;
+            app.osList.forEach(pkg => {
+              const outstock = pkg.status === 'outstock' ? 'outstock' : '';
+              html += `<button class="os-btn ${outstock}" onclick="${outstock ? '' : `addToCart('${pkg.id}')`}">${pkg.os} - ${pkg.price}฿</button>`;
+            });
+      html += `</div></div>`;
+    }
+    html += `</div>`;
+    contentArea.innerHTML = html;
+  } 
+  else {
+    // โหมดปกติ (พรีเมี่ยม/เติมเกม/แท็บสร้างใหม่) -> โชว์ไอคอน พอกดแล้วค่อยเข้าแพ็กเกจย่อย
+    let apps = {};
+    products.filter(p => p.tab === tabName).forEach(p => {
+      if(!apps[p.cat]) apps[p.cat] = { icon: p.icon, desc: p.appDesc };
+    });
+
+    let html = `<div class="app-grid">`;
+    for(let cat in apps) {
+      html += `
+        <div class="app-card" onclick="openPackageView('${tabName}', '${cat}')">
+          <img src="${apps[cat].icon || 'https://via.placeholder.com/70'}" alt="icon">
+          <h4>${cat}</h4>
+          <p class="app-desc">${apps[cat].desc}</p>
+        </div>`;
+    }
+    html += `</div>`;
+    contentArea.innerHTML = html;
   }
 }
 
-function renderProducts() {
-  const grid = document.getElementById('productGrid');
-  let filtered = products.filter(p => p.tab === currentTab);
+// หน้าแสดงแพ็กเกจย่อยหลังจากคลิกการ์ด
+function openPackageView(tabName, catName) {
+  const contentArea = document.getElementById('main-content');
+  const appProducts = products.filter(p => p.tab === tabName && p.cat === catName);
   
-  const sortVal = document.getElementById('sortSelect').value;
-  if(sortVal === 'price') filtered.sort((a,b) => a.price - b.price);
-  else filtered.sort((a,b) => a.name.localeCompare(b.name));
-
-  let html = '';
-  filtered.forEach(p => {
-    let isSelected = cart.find(i => i.id === p.id) ? 'selected' : '';
-    let statusClass = p.status === 'outstock' ? 'status-outstock' : p.status === 'preorder' ? 'status-preorder' : 'status-instock';
-    let statusText = p.status === 'outstock' ? 'สินค้าหมด' : p.status === 'preorder' ? 'พรีออเดอร์' : 'พร้อมส่ง';
-    
-    // Check if it's an image link or emoji
-    let iconHtml = p.icon.startsWith('http') ? `<img src="${p.icon}" class="card-img">` : `<div style="font-size:40px">${p.icon}</div>`;
-    let cardClass = currentTab === 'IOS-ANDROID' ? 'item-card os-card' : 'item-card';
-
-    html += `
-      <div class="${cardClass} ${isSelected}" id="card-${p.id}" onclick="toggleItem('${p.id}', '${p.status}')">
-        <div class="check-circle"></div>
-        <div class="item-status ${statusClass}">${statusText}</div>
-        <div class="card-img-wrapper">${iconHtml}</div>
-        <div class="card-title">${p.name}</div>
-        <div class="card-desc">${p.desc || 'iOS/Android'}</div>
-        <div class="card-price">${p.price}฿</div>
-      </div>
-    `;
+  // จัดกลุ่มตาม ตัวเลือกแพ็กเกจ (subCat)
+  let subCats = {};
+  appProducts.forEach(p => {
+    let sCat = p.subCat || 'แพ็กเกจทั่วไป';
+    if(!subCats[sCat]) subCats[sCat] = [];
+    subCats[sCat].push(p);
   });
-  grid.innerHTML = html;
+
+  let html = `<button class="back-btn" onclick="switchMainTab('${tabName}')">⬅ กลับหน้ารวมแอป</button>`;
+  html += `<h2 style="color:var(--primary);">${catName}</h2>`;
+
+  for(let sub in subCats) {
+    html += `<div class="package-group-title">${sub}</div>`;
+    subCats[sub].forEach(item => {
+      // ใส่ HTML โครงสร้างสินค้าของคุณตรงนี้
+      html += `<div style="background:#fff; color:#000; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong>${item.name}</strong><br>
+          <small style="color:#666;">${item.desc}</small>
+        </div>
+        <button onclick="addToCart('${item.id}')" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">${item.price}฿</button>
+      </div>`;
+    });
+  }
+  contentArea.innerHTML = html;
 }
+
 
 function renderInfo() {
   document.getElementById('infoGrid').innerHTML = `
@@ -256,17 +332,24 @@ function copyText(txt) {
   alert("คัดลอกแล้ว!");
 }
 
-function toggleItem(id, status) {
-  if(status === 'outstock') return alert('สินค้านี้หมดชั่วคราวค่ะ');
-  const card = document.getElementById(`card-${id}`);
+function addToCart(id) {
   const product = products.find(p => p.id === id);
-  const index = cart.findIndex(item => item.id === id);
+  if (!product) return;
+  
+  if(product.status === 'outstock') return alert('สินค้านี้หมดชั่วคราวค่ะ');
 
-  if (index > -1) { cart.splice(index, 1); card.classList.remove('selected'); }
-  else { cart.push(product); card.classList.add('selected'); }
+  // ตรวจสอบว่าสินค้ามีในตะกร้าหรือยัง
+  const index = cart.findIndex(item => item.id === id);
+  if (index > -1) { 
+    cart.splice(index, 1); // ถ้ามีแล้วให้เอาออก
+    alert(`นำ ${product.name} ออกจากตะกร้าแล้ว`);
+  } else { 
+    cart.push(product); // ถ้ายังไม่มีให้ใส่ตะกร้า
+    alert(`เพิ่ม ${product.name} ลงตะกร้าแล้ว`);
+  }
+  
   updateBottomBar();
 }
-
 function calculateTotal() {
   if(cart.length === 0) return 0;
   
@@ -353,19 +436,35 @@ function checkAdminLogin() {
 // --- นำไปแทนที่ในส่วนของ <script> หน้าเว็บ HTML ---
 
 function openAdmin() {
+  // 1. สร้างตัวเลือกแท็บอัตโนมัติจากข้อมูลที่มีในระบบ (ยกเว้นแท็บที่ไม่ใช่สินค้า)
+  let tabOptions = "";
+  currentTabList.forEach(t => {
+    if (t !== "ข้อมูลร้าน" && t !== "StoreInfo" && t !== "Orders") {
+      // แปลงชื่อแท็บ iOS-Android ให้ตรงกับที่ระบบหลังบ้านรอรับ
+      let val = (t === "แอพ-เกม iOS/Android") ? "IOS-ANDROID" : t;
+      tabOptions += `<option value="${val}">${t}</option>`;
+    }
+  });
+
+  // 2. นำ tabOptions ไปแทรกใน HTML
   document.body.insertAdjacentHTML("beforeend", `
     <div id="adminPanel" class="admin-panel">
       <div class="admin-box">
         <h3 style="margin-bottom:15px; color:var(--primary);">เพิ่ม/จัดการสินค้า</h3>
         
-        <select id="a_tab" onchange="toggleAdminForm()">
-          <option value="IOS-ANDROID">แอพ-เกม iOS/Android</option>
-          <option value="แอพพรีเมี่ยม">แอพพรีเมี่ยม</option>
-          <option value="เติมเกม">เติมเกม</option>
-          <option value="สตรีมมิ่ง">สตรีมมิ่ง</option>
+        <div class="form-group" style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px;">
+          <label>➕ สร้างแท็บหมวดหมู่ใหม่:</label>
+          <div style="display:flex; gap:10px;">
+            <input id="new_tab_input" placeholder="ชื่อแท็บใหม่">
+            <button class="btn-save" style="margin-top:0; width:auto;" onclick="adminAddTab()">สร้าง</button>
+          </div>
+        </div>
+        
+        <select id="a_tab" onchange="toggleAdminForm(); renderAdminProductList();">
+          ${tabOptions}
         </select>
         
-        <div id="form_ios">
+        <div id="form_ios" style="display:none;">
           <input id="ios_name" placeholder="ชื่อแอป">
           <input id="ios_desc" placeholder="รายละเอียดแอป (เว้นได้)">
           <input id="ios_os" placeholder="ระบบ (เช่น iOS, Android, ทั้งสอง)">
@@ -377,7 +476,7 @@ function openAdmin() {
           <input id="ios_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
         </div>
 
-        <div id="form_other" style="display:none;">
+        <div id="form_other">
           <input id="o_cat" placeholder="หมวดหมู่หลัก (ชื่อแอป)">
           <input id="o_appDesc" placeholder="รายละเอียดแอป (เว้นได้)">
           <input id="o_subCat" placeholder="ตัวเลือกแพ็กเกจ (เว้นได้)">
@@ -387,13 +486,72 @@ function openAdmin() {
           <input id="o_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
         </div>
         
-        <button onclick="addProduct()">เพิ่มสินค้าใหม่</button>
+        <button onclick="addProduct(event)" style="width: 100%; padding: 10px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 16px; margin-top: 15px; cursor: pointer;">เพิ่มสินค้าใหม่</button>
+        
+        <hr style="margin:20px 0 15px 0; border: 1px dashed #ccc;">
+        <h4 style="margin-bottom:10px; color:#333; font-size:15px;">📦 สินค้าที่มีในแท็บนี้</h4>
+        
+        <div id="admin_product_list" style="max-height: 250px; overflow-y: auto; background: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+          </div>
+
         <hr style="margin:15px 0;">
         <button class="btn-close" onclick="document.getElementById('adminPanel').remove()">ปิดหน้าต่าง</button>
       </div>
     </div>
   `);
+  
+  // เรียกใช้ฟังก์ชันตอนเปิดแอดมิน เพื่อให้ฟอร์มและรายการสินค้าตรงกับแท็บที่ถูกเลือกตอนแรก
+  toggleAdminForm(); 
+  renderAdminProductList();
 }
+// ย้ายออกมาข้างนอกตรงนี้
+async function adminAddTab() {
+  const tabName = document.getElementById('new_tab_input').value;
+  if(!tabName) return alert("กรุณาใส่ชื่อแท็บ");
+  
+  await fetch(API_URL, { method: "POST", body: JSON.stringify({action: "add_tab", tabName: tabName}) });
+  alert("สร้างแท็บสำเร็จ!");
+  loadData();
+}
+
+// ฟังก์ชันดึงรายการสินค้ามาแสดงในหน้าแอดมิน
+function renderAdminProductList() {
+  const container = document.getElementById('admin_product_list');
+  if (!container) return; // ถ้าไม่มีกล่องให้ข้ามไปเลย
+  
+  const tab = document.getElementById('a_tab').value;
+  
+  // กรองสินค้าเฉพาะแท็บที่เลือก
+  let filteredProducts = products.filter(p => p.tab === tab);
+  
+  if (filteredProducts.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; margin: 10px 0;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
+    return;
+  }
+
+  let html = '';
+  filteredProducts.forEach(p => {
+    // จัดรูปแบบชื่อที่จะแสดงให้ดูง่ายๆ
+    let title = (tab === 'IOS-ANDROID') ? `${p.name} (${p.os})` : `${p.cat} - ${p.name}`;
+    let statusColor = p.status === 'outstock' ? '#ff4b7e' : '#333';
+    let statusText = p.status === 'outstock' ? '(หมด)' : '';
+    
+    html += `
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e0e0e0; padding:8px 0; font-size:13px;">
+        <div style="color:${statusColor};">
+          <strong>${title}</strong> <span style="font-size:11px; color:#ff4b7e;">${statusText}</span><br>
+          <span style="color:#666; font-size:11px;">${p.desc || p.appDesc || ''}</span>
+        </div>
+        <div style="color:var(--primary); font-weight:bold; white-space:nowrap;">
+          ${p.price} ฿
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
 
 // ฟังก์ชันส่งข้อมูลไปยัง Apps Script
 // ฟังก์ชันสำหรับสลับช่องกรอกตามแท็บที่เลือก
@@ -408,7 +566,7 @@ function toggleAdminForm() {
   }
 }
 // ฟังก์ชันสำหรับส่งข้อมูลไปยัง Google Apps Script
-async function addProduct() {
+async function addProduct(e) {
   const btn = event.target; 
   btn.innerText = "กำลังบันทึก...";
   
@@ -432,14 +590,16 @@ async function addProduct() {
     payload.icon = document.getElementById('o_icon').value;
   }
 
+  // ช่วงท้ายของฟังก์ชัน addProduct()
   await fetch(API_URL, {
     method: "POST",
     body: JSON.stringify(payload)
   });
   
-  alert("เพิ่มสำเร็จ! ข้อมูลถูกส่งเข้าชีตแล้ว");
-  document.getElementById('adminPanel').remove();
-  loadData(); // โหลดข้อมูลใหม่เพื่อแสดงบนเว็บ
+  await loadData(); // รอให้ดึงข้อมูลใหม่จากชีตให้เสร็จก่อน
+  
+  alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
+  document.getElementById('adminPanel').remove(); // ค่อยปิดหน้าต่าง
 }
 
 loadData();
