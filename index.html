@@ -96,6 +96,49 @@ body {
 /* Contacts Info Tab */
 .info-card { background: var(--bg-card); color:#000; border-radius: 16px; padding: 20px; text-align:center; }
 .copy-btn { background: var(--primary); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
+/* --- CSS สำหรับโลโก้ร้านแบบวงรี --- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* ระยะห่างระหว่างโลโก้กับชื่อร้าน */
+}
+
+.hero-logo-container {
+  margin-top: -30px; /* ขยับโลโก้ขึ้นไปเล็กน้อยให้ลอยๆ */
+}
+
+.hero-logo-frame {
+  width: 170px;
+  height: 190px;
+  background: var(--bg-card); /* หรือใช้สีพื้นหลังตามต้องการ */
+  border: 4px solid var(--border-color); /* ขอบสีทองตามธีม */
+  border-radius: 50%; /* ทำให้เป็นวงกลม/วงรี */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 25px rgba(59,150,245,0.4); /* เพิ่มเงาฟ้าๆ ให้ลอยๆ */
+  overflow: hidden; /* กันรูปภาพล้นขอบ */
+  position: relative;
+  z-index: 2;
+}
+
+.hero-logo-img {
+  width: 130px; /* ขนาดรูปภาพด้านใน */
+  height: 130px;
+  border-radius: 50%; /* รูปภาพเป็นวงกลม */
+  object-fit: cover; /* จัดรูปภาพให้พอดี */
+}
+
+.hero-title-container {
+  text-align: center;
+}
+
+/* ปรับระยะแท็บเมนูใหม่ */
+.tab-nav {
+  margin-top: -10px; /* ขยับแท็บขึ้นมาเล็กน้อย */
+}
+
 </style>
 </head>
 <body>
@@ -105,8 +148,16 @@ body {
 <div id="shopStatus" class="status open">OPEN</div>
 
 <div class="hero">
-  <div class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</div>
-  <div class="hero-sub" id="welcomeMsg">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
+  <div class="hero-logo-container">
+    <div class="hero-logo-frame">
+      <img src="https://via.placeholder.com/150" alt="Shop Logo" class="hero-logo-img">
+    </div>
+  </div>
+  
+  <div class="hero-title-container">
+    <h1 class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</h1>
+    <p>ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</p>
+  </div>
 </div>
 
 <div class="tab-nav" id="tab-navigation"></div>
@@ -134,7 +185,7 @@ body {
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwecFmlAfDtVWDG0crvZ9y8fvAa5Sk403tvOekBRacV8yEvIKOkAqciPARQdPVIU2IQ/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwyLXflHMxQrZqfQ9VTguCO6AY607WSmoOaY6d0anvNt-HXD6KfOgGvcpqJRsYP9Sg7/exec"; 
 let products = [];
 let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer' };
 let cart = [];
@@ -567,7 +618,7 @@ function toggleAdminForm() {
 }
 // ฟังก์ชันสำหรับส่งข้อมูลไปยัง Google Apps Script
 async function addProduct(e) {
-  const btn = event.target; 
+  const btn = e.target; 
   btn.innerText = "กำลังบันทึก...";
   
   const tab = document.getElementById('a_tab').value;
