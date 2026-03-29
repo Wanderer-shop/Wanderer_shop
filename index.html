@@ -52,23 +52,23 @@ body {
 .tab-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 20px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border-color: transparent; }
 
-/* 📌 Sorting Box (ข้อ 1 และ 2) - ดีไซน์เดียวกับแท็บ จัดให้อยู่บรรทัดเดียวกับข้อความ */
-.sort-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+/* Sorting & Search Box */
+.sort-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; flex-wrap: wrap; gap: 10px; }
 .sort-title { font-size: 18px; font-weight: 700; color: #fff; border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1; display: flex; align-items: center; }
-.sort-dropdown { 
-  background: var(--bg-card); 
-  color: var(--text-muted); 
-  border: 1px solid var(--border-color); 
-  padding: 8px 20px; 
-  border-radius: 20px; 
-  font-family: inherit; 
-  font-size: 14px; 
-  font-weight: 600; 
-  outline: none; 
-  cursor: pointer; 
-  transition: 0.3s; 
-}
+.sort-dropdown { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 20px; font-family: inherit; font-size: 14px; font-weight: 600; outline: none; cursor: pointer; transition: 0.3s; }
 .sort-dropdown:hover { border-color: var(--primary); color: #333; }
+.search-box { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--bg-card); color: #333; font-family: inherit; font-size: 14px; outline: none; margin-bottom: 15px; transition: 0.3s; }
+.search-box:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(59,150,245,0.3); }
+
+/* Slider */
+.slider-container { position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; aspect-ratio: 16/9; margin-bottom: 10px; }
+.slider-img { width: 100%; height: 100%; display: none; object-fit: cover; }
+.slider-img.active { display: block; animation: fadeSlide 0.5s ease-in-out; }
+@keyframes fadeSlide { from { opacity: 0.5; } to { opacity: 1; } }
+.slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; transition: 0.2s; }
+.slider-btn:hover { background: var(--primary); }
+.slider-btn.left { left: 10px; }
+.slider-btn.right { right: 10px; }
 
 /* Content & Grid */
 .content { max-width: 600px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 5; }
@@ -113,7 +113,7 @@ body {
 .info-card { background: var(--bg-card); color:#000; border-radius: 16px; padding: 20px; text-align:center; margin-bottom: 15px; }
 .copy-btn { background: var(--primary); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
 
-/* Checkout Modal */
+/* Modals (Checkout & Popup) */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10001; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
 .modal-box { background: #fff; color: #000; padding: 24px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .modal-details { text-align: left; background: #f0f5fa; padding: 15px; border-radius: 8px; max-height: 250px; overflow-y: auto; font-size: 14px; margin: 15px 0; white-space: pre-wrap; line-height: 1.6; border: 1px solid #dce4ec; color: #333; }
@@ -125,8 +125,8 @@ body {
 .admin-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; }
 .admin-box { background: #fff; color: #000; padding: 20px; width: 100%; max-width: 450px; border-radius: 15px; position: relative; max-height: 90vh; overflow-y: auto; }
 .admin-box input[type="text"], .admin-box input[type="number"], .admin-box select, .admin-box textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; background: #fff; }
-.admin-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 15px; position: sticky; top: 0; background: #fff; z-index: 10; padding-top: 10px; }
-.admin-nav-btn { flex: 1; padding: 10px; border: none; background: #f0f0f0; border-radius: 8px; font-weight: bold; cursor: pointer; color: #555; font-family: inherit; font-size: 14px; transition: 0.2s; }
+.admin-nav { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 15px; position: sticky; top: 0; background: #fff; z-index: 10; padding-top: 10px; }
+.admin-nav-btn { flex: 1; padding: 8px; border: none; background: #f0f0f0; border-radius: 8px; font-weight: bold; cursor: pointer; color: #555; font-family: inherit; font-size: 13px; transition: 0.2s; min-width: 30%; }
 .admin-nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 10px rgba(59,150,245,0.3); }
 .admin-group-title { background: #eef5ff; color: var(--primary); padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-top: 15px; margin-bottom: 5px; font-size: 14px; border-left: 4px solid var(--primary); }
 </style>
@@ -162,7 +162,7 @@ body {
 <div class="bottom-bar" id="bottomBar">
   <div style="cursor: pointer; flex: 1;" onclick="toggleCartPanel()">
     <div style="font-size:12px; color:#ccc;" id="cartCount">เลือก 0 รายการ <span style="font-size:10px; margin-left:5px; color:#fff;">▲</span></div>
-    <div class="bb-total" id="cartTotal">0฿</div>
+    <div class="bb-total" id="cartTotal">0฿ <span id="cartPromoBadge" style="font-size:12px; font-weight:normal; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:10px; margin-left:5px;">ราคาปกติ</span></div>
   </div>
   <button class="bb-btn" onclick="openCheckoutModal()">สั่งซื้อสินค้า</button>
 </div>
@@ -176,24 +176,35 @@ body {
   </div>
 </div>
 
+<div id="alertPopupModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="color:var(--secondary); font-size:20px; margin-bottom:10px;">📢 ประกาศ / แจ้งเตือน</h3>
+    <p id="alertPopupText" style="font-size:14px; color:#333; line-height:1.6; white-space:pre-wrap; text-align:left; background:#f0f5fa; padding:15px; border-radius:8px; margin-bottom:15px;"></p>
+    <button class="btn-confirm" onclick="document.getElementById('alertPopupModal').style.display='none'">รับทราบ</button>
+  </div>
+</div>
+
 <script>
-// ใส่ลิงก์ API ของ Google Apps Script ของคุณตรงนี้
-const API_URL = "https://script.google.com/macros/s/AKfycbxnnymzqYG0ElcMrGgEc70yyhbeuFSViYu_9dDATChzp2jLeLdtfzVNvJksbTT58kXx/exec"; 
+// ใส่ลิงก์ API ของ Google Apps Script
+const API_URL = ""https://script.google.com/macros/s/AKfycbxnnymzqYG0ElcMrGgEc70yyhbeuFSViYu_9dDATChzp2jLeLdtfzVNvJksbTT58kXx/exec"; 
 
 let products = [];
-let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer', customCards: [] };
+let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer', customCards: [], popups: [] };
 let cart = [];
 let currentTab = "IOS-ANDROID";
 let currentView = "main";
 let currentCat = "";
-let currentSort = "name"; // เก็บการเรียงลำดับเริ่มต้น (name หรือ price)
+let currentSort = "name"; 
+let currentSearch = ""; 
 
 let adminMode = false;
 let tapCount = 0;
 let currentTabList = []; 
 let orderTextToCopy = ""; 
 let tempCustomCards = []; 
+let tempPopups = []; 
 let editingProductId = null; 
+let shownPopups = []; 
 
 const hiddenSystemTabs = ["Products", "ตั้งค่าร้าน", "ออเดอร์", "Database", "StoreInfo", "Orders"];
 
@@ -214,6 +225,7 @@ async function loadData() {
     products = data.products || [];
     storeInfo = data.storeInfo || storeInfo;
     if(!storeInfo.customCards) storeInfo.customCards = [];
+    if(!storeInfo.popups) storeInfo.popups = [];
     currentTabList = data.tabs || [];
     
     applyStoreInfo();
@@ -228,43 +240,77 @@ function applyStoreInfo() {
   const st = document.getElementById('shopStatus');
   st.className = `status ${storeInfo.status || 'open'}`;
   st.innerText = (storeInfo.status || 'open').toUpperCase();
-  
-  if(storeInfo.logo) {
-    document.querySelector('.hero-logo-img').src = storeInfo.logo;
-  }
-  
+  if(storeInfo.logo) document.querySelector('.hero-logo-img').src = storeInfo.logo;
   const welcomeEl = document.getElementById('welcomeMsg');
-  if(welcomeEl) {
-    welcomeEl.innerText = storeInfo.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
-  }
+  if(welcomeEl) welcomeEl.innerText = storeInfo.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
 }
 
 function renderTabsNav() {
   const tabNav = document.getElementById('tab-navigation'); 
   let html = `<button class="tab-btn active" id="btn_tab_ข้อมูลร้าน" onclick="switchMainTab('ข้อมูลร้าน')">ข้อมูลร้าน</button>`;
-  
   const priorityTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
-  
-  priorityTabs.forEach(t => {
-    html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
-  });
-
+  priorityTabs.forEach(t => { html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`; });
   currentTabList.forEach(t => {
     if(!priorityTabs.includes(t) && t !== "ข้อมูลร้าน" && !hiddenSystemTabs.includes(t)) {
       html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
     }
   });
-  
   tabNav.innerHTML = html;
 }
 
-// 📌 ฟังก์ชันจัดการเรียงลำดับสินค้า
-function changeSort(val) {
-  currentSort = val;
-  if (currentView === 'package') {
-    openPackageView(currentTab, currentCat);
-  } else {
-    switchMainTab(currentTab);
+function buildSliderHtml(linksStr, sliderId) {
+  if(!linksStr) return '';
+  let links = linksStr.split(',').map(s=>s.trim()).filter(s=>s);
+  if(links.length === 0) return '';
+  if(links.length === 1) {
+    let link = links[0];
+    if(link.includes('youtube') || link.includes('youtu.be')){
+        let ytid = link.split('v=')[1] || link.split('/').pop();
+        if(ytid && ytid.includes('&')) ytid = ytid.split('&')[0];
+        return `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allowfullscreen style="border-radius:12px; margin-bottom:10px;"></iframe>`;
+    } else if (link.match(/\.(mp4|mov)$/i)) {
+        return `<video width="100%" controls style="border-radius:12px; margin-bottom:10px;"><source src="${link}" type="video/mp4"></video>`;
+    } else {
+        return `<img src="${link}" style="width:100%; border-radius:12px; margin-bottom:10px; object-fit:cover;">`;
+    }
+  }
+  
+  let slides = links.map((lnk, idx) => `<img class="slider-img ${idx===0?'active':''}" src="${lnk}">`).join('');
+  return `
+    <div class="slider-container" id="${sliderId}">
+      ${slides}
+      <button class="slider-btn left" onclick="changeSlide('${sliderId}', -1)">❮</button>
+      <button class="slider-btn right" onclick="changeSlide('${sliderId}', 1)">❯</button>
+    </div>
+  `;
+}
+
+function changeSlide(sliderId, direction) {
+  const container = document.getElementById(sliderId);
+  if(!container) return;
+  const imgs = container.querySelectorAll('.slider-img');
+  if(imgs.length <= 1) return;
+  let activeIdx = Array.from(imgs).findIndex(img => img.classList.contains('active'));
+  imgs[activeIdx].classList.remove('active');
+  activeIdx = (activeIdx + direction + imgs.length) % imgs.length;
+  imgs[activeIdx].classList.add('active');
+}
+
+function changeSort(val) { currentSort = val; refreshView(); }
+function handleSearch(val) { currentSearch = val.toLowerCase(); refreshView(); }
+function refreshView() {
+  if (currentView === 'package') openPackageView(currentTab, currentCat);
+  else switchMainTab(currentTab);
+}
+
+function checkAndShowPopup(targetName) {
+  if(shownPopups.includes(targetName)) return; 
+  if(!storeInfo.popups) return;
+  const popup = storeInfo.popups.find(p => p.target === targetName);
+  if(popup) {
+    document.getElementById('alertPopupText').innerText = popup.message;
+    document.getElementById('alertPopupModal').style.display = 'flex';
+    shownPopups.push(targetName);
   }
 }
 
@@ -278,6 +324,7 @@ function switchMainTab(tabName) {
   if(activeBtn) activeBtn.classList.add('active');
 
   const contentArea = document.getElementById('main-content'); 
+  checkAndShowPopup(tabName); 
   
   if (tabName === 'ข้อมูลร้าน') {
     let html = `
@@ -295,18 +342,7 @@ function switchMainTab(tabName) {
     `;
 
     if(storeInfo.mediaLink && storeInfo.mediaLink.trim() !== '') {
-      let mediaHtml = '';
-      let link = storeInfo.mediaLink;
-      if(link.includes('youtube') || link.includes('youtu.be')){
-          let ytid = link.split('v=')[1] || link.split('/').pop();
-          if(ytid && ytid.includes('&')) ytid = ytid.split('&')[0];
-          mediaHtml = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allowfullscreen style="border-radius:12px; margin-bottom:10px;"></iframe>`;
-      } else if (link.match(/\.(mp4|mov)$/i)) {
-          mediaHtml = `<video width="100%" controls style="border-radius:12px; margin-bottom:10px;"><source src="${link}" type="video/mp4"></video>`;
-      } else {
-          mediaHtml = `<img src="${link}" style="width:100%; border-radius:12px; margin-bottom:10px; object-fit:cover;">`;
-      }
-      
+      let mediaHtml = buildSliderHtml(storeInfo.mediaLink, 'slider_main');
       html += `
         <div class="info-card" style="padding:15px;">
           ${mediaHtml}
@@ -316,14 +352,22 @@ function switchMainTab(tabName) {
     }
 
     if(storeInfo.customCards && storeInfo.customCards.length > 0) {
-      storeInfo.customCards.forEach(card => {
+      storeInfo.customCards.forEach((card, idx) => {
+        let iconHtml = '';
+        if(card.icon) {
+          let iconLinks = card.icon.split(',').map(s=>s.trim()).filter(s=>s);
+          if(iconLinks.length > 1) {
+            iconHtml = buildSliderHtml(card.icon, `slider_card_${idx}`);
+          } else {
+            iconHtml = `<img src="${iconLinks[0]}" style="width:40px; height:40px; border-radius:8px; object-fit:cover; flex-shrink:0;">`;
+          }
+        }
+
         html += `
-          <div class="info-card" style="display:flex; align-items:flex-start; gap:15px; text-align:left; padding:15px;">
-            ${card.icon ? `<img src="${card.icon}" style="width:40px; height:40px; border-radius:8px; object-fit:cover; flex-shrink:0;">` : ''}
-            <div>
-              <h4 style="color:var(--primary); margin-bottom:5px;">${card.title}</h4>
-              <div style="font-size:13px; color:#555; white-space:pre-wrap; line-height:1.5;">${card.desc}</div>
-            </div>
+          <div class="info-card" style="display:flex; flex-direction:column; gap:10px; text-align:left; padding:15px;">
+            ${iconHtml.includes('slider-container') ? iconHtml : `<div style="display:flex; gap:15px; align-items:flex-start;">${iconHtml}<div><h4 style="color:var(--primary); margin-bottom:5px;">${card.title}</h4></div></div>`}
+            ${!iconHtml.includes('slider-container') ? '' : `<h4 style="color:var(--primary); margin-bottom:5px;">${card.title}</h4>`}
+            <div style="font-size:13px; color:#555; white-space:pre-wrap; line-height:1.5;">${card.desc}</div>
           </div>
         `;
       });
@@ -331,8 +375,8 @@ function switchMainTab(tabName) {
     contentArea.innerHTML = html;
   }
   else {
-    // 📌 สร้างแท็บส่วนหัวเรียงลำดับ สำหรับทุกหน้าหมวดหมู่
-    let sortHeader = `
+    let searchAndSortHeader = `
+      <input type="text" class="search-box" id="searchInput" placeholder="🔍 ค้นหาชื่อสินค้า..." value="${currentSearch}" oninput="handleSearch(this.value)">
       <div class="sort-container">
         <div class="sort-title">รายการสินค้า</div>
         <select class="sort-dropdown" onchange="changeSort(this.value)">
@@ -351,23 +395,21 @@ function switchMainTab(tabName) {
       
       let appsArr = Object.keys(apps).map(key => ({ name: key, ...apps[key] }));
       
-      // ระบบ Sorting สำหรับ iOS/Android
-      if (currentSort === 'name') {
-        appsArr.sort((a, b) => a.name.localeCompare(b.name, 'th'));
-      } else if (currentSort === 'price') {
-        appsArr.sort((a, b) => {
-          let minA = Math.min(...a.osList.map(p => p.price));
-          let minB = Math.min(...b.osList.map(p => p.price));
-          return minA - minB;
-        });
+      if (currentSearch) {
+        appsArr = appsArr.filter(app => app.name.toLowerCase().includes(currentSearch));
+      }
+
+      if (currentSort === 'name') appsArr.sort((a, b) => a.name.localeCompare(b.name, 'th'));
+      else if (currentSort === 'price') {
+        appsArr.sort((a, b) => Math.min(...a.osList.map(p => p.price)) - Math.min(...b.osList.map(p => p.price)));
       }
 
       if(appsArr.length === 0) {
-        contentArea.innerHTML = sortHeader + `<p style="text-align:center; margin-top:30px;">ยังไม่มีสินค้าในหมวดนี้</p>`;
+        contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้าที่ค้นหา</p>`;
         return;
       }
 
-      let html = sortHeader + `<div class="app-grid">`;
+      let html = searchAndSortHeader + `<div class="app-grid">`;
       appsArr.forEach(app => {
         let isReady = app.osList.some(p => p.status !== 'outstock' && p.status !== 'not_ready');
         let badgeHtml = isReady ? `<div class="app-badge ready">พร้อมส่ง</div>` : `<div class="app-badge not-ready">เมลไม่พร้อม</div>`;
@@ -394,17 +436,18 @@ function switchMainTab(tabName) {
       contentArea.innerHTML = html;
 
     } else {
-      // 📌 สำหรับแท็บอื่นๆ 
       products.filter(p => p.tab === tabName).forEach(p => {
         if(!apps[p.cat]) apps[p.cat] = { icon: p.icon, desc: p.appDesc };
       });
 
       let appsArr = Object.keys(apps).map(key => ({ cat: key, ...apps[key] }));
+      
+      if (currentSearch) {
+        appsArr = appsArr.filter(app => app.cat.toLowerCase().includes(currentSearch));
+      }
 
-      // ระบบ Sorting สำหรับแท็บอื่นๆ
-      if (currentSort === 'name') {
-        appsArr.sort((a, b) => a.cat.localeCompare(b.cat, 'th'));
-      } else if (currentSort === 'price') {
+      if (currentSort === 'name') appsArr.sort((a, b) => a.cat.localeCompare(b.cat, 'th'));
+      else if (currentSort === 'price') {
         appsArr.sort((a, b) => {
            let minA = Math.min(...products.filter(p => p.tab === tabName && p.cat === a.cat).map(p => p.price));
            let minB = Math.min(...products.filter(p => p.tab === tabName && p.cat === b.cat).map(p => p.price));
@@ -413,11 +456,11 @@ function switchMainTab(tabName) {
       }
 
       if(appsArr.length === 0) {
-        contentArea.innerHTML = sortHeader + `<p style="text-align:center; margin-top:30px;">ยังไม่มีสินค้าในหมวดนี้</p>`;
+        contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้าที่ค้นหา</p>`;
         return;
       }
 
-      let html = sortHeader + `<div class="app-grid">`;
+      let html = searchAndSortHeader + `<div class="app-grid">`;
       appsArr.forEach(app => {
         html += `
           <div class="app-card" onclick="openPackageView('${tabName}', '${app.cat}')">
@@ -429,14 +472,18 @@ function switchMainTab(tabName) {
       html += `</div>`;
       contentArea.innerHTML = html;
     }
+    
+    let searchInp = document.getElementById('searchInput');
+    if(searchInp && currentSearch) { searchInp.focus(); searchInp.setSelectionRange(currentSearch.length, currentSearch.length); }
   }
 }
 
-// 📌 ฟังก์ชันจัดเรียงและแสดงผล แพ็กเกจย่อย
 function openPackageView(tabName, catName) {
   currentView = 'package';
   currentCat = catName;
   const contentArea = document.getElementById('main-content');
+  checkAndShowPopup(catName); 
+
   const appProducts = products.filter(p => p.tab === tabName && p.cat === catName);
   
   let subCats = {};
@@ -450,8 +497,8 @@ function openPackageView(tabName, catName) {
 
   let html = `<button class="back-btn" onclick="switchMainTab('${tabName}')">⬅ กลับหน้ารวมแอป</button>`;
   
-  // 📌 เพิ่มกล่องเรียงลำดับ ในหน้ารายการแพ็กเกจด้วย (อยู่เหนือกรอบสินค้า)
   html += `
+    <input type="text" class="search-box" id="searchInput" placeholder="🔍 ค้นหาชื่อแพ็กเกจ..." value="${currentSearch}" oninput="handleSearch(this.value)">
     <div class="sort-container">
       <div class="sort-title">${catName}</div>
       <select class="sort-dropdown" onchange="changeSort(this.value)">
@@ -462,15 +509,15 @@ function openPackageView(tabName, catName) {
   `;
 
   subCatsArr.forEach(sub => {
-    // จัดเรียงแพ็กเกจย่อย
-    if (currentSort === 'name') {
-       sub.items.sort((a, b) => a.name.localeCompare(b.name, 'th'));
-    } else if (currentSort === 'price') {
-       sub.items.sort((a, b) => a.price - b.price);
-    }
+    let items = [...sub.items];
+    if (currentSearch) items = items.filter(i => i.name.toLowerCase().includes(currentSearch));
+    if (items.length === 0) return; 
+
+    if (currentSort === 'name') items.sort((a, b) => a.name.localeCompare(b.name, 'th'));
+    else if (currentSort === 'price') items.sort((a, b) => a.price - b.price);
 
     html += `<div class="package-group-title">${sub.name}</div>`;
-    sub.items.forEach(item => {
+    items.forEach(item => {
       const isOutstock = item.status === 'outstock';
       const inCart = cart.some(c => c.id === item.id) ? 'background:#FF4B7E;' : (isOutstock ? 'background:#ccc; cursor:not-allowed;' : 'background:var(--primary);');
       const btnText = isOutstock ? 'หมด' : (cart.some(c => c.id === item.id) ? 'ลบออก' : `${item.price} ฿`);
@@ -485,7 +532,12 @@ function openPackageView(tabName, catName) {
       </div>`;
     });
   });
+  
+  if(!html.includes('package-group-title')) html += `<p style="text-align:center; margin-top:20px;">ไม่พบแพ็กเกจที่ค้นหา</p>`;
+  
   contentArea.innerHTML = html;
+  let searchInp = document.getElementById('searchInput');
+  if(searchInp && currentSearch) { searchInp.focus(); searchInp.setSelectionRange(currentSearch.length, currentSearch.length); }
 }
 
 function copyText(txt) {
@@ -524,21 +576,26 @@ function updateButtonUI(id) {
 }
 
 function calculateTotal() {
-  if(cart.length === 0) return 0;
+  if(cart.length === 0) return { total: 0, isPromo: false };
   let promoItems = cart.filter(i => i.price >= 20 && i.price <= 25 && i.tab === 'แอพ-เกม iOS/Android');
   let otherItems = cart.filter(i => !(i.price >= 20 && i.price <= 25 && i.tab === 'แอพ-เกม iOS/Android'));
   
   let count = promoItems.length;
   let promoTotal = 0;
-  if (count >= 30) promoTotal = 360;
-  else if (count >= 15) promoTotal = 210;
-  else if (count >= 8) promoTotal = 80;
-  else if (count >= 3) promoTotal = 45;
-  else if (count === 2 && promoItems.every(i => i.price === 25)) promoTotal = 45;
-  else promoTotal = promoItems.reduce((sum, i) => sum + i.price, 0);
+  let isPromo = false;
+
+  if (count >= 30) { promoTotal = 360; isPromo = true; }
+  else if (count >= 15) { promoTotal = 210; isPromo = true; }
+  else if (count >= 8) { promoTotal = 80; isPromo = true; }
+  else if (count >= 3) { promoTotal = 45; isPromo = true; }
+  else if (count === 2 && promoItems.every(i => i.price === 25)) { promoTotal = 45; isPromo = true; }
+  else { 
+    promoTotal = promoItems.reduce((sum, i) => sum + i.price, 0); 
+    isPromo = false;
+  }
 
   let othersTotal = otherItems.reduce((sum, i) => sum + i.price, 0);
-  return promoTotal + othersTotal;
+  return { total: promoTotal + othersTotal, isPromo: isPromo };
 }
 
 function updateBottomBar() {
@@ -546,7 +603,12 @@ function updateBottomBar() {
   if (cart.length > 0) {
     bar.classList.add('active');
     document.getElementById('cartCount').innerHTML = `เลือก ${cart.length} รายการ <span style="font-size:10px; margin-left:5px; color:#fff;">▲</span>`;
-    document.getElementById('cartTotal').innerText = calculateTotal() + "฿";
+    
+    let calc = calculateTotal();
+    document.getElementById('cartTotal').innerHTML = `${calc.total}฿ 
+      <span id="cartPromoBadge" style="font-size:10px; font-weight:normal; background:${calc.isPromo ? '#00c853' : 'rgba(255,255,255,0.2)'}; padding:2px 8px; border-radius:10px; margin-left:5px;">
+        ${calc.isPromo ? 'จัดโปรโมชั่น' : 'ราคาปกติ'}
+      </span>`;
   } else {
     bar.classList.remove('active');
     document.getElementById('cartPanel').classList.remove('open'); 
@@ -556,19 +618,13 @@ function updateBottomBar() {
 
 function toggleCartPanel() {
   const panel = document.getElementById('cartPanel');
-  if(panel.classList.contains('open')) {
-    panel.classList.remove('open');
-  } else {
-    if(cart.length > 0) panel.classList.add('open');
-  }
+  if(panel.classList.contains('open')) panel.classList.remove('open');
+  else if(cart.length > 0) panel.classList.add('open');
 }
 
 function updateCartPanel() {
   const list = document.getElementById('cartPanelList');
-  if(cart.length === 0) {
-    list.innerHTML = '';
-    return;
-  }
+  if(cart.length === 0) { list.innerHTML = ''; return; }
   let html = '';
   cart.forEach(item => {
     html += `
@@ -588,7 +644,8 @@ function openCheckoutModal() {
   if (cart.length === 0) return;
   document.getElementById('cartPanel').classList.remove('open'); 
   
-  let total = calculateTotal();
+  let calc = calculateTotal();
+  let total = calc.total;
   orderTextToCopy = "";
 
   if (currentTab === "เติมเกม") {
@@ -615,8 +672,8 @@ function closeCheckoutModal() {
 }
 
 async function confirmCheckout() {
-  let total = calculateTotal();
-  fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "add_order", items: orderTextToCopy, total: total }) });
+  let calc = calculateTotal();
+  fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "add_order", items: orderTextToCopy, total: calc.total }) });
 
   const tempInput = document.createElement("textarea");
   tempInput.value = orderTextToCopy;
@@ -648,9 +705,11 @@ function openAdmin() {
   if(document.getElementById('adminPanel')) document.getElementById('adminPanel').remove();
   
   tempCustomCards = storeInfo.customCards ? JSON.parse(JSON.stringify(storeInfo.customCards)) : [];
+  tempPopups = storeInfo.popups ? JSON.parse(JSON.stringify(storeInfo.popups)) : [];
   editingProductId = null; 
 
   let tabOptions = "";
+  let targetPopupOptions = ""; 
   const mainTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
   let allTabsForAdmin = [...new Set([...mainTabs, ...currentTabList])];
 
@@ -659,6 +718,14 @@ function openAdmin() {
       let val = (t === "แอพ-เกม iOS/Android") ? "IOS-ANDROID" : t;
       tabOptions += `<option value="${val}">${t}</option>`;
     }
+    if (!hiddenSystemTabs.includes(t)) {
+      targetPopupOptions += `<option value="${t}">แท็บ: ${t}</option>`;
+    }
+  });
+  
+  let allAppNames = [...new Set(products.map(p => p.name || p.cat))].filter(n => n);
+  allAppNames.forEach(app => {
+    targetPopupOptions += `<option value="${app}">แอป: ${app}</option>`;
   });
 
   document.body.insertAdjacentHTML("beforeend", `
@@ -667,8 +734,9 @@ function openAdmin() {
         <h3 style="margin-bottom:15px; color:var(--primary); text-align:center;">ระบบจัดการร้านค้า</h3>
         
         <div class="admin-nav">
-          <button class="admin-nav-btn active" id="btn_adm_store" onclick="switchAdminView('store')">🏠 ร้านค้า<br><small style="font-weight:normal;">(ข้อมูลร้านค้า)</small></button>
-          <button class="admin-nav-btn" id="btn_adm_products" onclick="switchAdminView('products')">📦 สินค้า<br><small style="font-weight:normal;">(หมวดหมู่สินค้า)</small></button>
+          <button class="admin-nav-btn active" id="btn_adm_store" onclick="switchAdminView('store')">🏠 ร้านค้า</button>
+          <button class="admin-nav-btn" id="btn_adm_products" onclick="switchAdminView('products')">📦 สินค้า</button>
+          <button class="admin-nav-btn" id="btn_adm_popup" onclick="switchAdminView('popup')" style="background:#fff3cd; color:#ff9800; border:1px solid #ffe082;">📢 แจ้งเตือน</button>
         </div>
         
         <div id="admin_view_store" style="display:block;">
@@ -692,24 +760,38 @@ function openAdmin() {
           <input type="text" id="st_logo" placeholder="URL รูปภาพโลโก้ร้าน" value="${storeInfo.logo || ''}">
 
           <div style="background:#f0f5fa; padding:12px; border-radius:8px; margin-bottom:15px; margin-top:15px;">
-            <label style="font-size:13px; font-weight:bold; color:#333;">🎥 สื่อต้อนรับ (วิดีโอ YouTube/รูปภาพ):</label>
-            <input type="text" id="st_mediaLink" placeholder="ลิงก์วิดีโอ หรือ ลิงก์รูปภาพ" value="${storeInfo.mediaLink || ''}">
-            
-            <label style="font-size:13px; font-weight:bold; color:#333;">📝 ข้อความใต้สื่อต้อนรับ:</label>
+            <label style="font-size:13px; font-weight:bold; color:#333;">🎥 สื่อต้อนรับ (ใส่ลูกน้ำ , คั่นเพื่อทำสไลด์):</label>
+            <input type="text" id="st_mediaLink" placeholder="ลิงก์รูปภาพ หรือ วิดีโอ" value="${storeInfo.mediaLink || ''}">
             <textarea id="st_mediaText" placeholder="คำอธิบาย หรือโปรโมชั่น (ขึ้นบรรทัดใหม่ได้)" rows="3" style="width:100%; padding:10px; margin-bottom:5px; border:1px solid #ddd; border-radius:8px;">${storeInfo.mediaText || ''}</textarea>
           </div>
 
           <div style="background:#eef5ff; padding:12px; border-radius:8px; margin-bottom:15px; border: 1px solid #cce0ff;">
-            <label style="font-size:14px; font-weight:bold; color:var(--primary);">➕ เพิ่มการ์ดข้อมูลใหม่ (เช่น โปรโมชั่น, กติกา)</label>
+            <label style="font-size:14px; font-weight:bold; color:var(--primary);">➕ เพิ่มการ์ดข้อมูลใหม่</label>
             <input type="text" id="cc_title" placeholder="1. ชื่อหัวข้อการ์ด" style="margin-top:8px;">
             <textarea id="cc_desc" placeholder="2. รายละเอียด (ขึ้นบรรทัดใหม่ได้)" rows="2" style="width:100%; padding:10px; margin-bottom:12px; border:1px solid #ddd; border-radius:8px;"></textarea>
-            <input type="text" id="cc_icon" placeholder="3. ลิงก์รูปไอคอนของการ์ด (เว้นได้)">
+            <input type="text" id="cc_icon" placeholder="3. ลิงก์รูปภาพ (ใส่ลูกน้ำ , คั่นทำสไลด์ได้)">
             <button onclick="adminAddCustomCard()" style="background:#3B96F5; color:#fff; border:none; padding:8px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer;">กดเพื่อสร้างการ์ด</button>
-            
             <div id="admin_cards_list" style="margin-top:10px;"></div>
           </div>
           
           <button onclick="saveStoreInfo(event)" style="width:100%; padding:12px; background:#00c853; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:10px;">💾 บันทึกข้อมูลร้านค้าทั้งหมด</button>
+        </div>
+
+        <div id="admin_view_popup" style="display:none;">
+          <div style="background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffe082;">
+            <h4 style="color:#ff9800; margin-bottom:10px;">➕ สร้างแจ้งเตือนป๊อปอัปใหม่</h4>
+            <label style="font-size:13px; font-weight:bold; color:#555;">ให้เด้งตอนกดเข้าหน้าไหน?</label>
+            <select id="pu_target" style="margin-bottom:10px;">
+              ${targetPopupOptions}
+            </select>
+            <label style="font-size:13px; font-weight:bold; color:#555;">ข้อความที่จะให้เด้งบอก:</label>
+            <textarea id="pu_msg" placeholder="พิมพ์ข้อความแจ้งเตือนที่นี่..." rows="3" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
+            <button onclick="adminAddPopup()" style="background:#ff9800; color:#fff; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer;">บันทึกแจ้งเตือน</button>
+          </div>
+          
+          <h4 style="margin-bottom:10px; color:#333; font-size:15px;">📋 แจ้งเตือนที่มีอยู่</h4>
+          <div id="admin_popup_list" style="max-height: 200px; overflow-y: auto;"></div>
+          <button onclick="saveStoreInfo(event)" style="width:100%; padding:12px; background:#00c853; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:10px;">💾 บันทึกข้อมูลทั้งหมด</button>
         </div>
 
         <div id="admin_view_products" style="display:none;">
@@ -729,7 +811,6 @@ function openAdmin() {
           <div id="form_ios" style="display:none; background:#f0f5fa; padding:12px; border-radius:8px;">
             <input type="text" id="ios_name" placeholder="ชื่อแอป (หมวดหลัก)">
             <input type="text" id="ios_desc" placeholder="รายละเอียดแอป (เว้นได้)">
-            
             <label style="font-size:13px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📱 เลือกระบบ (ติ๊ก 1 หรือ 2 ก็ได้):</label>
             <div style="display:flex; gap:15px; margin-bottom:12px; background:#fff; padding:10px; border-radius:8px; border:1px solid #ddd;">
               <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:bold; color:#000;">
@@ -739,7 +820,6 @@ function openAdmin() {
                 <input type="checkbox" id="cb_android" value="Android" style="width:auto; margin:0;" checked> Android
               </label>
             </div>
-
             <select id="ios_status">
               <option value="ready">สถานะ: พร้อมส่ง</option>
               <option value="not_ready">สถานะ: เมลไม่พร้อม (สีแดง)</option>
@@ -778,23 +858,64 @@ function openAdmin() {
   
   switchAdminView('store');
   renderAdminCustomCards(); 
+  renderAdminPopupList();
 }
 
 function switchAdminView(view) {
   document.getElementById('btn_adm_store').classList.remove('active');
   document.getElementById('btn_adm_products').classList.remove('active');
+  document.getElementById('btn_adm_popup').classList.remove('active');
+  document.getElementById('admin_view_store').style.display = 'none';
+  document.getElementById('admin_view_products').style.display = 'none';
+  document.getElementById('admin_view_popup').style.display = 'none';
 
   if(view === 'store') {
     document.getElementById('btn_adm_store').classList.add('active');
     document.getElementById('admin_view_store').style.display = 'block';
-    document.getElementById('admin_view_products').style.display = 'none';
-  } else {
+  } else if (view === 'products') {
     document.getElementById('btn_adm_products').classList.add('active');
-    document.getElementById('admin_view_store').style.display = 'none';
     document.getElementById('admin_view_products').style.display = 'block';
     toggleAdminForm();
     renderAdminProductList();
+  } else if (view === 'popup') {
+    document.getElementById('btn_adm_popup').classList.add('active');
+    document.getElementById('admin_view_popup').style.display = 'block';
   }
+}
+
+function adminAddPopup() {
+  const target = document.getElementById('pu_target').value;
+  const msg = document.getElementById('pu_msg').value;
+  if(!msg) return alert("กรุณาใส่ข้อความแจ้งเตือน");
+  
+  tempPopups = tempPopups.filter(p => p.target !== target);
+  tempPopups.push({ target: target, message: msg });
+  
+  document.getElementById('pu_msg').value = '';
+  renderAdminPopupList();
+}
+
+function adminRemovePopup(index) {
+  tempPopups.splice(index, 1);
+  renderAdminPopupList();
+}
+
+function renderAdminPopupList() {
+  const list = document.getElementById('admin_popup_list');
+  let html = '';
+  tempPopups.forEach((p, i) => {
+    html += `
+      <div style="background:#fff; border:1px solid #ccc; padding:10px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong style="color:#ff9800; font-size:13px;">หน้า: ${p.target}</strong>
+          <div style="font-size:12px; color:#555;">${p.message}</div>
+        </div>
+        <button onclick="adminRemovePopup(${i})" style="background:#ff4b7e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ลบ</button>
+      </div>
+    `;
+  });
+  if(tempPopups.length === 0) html = '<div style="font-size:12px; color:#999;">ยังไม่มีการตั้งแจ้งเตือน</div>';
+  list.innerHTML = html;
 }
 
 function adminAddCustomCard() {
@@ -848,7 +969,8 @@ async function saveStoreInfo(e) {
     logo: document.getElementById('st_logo').value,
     mediaLink: document.getElementById('st_mediaLink').value,
     mediaText: document.getElementById('st_mediaText').value,
-    customCards: tempCustomCards
+    customCards: tempCustomCards,
+    popups: tempPopups
   };
 
   await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
