@@ -79,7 +79,7 @@ body {
 .app-card h4 { font-size: 16px; margin-bottom: 5px; }
 .app-card .app-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
 
-/* Product Status Badge (เฉพาะ iOS) */
+/* Product Status Badge */
 .app-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; padding: 3px 8px; border-radius: 12px; color: #fff; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 5; }
 .app-badge.ready { background: #00c853; }
 .app-badge.not-ready { background: #ff1744; }
@@ -113,7 +113,7 @@ body {
 .info-card { background: var(--bg-card); color:#000; border-radius: 16px; padding: 20px; text-align:center; margin-bottom: 15px; }
 .copy-btn { background: var(--primary); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
 
-/* Modals (Checkout & Popup) */
+/* Modals */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10001; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
 .modal-box { background: #fff; color: #000; padding: 24px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .modal-details { text-align: left; background: #f0f5fa; padding: 15px; border-radius: 8px; max-height: 250px; overflow-y: auto; font-size: 14px; margin: 15px 0; white-space: pre-wrap; line-height: 1.6; border: 1px solid #dce4ec; color: #333; }
@@ -140,10 +140,9 @@ body {
 <div class="hero">
   <div class="hero-logo-container">
     <div class="hero-logo-frame">
-      <img src="https://via.placeholder.com/180" alt="Shop Logo" class="hero-logo-img">
+      <img src="https://via.placeholder.com/180" alt="Shop Logo" class="hero-logo-img" onerror="this.src='https://via.placeholder.com/180'">
     </div>
   </div>
-  
   <div class="hero-title-container">
     <h1 class="hero-title" onclick="checkAdminLogin()">Wanderer_Shop</h1>
     <p id="welcomeMsg" class="hero-sub">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</p>
@@ -152,7 +151,12 @@ body {
 
 <div class="tab-nav" id="tab-navigation"></div>
 
-<div class="content" id="main-content"></div>
+<div class="content" id="main-content">
+  <div style="text-align:center; padding: 40px 20px; color:#fff;">
+    <h3 style="color:var(--primary);">กำลังเชื่อมต่อฐานข้อมูล... ⏳</h3>
+    <p style="font-size:14px; color:#aaa; margin-top:10px;">(หากหน้านี้หมุนนานเกิน 10 วินาที แสดงว่ามีปัญหาที่ลิงก์ API)</p>
+  </div>
+</div>
 
 <div id="cartPanel" class="cart-panel">
   <div class="cart-panel-header">🛒 รายการที่เลือก (กดซ้ำเพื่อเอาออก)</div>
@@ -185,8 +189,8 @@ body {
 </div>
 
 <script>
-// ใส่ลิงก์ API ของ Google Apps Script
-const API_URL = "https://script.google.com/macros/s/AKfycbzRG0pJcG2ZvKMJe6zI2D_92tpuFgrp7GqGTZcXCzEeLCcvAt259yT5CxP7TJgOIaTx/exec"; 
+// ⭐ เปลี่ยนเป็นลิงก์ API ของคุณ
+const API_URL = "https://script.google.com/macros/s/AKfycbwHaYMQfGbVj-lvLl7YSHNXfI7p_NWDEMRXB-jX03LmeN5OZPBpjPyUjvrz-_7r71RC/exec"; 
 
 let products = [];
 let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer', customCards: [], popups: [] };
@@ -206,22 +210,29 @@ let tempPopups = [];
 let editingProductId = null; 
 let shownPopups = []; 
 
-const hiddenSystemTabs = ["Products", "ตั้งค่าร้าน", "ออเดอร์", "Database", "StoreInfo", "Orders"];
+const hiddenSystemTabs = ["Orders", "StoreInfo", "ข้อมูลร้าน", "popups", "Popups"];
 
-const P = document.getElementById('pts');
-['🎐','🍃','🌌'].forEach(e => {
-  for (let j = 0; j < 5; j++) {
-    const d = document.createElement('div');
-    d.className = 'pt'; d.textContent = e;
-    d.style.cssText = `left:${Math.random()*100}vw; font-size:${12+Math.random()*15}px; animation-duration:${10+Math.random()*15}s; animation-delay:${-Math.random()*20}s;`;
-    if(P) P.appendChild(d);
-  }
-});
+try {
+  const P = document.getElementById('pts');
+  ['🎐','🍃','🌌'].forEach(e => {
+    for (let j = 0; j < 5; j++) {
+      const d = document.createElement('div');
+      d.className = 'pt'; d.textContent = e;
+      d.style.cssText = `left:${Math.random()*100}vw; font-size:${12+Math.random()*15}px; animation-duration:${10+Math.random()*15}s; animation-delay:${-Math.random()*20}s;`;
+      if(P) P.appendChild(d);
+    }
+  });
+} catch(e) {}
 
 async function loadData() {
   try {
     const res = await fetch(API_URL);
-    const data = await res.json();
+    if (!res.ok) throw new Error(`HTTP Error Status: ${res.status}`);
+    
+    const textData = await res.text();
+    let data;
+    try { data = JSON.parse(textData); } catch (parseError) { throw new Error(`API Parse Error`); }
+
     products = data.products || [];
     storeInfo = data.storeInfo || storeInfo;
     if(!storeInfo.customCards) storeInfo.customCards = [];
@@ -231,16 +242,17 @@ async function loadData() {
     applyStoreInfo();
     renderTabsNav(); 
     switchMainTab('ข้อมูลร้าน'); 
+
   } catch (err) {
-    console.error("โหลดข้อมูลล้มเหลว:", err);
+    document.getElementById('main-content').innerHTML = `<p style="text-align:center; color:#FF4B7E; padding:20px;">โหลดข้อมูลไม่สำเร็จ กรุณาตรวจสอบลิงก์ API</p>`;
   }
 }
 
 function applyStoreInfo() {
   const st = document.getElementById('shopStatus');
-  st.className = `status ${storeInfo.status || 'open'}`;
-  st.innerText = (storeInfo.status || 'open').toUpperCase();
-  if(storeInfo.logo) document.querySelector('.hero-logo-img').src = storeInfo.logo;
+  if(st) { st.className = `status ${storeInfo.status || 'open'}`; st.innerText = (storeInfo.status || 'open').toUpperCase(); }
+  const logoEl = document.querySelector('.hero-logo-img');
+  if(storeInfo.logo && logoEl) logoEl.src = storeInfo.logo;
   const welcomeEl = document.getElementById('welcomeMsg');
   if(welcomeEl) welcomeEl.innerText = storeInfo.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
 }
@@ -250,17 +262,20 @@ function renderTabsNav() {
   let html = `<button class="tab-btn active" id="btn_tab_ข้อมูลร้าน" onclick="switchMainTab('ข้อมูลร้าน')">ข้อมูลร้าน</button>`;
   const priorityTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
   priorityTabs.forEach(t => { html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`; });
-  currentTabList.forEach(t => {
-    if(!priorityTabs.includes(t) && t !== "ข้อมูลร้าน" && !hiddenSystemTabs.includes(t)) {
-      html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
-    }
-  });
+  
+  if(currentTabList && Array.isArray(currentTabList)) {
+    currentTabList.forEach(t => {
+      if(!priorityTabs.includes(t) && t !== "ข้อมูลร้าน" && !hiddenSystemTabs.includes(t)) {
+        html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
+      }
+    });
+  }
   tabNav.innerHTML = html;
 }
 
 function buildSliderHtml(linksStr, sliderId) {
   if(!linksStr) return '';
-  let links = linksStr.split(',').map(s=>s.trim()).filter(s=>s);
+  let links = String(linksStr).split(',').map(s=>s.trim()).filter(s=>s);
   if(links.length === 0) return '';
   if(links.length === 1) {
     let link = links[0];
@@ -274,15 +289,8 @@ function buildSliderHtml(linksStr, sliderId) {
         return `<img src="${link}" style="width:100%; border-radius:12px; margin-bottom:10px; object-fit:cover;">`;
     }
   }
-  
   let slides = links.map((lnk, idx) => `<img class="slider-img ${idx===0?'active':''}" src="${lnk}">`).join('');
-  return `
-    <div class="slider-container" id="${sliderId}">
-      ${slides}
-      <button class="slider-btn left" onclick="changeSlide('${sliderId}', -1)">❮</button>
-      <button class="slider-btn right" onclick="changeSlide('${sliderId}', 1)">❯</button>
-    </div>
-  `;
+  return `<div class="slider-container" id="${sliderId}">${slides}<button class="slider-btn left" onclick="changeSlide('${sliderId}', -1)">❮</button><button class="slider-btn right" onclick="changeSlide('${sliderId}', 1)">❯</button></div>`;
 }
 
 function changeSlide(sliderId, direction) {
@@ -305,20 +313,18 @@ function refreshView() {
 
 function checkAndShowPopup(targetName) {
   if(shownPopups.includes(targetName)) return; 
-  if(!storeInfo.popups) return;
-  const popup = storeInfo.popups.find(p => p.target === targetName);
+  if(!storeInfo.popups || !Array.isArray(storeInfo.popups)) return;
+  const popup = storeInfo.popups.find(p => p.target === targetName || p.target === 'all');
   if(popup) {
     document.getElementById('alertPopupText').innerText = popup.message;
     document.getElementById('alertPopupModal').style.display = 'flex';
     shownPopups.push(targetName);
+    if(popup.target === 'all') shownPopups.push('all');
   }
 }
 
 function switchMainTab(tabName) {
-  currentTab = tabName;
-  currentView = 'main';
-  currentCat = '';
-
+  currentTab = tabName; currentView = 'main'; currentCat = '';
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   let activeBtn = document.getElementById('btn_tab_' + tabName);
   if(activeBtn) activeBtn.classList.add('active');
@@ -341,28 +347,18 @@ function switchMainTab(tabName) {
       </div>
     `;
 
-    if(storeInfo.mediaLink && storeInfo.mediaLink.trim() !== '') {
-      let mediaHtml = buildSliderHtml(storeInfo.mediaLink, 'slider_main');
-      html += `
-        <div class="info-card" style="padding:15px;">
-          ${mediaHtml}
-          ${storeInfo.mediaText ? `<div style="font-size:14px; text-align:left; color:#333; white-space:pre-wrap; line-height:1.5;">${storeInfo.mediaText}</div>` : ''}
-        </div>
-      `;
+    if(storeInfo.mediaLink && String(storeInfo.mediaLink).trim() !== '') {
+      html += `<div class="info-card" style="padding:15px;">${buildSliderHtml(storeInfo.mediaLink, 'slider_main')}${storeInfo.mediaText ? `<div style="font-size:14px; text-align:left; color:#333; white-space:pre-wrap; line-height:1.5;">${storeInfo.mediaText}</div>` : ''}</div>`;
     }
 
-    if(storeInfo.customCards && storeInfo.customCards.length > 0) {
+    if(storeInfo.customCards && Array.isArray(storeInfo.customCards) && storeInfo.customCards.length > 0) {
       storeInfo.customCards.forEach((card, idx) => {
         let iconHtml = '';
         if(card.icon) {
-          let iconLinks = card.icon.split(',').map(s=>s.trim()).filter(s=>s);
-          if(iconLinks.length > 1) {
-            iconHtml = buildSliderHtml(card.icon, `slider_card_${idx}`);
-          } else {
-            iconHtml = `<img src="${iconLinks[0]}" style="width:40px; height:40px; border-radius:8px; object-fit:cover; flex-shrink:0;">`;
-          }
+          let iconLinks = String(card.icon).split(',').map(s=>s.trim()).filter(s=>s);
+          if(iconLinks.length > 1) iconHtml = buildSliderHtml(card.icon, `slider_card_${idx}`);
+          else if(iconLinks.length === 1) iconHtml = `<img src="${iconLinks[0]}" style="width:40px; height:40px; border-radius:8px; object-fit:cover; flex-shrink:0;">`;
         }
-
         html += `
           <div class="info-card" style="display:flex; flex-direction:column; gap:10px; text-align:left; padding:15px;">
             ${iconHtml.includes('slider-container') ? iconHtml : `<div style="display:flex; gap:15px; align-items:flex-start;">${iconHtml}<div><h4 style="color:var(--primary); margin-bottom:5px;">${card.title}</h4></div></div>`}
@@ -392,39 +388,24 @@ function switchMainTab(tabName) {
         if(!apps[p.name]) apps[p.name] = { icon: p.icon, desc: p.desc, osList: [] };
         apps[p.name].osList.push(p);
       });
-      
       let appsArr = Object.keys(apps).map(key => ({ name: key, ...apps[key] }));
-      
-      if (currentSearch) {
-        appsArr = appsArr.filter(app => app.name.toLowerCase().includes(currentSearch));
-      }
-
+      if (currentSearch) appsArr = appsArr.filter(app => app.name.toLowerCase().includes(currentSearch));
       if (currentSort === 'name') appsArr.sort((a, b) => a.name.localeCompare(b.name, 'th'));
-      else if (currentSort === 'price') {
-        appsArr.sort((a, b) => Math.min(...a.osList.map(p => p.price)) - Math.min(...b.osList.map(p => p.price)));
-      }
+      else if (currentSort === 'price') appsArr.sort((a, b) => Math.min(...a.osList.map(p => p.price)) - Math.min(...b.osList.map(p => p.price)));
 
-      if(appsArr.length === 0) {
-        contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้าที่ค้นหา</p>`;
-        return;
-      }
+      if(appsArr.length === 0) { contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้า</p>`; return; }
 
       let html = searchAndSortHeader + `<div class="app-grid">`;
       appsArr.forEach(app => {
         let isReady = app.osList.some(p => p.status !== 'outstock' && p.status !== 'not_ready');
-        let badgeHtml = isReady ? `<div class="app-badge ready">พร้อมส่ง</div>` : `<div class="app-badge not-ready">เมลไม่พร้อม</div>`;
-
         html += `
           <div class="app-card">
-            ${badgeHtml}
-            <img src="${app.icon || 'https://via.placeholder.com/70'}" alt="icon">
-            <h4>${app.name}</h4>
-            <p class="app-desc">${app.desc}</p>
+            ${isReady ? `<div class="app-badge ready">พร้อมส่ง</div>` : `<div class="app-badge not-ready">เมลไม่พร้อม</div>`}
+            <img src="${app.icon || 'https://via.placeholder.com/70'}" alt="icon" onerror="this.src='https://via.placeholder.com/70'">
+            <h4>${app.name}</h4><p class="app-desc">${app.desc}</p>
             <div class="os-btn-group">`;
-              
               let osListSorted = [...app.osList];
               if(currentSort === 'price') osListSorted.sort((a,b) => a.price - b.price);
-
               osListSorted.forEach(pkg => {
                 const outstock = pkg.status === 'outstock' ? 'outstock' : '';
                 const inCart = cart.some(c => c.id === pkg.id) ? 'selected' : '';
@@ -432,72 +413,45 @@ function switchMainTab(tabName) {
               });
         html += `</div></div>`;
       });
-      html += `</div>`;
-      contentArea.innerHTML = html;
-
+      contentArea.innerHTML = html + `</div>`;
     } else {
       products.filter(p => p.tab === tabName).forEach(p => {
         if(!apps[p.cat]) apps[p.cat] = { icon: p.icon, desc: p.appDesc };
       });
-
       let appsArr = Object.keys(apps).map(key => ({ cat: key, ...apps[key] }));
-      
-      if (currentSearch) {
-        appsArr = appsArr.filter(app => app.cat.toLowerCase().includes(currentSearch));
-      }
-
+      if (currentSearch) appsArr = appsArr.filter(app => app.cat.toLowerCase().includes(currentSearch));
       if (currentSort === 'name') appsArr.sort((a, b) => a.cat.localeCompare(b.cat, 'th'));
       else if (currentSort === 'price') {
-        appsArr.sort((a, b) => {
-           let minA = Math.min(...products.filter(p => p.tab === tabName && p.cat === a.cat).map(p => p.price));
-           let minB = Math.min(...products.filter(p => p.tab === tabName && p.cat === b.cat).map(p => p.price));
-           return minA - minB;
-        });
+        appsArr.sort((a, b) => Math.min(...products.filter(p => p.tab === tabName && p.cat === a.cat).map(p => p.price)) - Math.min(...products.filter(p => p.tab === tabName && p.cat === b.cat).map(p => p.price)));
       }
 
-      if(appsArr.length === 0) {
-        contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้าที่ค้นหา</p>`;
-        return;
-      }
+      if(appsArr.length === 0) { contentArea.innerHTML = searchAndSortHeader + `<p style="text-align:center; margin-top:30px;">ไม่พบสินค้า</p>`; return; }
 
       let html = searchAndSortHeader + `<div class="app-grid">`;
       appsArr.forEach(app => {
         html += `
           <div class="app-card" onclick="openPackageView('${tabName}', '${app.cat}')">
-            <img src="${app.icon || 'https://via.placeholder.com/70'}" alt="icon">
-            <h4>${app.cat}</h4>
-            <p class="app-desc">${app.desc}</p>
+            <img src="${app.icon || 'https://via.placeholder.com/70'}" alt="icon" onerror="this.src='https://via.placeholder.com/70'">
+            <h4>${app.cat}</h4><p class="app-desc">${app.desc}</p>
           </div>`;
       });
-      html += `</div>`;
-      contentArea.innerHTML = html;
+      contentArea.innerHTML = html + `</div>`;
     }
-    
     let searchInp = document.getElementById('searchInput');
     if(searchInp && currentSearch) { searchInp.focus(); searchInp.setSelectionRange(currentSearch.length, currentSearch.length); }
   }
 }
 
 function openPackageView(tabName, catName) {
-  currentView = 'package';
-  currentCat = catName;
+  currentView = 'package'; currentCat = catName;
   const contentArea = document.getElementById('main-content');
   checkAndShowPopup(catName); 
 
   const appProducts = products.filter(p => p.tab === tabName && p.cat === catName);
-  
   let subCats = {};
-  appProducts.forEach(p => {
-    let sCat = p.subCat || 'แพ็กเกจทั่วไป';
-    if(!subCats[sCat]) subCats[sCat] = [];
-    subCats[sCat].push(p);
-  });
+  appProducts.forEach(p => { let sCat = p.subCat || 'แพ็กเกจทั่วไป'; if(!subCats[sCat]) subCats[sCat] = []; subCats[sCat].push(p); });
 
-  let subCatsArr = Object.keys(subCats).map(key => ({ name: key, items: subCats[key] }));
-
-  let html = `<button class="back-btn" onclick="switchMainTab('${tabName}')">⬅ กลับหน้ารวมแอป</button>`;
-  
-  html += `
+  let html = `<button class="back-btn" onclick="switchMainTab('${tabName}')">⬅ กลับหน้ารวมแอป</button>
     <input type="text" class="search-box" id="searchInput" placeholder="🔍 ค้นหาชื่อแพ็กเกจ..." value="${currentSearch}" oninput="handleSearch(this.value)">
     <div class="sort-container">
       <div class="sort-title">${catName}</div>
@@ -505,10 +459,9 @@ function openPackageView(tabName, catName) {
         <option value="name" ${currentSort==='name'?'selected':''}>เรียงตามอักษร</option>
         <option value="price" ${currentSort==='price'?'selected':''}>เรียงตามราคา</option>
       </select>
-    </div>
-  `;
+    </div>`;
 
-  subCatsArr.forEach(sub => {
+  Object.keys(subCats).map(key => ({ name: key, items: subCats[key] })).forEach(sub => {
     let items = [...sub.items];
     if (currentSearch) items = items.filter(i => i.name.toLowerCase().includes(currentSearch));
     if (items.length === 0) return; 
@@ -521,29 +474,21 @@ function openPackageView(tabName, catName) {
       const isOutstock = item.status === 'outstock';
       const inCart = cart.some(c => c.id === item.id) ? 'background:#FF4B7E;' : (isOutstock ? 'background:#ccc; cursor:not-allowed;' : 'background:var(--primary);');
       const btnText = isOutstock ? 'หมด' : (cart.some(c => c.id === item.id) ? 'ลบออก' : `${item.price} ฿`);
-
       html += `
       <div style="background:#fff; color:#000; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
-        <div>
-          <strong>${item.name}</strong><br>
-          <small style="color:#666;">${item.desc}</small>
-        </div>
+        <div><strong>${item.name}</strong><br><small style="color:#666;">${item.desc}</small></div>
         <button id="btn_${item.id}" onclick="${isOutstock ? '' : `addToCart('${item.id}')`}" style="${inCart} color:#fff; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; transition:0.2s;">${btnText}</button>
       </div>`;
     });
   });
   
-  if(!html.includes('package-group-title')) html += `<p style="text-align:center; margin-top:20px;">ไม่พบแพ็กเกจที่ค้นหา</p>`;
-  
+  if(!html.includes('package-group-title')) html += `<p style="text-align:center; margin-top:20px;">ไม่พบแพ็กเกจ</p>`;
   contentArea.innerHTML = html;
   let searchInp = document.getElementById('searchInput');
   if(searchInp && currentSearch) { searchInp.focus(); searchInp.setSelectionRange(currentSearch.length, currentSearch.length); }
 }
 
-function copyText(txt) {
-  navigator.clipboard.writeText(txt);
-  alert("คัดลอกแล้ว!");
-}
+function copyText(txt) { navigator.clipboard.writeText(txt); alert("คัดลอกแล้ว!"); }
 
 function addToCart(id) {
   const product = products.find(p => p.id === id);
@@ -551,11 +496,7 @@ function addToCart(id) {
   if(product.status === 'outstock') return alert('สินค้านี้หมดชั่วคราวค่ะ');
 
   const index = cart.findIndex(item => item.id === id);
-  if (index > -1) { 
-    cart.splice(index, 1); 
-  } else { 
-    cart.push(product); 
-  }
+  if (index > -1) cart.splice(index, 1); else cart.push(product); 
   updateBottomBar();
   updateButtonUI(id);
 }
@@ -564,13 +505,11 @@ function updateButtonUI(id) {
   const btn = document.getElementById(`btn_${id}`);
   if(btn) {
     if(currentTab === 'แอพ-เกม iOS/Android') {
-      if(cart.some(c => c.id === id)) btn.classList.add('selected');
-      else btn.classList.remove('selected');
+      if(cart.some(c => c.id === id)) btn.classList.add('selected'); else btn.classList.remove('selected');
     } else {
       const inCart = cart.some(c => c.id === id);
       btn.style.background = inCart ? '#FF4B7E' : 'var(--primary)';
-      const product = products.find(p => p.id === id);
-      btn.innerText = inCart ? 'ลบออก' : `${product.price} ฿`;
+      btn.innerText = inCart ? 'ลบออก' : `${products.find(p => p.id === id).price} ฿`;
     }
   }
 }
@@ -580,19 +519,14 @@ function calculateTotal() {
   let promoItems = cart.filter(i => i.price >= 20 && i.price <= 25 && i.tab === 'แอพ-เกม iOS/Android');
   let otherItems = cart.filter(i => !(i.price >= 20 && i.price <= 25 && i.tab === 'แอพ-เกม iOS/Android'));
   
-  let count = promoItems.length;
-  let promoTotal = 0;
-  let isPromo = false;
+  let count = promoItems.length; let promoTotal = 0; let isPromo = false;
 
   if (count >= 30) { promoTotal = 360; isPromo = true; }
   else if (count >= 15) { promoTotal = 210; isPromo = true; }
   else if (count >= 8) { promoTotal = 80; isPromo = true; }
   else if (count >= 3) { promoTotal = 45; isPromo = true; }
   else if (count === 2 && promoItems.every(i => i.price === 25)) { promoTotal = 45; isPromo = true; }
-  else { 
-    promoTotal = promoItems.reduce((sum, i) => sum + i.price, 0); 
-    isPromo = false;
-  }
+  else { promoTotal = promoItems.reduce((sum, i) => sum + i.price, 0); isPromo = false; }
 
   let othersTotal = otherItems.reduce((sum, i) => sum + i.price, 0);
   return { total: promoTotal + othersTotal, isPromo: isPromo };
@@ -603,12 +537,8 @@ function updateBottomBar() {
   if (cart.length > 0) {
     bar.classList.add('active');
     document.getElementById('cartCount').innerHTML = `เลือก ${cart.length} รายการ <span style="font-size:10px; margin-left:5px; color:#fff;">▲</span>`;
-    
     let calc = calculateTotal();
-    document.getElementById('cartTotal').innerHTML = `${calc.total}฿ 
-      <span id="cartPromoBadge" style="font-size:10px; font-weight:normal; background:${calc.isPromo ? '#00c853' : 'rgba(255,255,255,0.2)'}; padding:2px 8px; border-radius:10px; margin-left:5px;">
-        ${calc.isPromo ? 'จัดโปรโมชั่น' : 'ราคาปกติ'}
-      </span>`;
+    document.getElementById('cartTotal').innerHTML = `${calc.total}฿ <span id="cartPromoBadge" style="font-size:10px; font-weight:normal; background:${calc.isPromo ? '#00c853' : 'rgba(255,255,255,0.2)'}; padding:2px 8px; border-radius:10px; margin-left:5px;">${calc.isPromo ? 'จัดโปรโมชั่น' : 'ราคาปกติ'}</span>`;
   } else {
     bar.classList.remove('active');
     document.getElementById('cartPanel').classList.remove('open'); 
@@ -618,8 +548,7 @@ function updateBottomBar() {
 
 function toggleCartPanel() {
   const panel = document.getElementById('cartPanel');
-  if(panel.classList.contains('open')) panel.classList.remove('open');
-  else if(cart.length > 0) panel.classList.add('open');
+  if(panel.classList.contains('open')) panel.classList.remove('open'); else if(cart.length > 0) panel.classList.add('open');
 }
 
 function updateCartPanel() {
@@ -634,8 +563,7 @@ function updateCartPanel() {
           <span style="color:var(--primary); font-weight:bold;">${item.price} ฿</span>
         </div>
         <button class="cart-item-remove" onclick="addToCart('${item.id}')">ลบออก</button>
-      </div>
-    `;
+      </div>`;
   });
   list.innerHTML = html;
 }
@@ -644,9 +572,7 @@ function openCheckoutModal() {
   if (cart.length === 0) return;
   document.getElementById('cartPanel').classList.remove('open'); 
   
-  let calc = calculateTotal();
-  let total = calc.total;
-  orderTextToCopy = "";
+  let calc = calculateTotal(); let total = calc.total; orderTextToCopy = "";
 
   if (currentTab === "เติมเกม") {
     orderTextToCopy = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
@@ -667,23 +593,15 @@ function openCheckoutModal() {
   document.getElementById('checkoutModal').style.display = 'flex';
 }
 
-function closeCheckoutModal() {
-  document.getElementById('checkoutModal').style.display = 'none';
-}
+function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
 
 async function confirmCheckout() {
   let calc = calculateTotal();
   fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "add_order", items: orderTextToCopy, total: calc.total }) });
-
   const tempInput = document.createElement("textarea");
-  tempInput.value = orderTextToCopy;
-  document.body.appendChild(tempInput);
-  tempInput.select();
-  document.execCommand("copy");
-  document.body.removeChild(tempInput);
-  
-  closeCheckoutModal();
-  window.location.href = "https://lin.ee/twgRJSxV";
+  tempInput.value = orderTextToCopy; document.body.appendChild(tempInput);
+  tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
+  closeCheckoutModal(); window.location.href = "https://lin.ee/twgRJSxV";
 }
 
 // --- Admin System ---
@@ -708,8 +626,7 @@ function openAdmin() {
   tempPopups = storeInfo.popups ? JSON.parse(JSON.stringify(storeInfo.popups)) : [];
   editingProductId = null; 
 
-  let tabOptions = "";
-  let targetPopupOptions = ""; 
+  let tabOptions = ""; let targetPopupOptions = ""; 
   const mainTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
   let allTabsForAdmin = [...new Set([...mainTabs, ...currentTabList])];
 
@@ -718,15 +635,11 @@ function openAdmin() {
       let val = (t === "แอพ-เกม iOS/Android") ? "IOS-ANDROID" : t;
       tabOptions += `<option value="${val}">${t}</option>`;
     }
-    if (!hiddenSystemTabs.includes(t)) {
-      targetPopupOptions += `<option value="${t}">แท็บ: ${t}</option>`;
-    }
+    if (!hiddenSystemTabs.includes(t)) targetPopupOptions += `<option value="${t}">แท็บ: ${t}</option>`;
   });
   
   let allAppNames = [...new Set(products.map(p => p.name || p.cat))].filter(n => n);
-  allAppNames.forEach(app => {
-    targetPopupOptions += `<option value="${app}">แอป: ${app}</option>`;
-  });
+  allAppNames.forEach(app => { targetPopupOptions += `<option value="${app}">แอป: ${app}</option>`; });
 
   document.body.insertAdjacentHTML("beforeend", `
     <div id="adminPanel" class="admin-panel">
@@ -775,13 +688,54 @@ function openAdmin() {
           </div>
           
           <button onclick="saveStoreInfo(event)" style="width:100%; padding:12px; background:#00c853; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:10px;">💾 บันทึกข้อมูลร้านค้าทั้งหมด</button>
+
+          <div style="padding: 20px; background: #152b4d; border-radius: 8px; margin-top: 20px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--border-color); margin-bottom: 15px;">📊 สถิติร้านค้าภาพรวม</h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 120px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; text-align: center;">
+                <p style="font-size: 14px; color: #aaa;">คนเข้าเว็บ (ครั้ง)</p>
+                <h2 id="stat_views" style="color: #fff;">0</h2>
+              </div>
+              <div style="flex: 1; min-width: 120px; padding: 15px; background: rgba(59,150,245,0.2); border-radius: 8px; text-align: center;">
+                <p style="font-size: 14px; color: #aaa;">ยอดเงินรวม (บาท)</p>
+                <h2 id="stat_revenue" style="color: #3B96F5;">0</h2>
+              </div>
+              <div style="flex: 1; min-width: 120px; padding: 15px; background: rgba(255,75,126,0.2); border-radius: 8px; text-align: center;">
+                <p style="font-size: 14px; color: #aaa;">แอปขายดีที่สุด</p>
+                <h3 id="stat_bestapp" style="color: var(--secondary); margin-top: 5px;">-</h3>
+              </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h4 style="color:#fff;">📝 ประวัติรายการขายล่าสุด</h4>
+              <button onclick="loadStatistics()" style="background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">🔄 อัปเดตข้อมูล</button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; text-align: left; border-collapse: collapse; font-size: 14px; color:#fff;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 8px;">เวลา</th>
+                    <th style="padding: 8px;">รายการ / แอป</th>
+                    <th style="padding: 8px;">ยอด (฿)</th>
+                    <th style="padding: 8px;">สถานะ</th>
+                  </tr>
+                </thead>
+                <tbody id="stat_table_body">
+                  <tr><td colspan=\"4\" style=\"padding: 10px; text-align: center;\">กดปุ่ม "อัปเดตข้อมูล" เพื่อดูสถิติ</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <div id="admin_view_popup" style="display:none;">
           <div style="background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffe082;">
             <h4 style="color:#ff9800; margin-bottom:10px;">➕ สร้างแจ้งเตือนป๊อปอัปใหม่</h4>
             <label style="font-size:13px; font-weight:bold; color:#555;">ให้เด้งตอนกดเข้าหน้าไหน?</label>
-            <select id="pu_target" style="margin-bottom:10px;">
+            <select id="pu_target" style="margin-bottom:10px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+              <option value="all">แสดงทุกหน้า (Global)</option>
               ${targetPopupOptions}
             </select>
             <label style="font-size:13px; font-weight:bold; color:#555;">ข้อความที่จะให้เด้งบอก:</label>
@@ -859,6 +813,8 @@ function openAdmin() {
   switchAdminView('store');
   renderAdminCustomCards(); 
   renderAdminPopupList();
+
+  setTimeout(() => { if(typeof loadStatistics === 'function') loadStatistics(); }, 500);
 }
 
 function switchAdminView(view) {
@@ -922,22 +878,13 @@ function adminAddCustomCard() {
   const title = document.getElementById('cc_title').value;
   const desc = document.getElementById('cc_desc').value;
   const icon = document.getElementById('cc_icon').value;
-  
   if(!title) return alert("กรุณาใส่ชื่อหัวข้อการ์ด");
-  
   tempCustomCards.push({ title: title, desc: desc, icon: icon });
-  
-  document.getElementById('cc_title').value = '';
-  document.getElementById('cc_desc').value = '';
-  document.getElementById('cc_icon').value = '';
-  
+  document.getElementById('cc_title').value = ''; document.getElementById('cc_desc').value = ''; document.getElementById('cc_icon').value = '';
   renderAdminCustomCards();
 }
 
-function adminRemoveCustomCard(index) {
-  tempCustomCards.splice(index, 1);
-  renderAdminCustomCards();
-}
+function adminRemoveCustomCard(index) { tempCustomCards.splice(index, 1); renderAdminCustomCards(); }
 
 function renderAdminCustomCards() {
   const list = document.getElementById('admin_cards_list');
@@ -945,12 +892,9 @@ function renderAdminCustomCards() {
   tempCustomCards.forEach((c, i) => {
     html += `
       <div style="background:#fff; border:1px solid #ccc; padding:8px; border-radius:6px; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <strong style="color:var(--primary); font-size:13px;">${c.title}</strong>
-        </div>
+        <div><strong style="color:var(--primary); font-size:13px;">${c.title}</strong></div>
         <button onclick="adminRemoveCustomCard(${i})" style="background:#ff4b7e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ลบ</button>
-      </div>
-    `;
+      </div>`;
   });
   list.innerHTML = html;
 }
@@ -959,89 +903,57 @@ async function saveStoreInfo(e) {
   const btn = e.target;
   const oldText = btn.innerText;
   btn.innerText = "กำลังบันทึก...";
-
   let payload = {
-    action: "save_store",
-    status: document.getElementById('st_status').value,
-    welcome: document.getElementById('st_welcome').value,
-    line: document.getElementById('st_line').value,
-    hours: document.getElementById('st_hours').value,
-    logo: document.getElementById('st_logo').value,
-    mediaLink: document.getElementById('st_mediaLink').value,
-    mediaText: document.getElementById('st_mediaText').value,
-    customCards: tempCustomCards,
-    popups: tempPopups
+    action: "save_store", status: document.getElementById('st_status').value, welcome: document.getElementById('st_welcome').value,
+    line: document.getElementById('st_line').value, hours: document.getElementById('st_hours').value, logo: document.getElementById('st_logo').value,
+    mediaLink: document.getElementById('st_mediaLink').value, mediaText: document.getElementById('st_mediaText').value,
+    customCards: tempCustomCards, popups: tempPopups
   };
-
   await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
   await loadData(); 
-  btn.innerText = oldText;
-  alert("บันทึกข้อมูลร้านค้าเรียบร้อย!");
+  btn.innerText = oldText; alert("บันทึกข้อมูลร้านค้าเรียบร้อย!");
 }
 
 async function adminAddTab() {
   const tabName = document.getElementById('new_tab_input').value;
   if(!tabName) return alert("กรุณาใส่ชื่อแท็บ");
-  
   await fetch(API_URL, { method: "POST", body: JSON.stringify({action: "add_tab", tabName: tabName}) });
-  alert("สร้างแท็บสำเร็จ!");
-  document.getElementById('adminPanel').remove();
-  loadData();
+  alert("สร้างแท็บสำเร็จ!"); document.getElementById('adminPanel').remove(); loadData();
 }
 
 function renderAdminProductList() {
   const container = document.getElementById('admin_product_list');
   if (!container) return; 
-  
   const tab = document.getElementById('a_tab').value;
   let targetTabName = tab === "IOS-ANDROID" ? "แอพ-เกม iOS/Android" : tab;
   let filteredProducts = products.filter(p => p.tab === targetTabName);
   
-  if (filteredProducts.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; margin: 20px 0;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
-    return;
-  }
+  if (filteredProducts.length === 0) { container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; margin: 20px 0;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>'; return; }
 
   let groups = {};
-  filteredProducts.forEach(p => {
-    let groupName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.name : p.cat;
-    if(!groupName) groupName = "ไม่มีหมวดหมู่";
-    if(!groups[groupName]) groups[groupName] = [];
-    groups[groupName].push(p);
-  });
+  filteredProducts.forEach(p => { let groupName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.name : p.cat; if(!groupName) groupName = "ไม่มีหมวดหมู่"; if(!groups[groupName]) groups[groupName] = []; groups[groupName].push(p); });
 
   let html = '';
   for(let gName in groups) {
     let gStatus = '';
     if (targetTabName !== 'แอพ-เกม iOS/Android') {
-      let hasNotReady = groups[gName].some(p => p.status === 'not_ready');
-      let allOut = groups[gName].every(p => p.status === 'outstock');
+      let hasNotReady = groups[gName].some(p => p.status === 'not_ready'); let allOut = groups[gName].every(p => p.status === 'outstock');
       if (hasNotReady) gStatus = `<span style="color:#ff1744; font-size:12px; font-weight:normal; margin-left:8px;">(เมลไม่พร้อม)</span>`;
       else if (allOut) gStatus = `<span style="color:#ff4b7e; font-size:12px; font-weight:normal; margin-left:8px;">(หมด)</span>`;
     }
-
     html += `<div class="admin-group-title">${gName}${gStatus}</div>`;
-    
     groups[gName].forEach(p => {
       let subName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.os : p.name;
       let statusColor = p.status === 'outstock' ? '#ff4b7e' : (p.status === 'not_ready' ? '#ff1744' : '#333');
       let statusText = p.status === 'outstock' ? '(หมด)' : (p.status === 'not_ready' ? '(เมลไม่พร้อม)' : '');
-      
       html += `
         <div class="admin-item" style="display:flex; justify-content:space-between; align-items:flex-start;">
-          <div style="flex:1; color:${statusColor};">
-            <strong>- ${subName}</strong> <span style="font-size:11px; color:${statusColor};">${statusText}</span><br>
-            <span style="color:#888; font-size:11px; margin-left:10px;">${p.desc || p.appDesc || 'ไม่มีรายละเอียด'}</span>
-          </div>
+          <div style="flex:1; color:${statusColor};"><strong>- ${subName}</strong> <span style="font-size:11px; color:${statusColor};">${statusText}</span><br><span style="color:#888; font-size:11px; margin-left:10px;">${p.desc || p.appDesc || 'ไม่มีรายละเอียด'}</span></div>
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px; min-width:80px;">
             <span style="color:var(--primary); font-weight:bold;">${p.price} ฿</span>
-            <div style="display:flex; gap:5px;">
-              <button onclick="editProduct('${p.id}')" style="background:#ffc107; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">✏️ แก้ไข</button>
-              <button onclick="deleteProduct('${p.id}')" style="background:#ff4b7e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🗑️ ลบ</button>
-            </div>
+            <div style="display:flex; gap:5px;"><button onclick="editProduct('${p.id}')" style="background:#ffc107; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">✏️ แก้ไข</button><button onclick="deleteProduct('${p.id}')" style="background:#ff4b7e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🗑️ ลบ</button></div>
           </div>
-        </div>
-      `;
+        </div>`;
     });
   }
   container.innerHTML = html;
@@ -1049,160 +961,101 @@ function renderAdminProductList() {
 
 function toggleAdminForm() {
   const tab = document.getElementById('a_tab').value;
-  if(tab === 'IOS-ANDROID') {
-    document.getElementById('form_ios').style.display = 'block';
-    document.getElementById('form_other').style.display = 'none';
-  } else {
-    document.getElementById('form_ios').style.display = 'none';
-    document.getElementById('form_other').style.display = 'block';
-  }
+  if(tab === 'IOS-ANDROID') { document.getElementById('form_ios').style.display = 'block'; document.getElementById('form_other').style.display = 'none'; }
+  else { document.getElementById('form_ios').style.display = 'none'; document.getElementById('form_other').style.display = 'block'; }
 }
 
 function editProduct(id) {
-  const p = products.find(x => x.id === id);
-  if(!p) return;
-  
-  editingProductId = id;
-  document.querySelector('.admin-box').scrollTop = 0;
-
+  const p = products.find(x => x.id === id); if(!p) return; editingProductId = id; document.querySelector('.admin-box').scrollTop = 0;
   if (p.tab === "แอพ-เกม iOS/Android") {
-    document.getElementById('a_tab').value = "IOS-ANDROID";
-    toggleAdminForm();
-    document.getElementById('ios_name').value = p.name;
-    document.getElementById('ios_desc').value = p.desc;
-    document.getElementById('ios_status').value = p.status;
-    document.getElementById('ios_price').value = p.price;
-    document.getElementById('ios_icon').value = p.icon;
-    document.getElementById('cb_ios').checked = p.os.toLowerCase().includes("ios");
-    document.getElementById('cb_android').checked = p.os.toLowerCase().includes("android");
+    document.getElementById('a_tab').value = "IOS-ANDROID"; toggleAdminForm();
+    document.getElementById('ios_name').value = p.name; document.getElementById('ios_desc').value = p.desc; document.getElementById('ios_status').value = p.status;
+    document.getElementById('ios_price').value = p.price; document.getElementById('ios_icon').value = p.icon;
+    document.getElementById('cb_ios').checked = p.os.toLowerCase().includes("ios"); document.getElementById('cb_android').checked = p.os.toLowerCase().includes("android");
   } else {
-    document.getElementById('a_tab').value = p.tab;
-    toggleAdminForm();
-    document.getElementById('o_cat').value = p.cat;
-    document.getElementById('o_appDesc').value = p.appDesc;
-    document.getElementById('o_subCat').value = p.subCat;
-    document.getElementById('o_name').value = p.name;
-    document.getElementById('o_desc').value = p.desc;
-    document.getElementById('o_status').value = p.status;
-    document.getElementById('o_price').value = p.price;
-    document.getElementById('o_icon').value = p.icon;
+    document.getElementById('a_tab').value = p.tab; toggleAdminForm();
+    document.getElementById('o_cat').value = p.cat; document.getElementById('o_appDesc').value = p.appDesc; document.getElementById('o_subCat').value = p.subCat;
+    document.getElementById('o_name').value = p.name; document.getElementById('o_desc').value = p.desc; document.getElementById('o_status').value = p.status;
+    document.getElementById('o_price').value = p.price; document.getElementById('o_icon').value = p.icon;
   }
-
   const submitBtn = document.getElementById('admin_submit_btn');
   if(submitBtn) {
-    submitBtn.innerText = "💾 บันทึกการแก้ไข";
-    submitBtn.style.background = "#ffc107";
-    submitBtn.style.color = "#000";
-    
+    submitBtn.innerText = "💾 บันทึกการแก้ไข"; submitBtn.style.background = "#ffc107"; submitBtn.style.color = "#000";
     if(!document.getElementById('cancel_edit_btn')) {
-      const cancelBtn = document.createElement('button');
-      cancelBtn.id = 'cancel_edit_btn';
-      cancelBtn.innerText = "❌ ยกเลิกแก้ไข";
+      const cancelBtn = document.createElement('button'); cancelBtn.id = 'cancel_edit_btn'; cancelBtn.innerText = "❌ ยกเลิกแก้ไข";
       cancelBtn.style.cssText = "width: 100%; padding: 10px; background: #eee; color:#333; border: none; border-radius: 8px; font-size: 14px; margin-top: 10px; font-weight:bold; cursor: pointer;";
-      cancelBtn.onclick = cancelEdit;
-      submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
+      cancelBtn.onclick = cancelEdit; submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
     }
   }
 }
 
 function cancelEdit() {
-  editingProductId = null;
-  document.querySelectorAll('#form_ios input, #form_other input').forEach(inp => inp.value = "");
-  document.getElementById('cb_ios').checked = true;
-  document.getElementById('cb_android').checked = true;
-
+  editingProductId = null; document.querySelectorAll('#form_ios input, #form_other input').forEach(inp => inp.value = "");
+  document.getElementById('cb_ios').checked = true; document.getElementById('cb_android').checked = true;
   const submitBtn = document.getElementById('admin_submit_btn');
-  if(submitBtn) {
-    submitBtn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
-    submitBtn.style.background = "var(--primary)";
-    submitBtn.style.color = "#fff";
-  }
-  const cancelBtn = document.getElementById('cancel_edit_btn');
-  if(cancelBtn) cancelBtn.remove();
+  if(submitBtn) { submitBtn.innerText = "เพิ่มสินค้าเข้าหมวดนี้"; submitBtn.style.background = "var(--primary)"; submitBtn.style.color = "#fff"; }
+  const cancelBtn = document.getElementById('cancel_edit_btn'); if(cancelBtn) cancelBtn.remove();
 }
 
 async function deleteProduct(id) {
   if(!confirm("ยืนยันการลบสินค้านี้? (ลบแล้วกู้คืนไม่ได้นะ)")) return;
   await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "delete_product", id: id }) });
-  await loadData(); 
-  renderAdminProductList(); 
-  alert("ลบสินค้าเรียบร้อย!");
+  await loadData(); renderAdminProductList(); alert("ลบสินค้าเรียบร้อย!");
 }
 
 async function addProduct(e) {
-  const btn = e.target; 
-  btn.innerText = "กำลังบันทึก...";
-  btn.disabled = true;
-  
+  const btn = e.target; btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
   const tab = document.getElementById('a_tab').value;
 
   if (tab === "IOS-ANDROID") {
     let osSelected = [];
-    if(document.getElementById('cb_ios').checked) osSelected.push("iOS");
-    if(document.getElementById('cb_android').checked) osSelected.push("Android");
-
+    if(document.getElementById('cb_ios').checked) osSelected.push("iOS"); if(document.getElementById('cb_android').checked) osSelected.push("Android");
     if (editingProductId) {
-      let payload = { action: "edit_product", id: editingProductId, tab: tab };
-      payload.name = document.getElementById('ios_name').value;
-      payload.desc = document.getElementById('ios_desc').value;
-      payload.os = osSelected.join(" / ");
-      payload.status = document.getElementById('ios_status').value;
-      payload.price = document.getElementById('ios_price').value;
-      payload.icon = document.getElementById('ios_icon').value;
-      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-      alert("อัปเดตข้อมูลสำเร็จ!");
-      cancelEdit();
+      let payload = { action: "edit_product", id: editingProductId, tab: tab, name: document.getElementById('ios_name').value, desc: document.getElementById('ios_desc').value, os: osSelected.join(" / "), status: document.getElementById('ios_status').value, price: document.getElementById('ios_price').value, icon: document.getElementById('ios_icon').value };
+      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }); alert("อัปเดตข้อมูลสำเร็จ!"); cancelEdit();
     } else {
-      if(osSelected.length === 0) {
-        alert("กรุณาเลือกระบบปฏิบัติการอย่างน้อย 1 อย่าง");
-        btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
-        btn.disabled = false;
-        return;
-      }
+      if(osSelected.length === 0) { alert("กรุณาเลือกระบบปฏิบัติการอย่างน้อย 1 อย่าง"); btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้"; btn.disabled = false; return; }
       for(let osName of osSelected) {
-        let payload = {
-          action: "add", tab: tab, os: osName,
-          name: document.getElementById('ios_name').value,
-          desc: document.getElementById('ios_desc').value,
-          status: document.getElementById('ios_status').value,
-          price: document.getElementById('ios_price').value,
-          icon: document.getElementById('ios_icon').value
-        };
+        let payload = { action: "add", tab: tab, os: osName, name: document.getElementById('ios_name').value, desc: document.getElementById('ios_desc').value, status: document.getElementById('ios_status').value, price: document.getElementById('ios_price').value, icon: document.getElementById('ios_icon').value };
         await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
       }
-      alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
-      document.querySelectorAll('#form_ios input').forEach(inp => inp.value = ""); 
+      alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว"); document.querySelectorAll('#form_ios input').forEach(inp => inp.value = ""); 
     }
   } else {
-    let payload = { tab: tab };
-    payload.cat = document.getElementById('o_cat').value;
-    payload.appDesc = document.getElementById('o_appDesc').value;
-    payload.subCat = document.getElementById('o_subCat').value;
-    payload.name = document.getElementById('o_name').value;
-    payload.desc = document.getElementById('o_desc').value;
-    payload.status = document.getElementById('o_status').value; 
-    payload.price = document.getElementById('o_price').value;
-    payload.icon = document.getElementById('o_icon').value;
-    
-    if (editingProductId) {
-      payload.action = "edit_product";
-      payload.id = editingProductId;
-      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-      alert("อัปเดตข้อมูลสำเร็จ!");
-      cancelEdit();
-    } else {
-      payload.action = "add";
-      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-      alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
-      document.querySelectorAll('#form_other input').forEach(inp => inp.value = ""); 
-    }
+    let payload = { tab: tab, cat: document.getElementById('o_cat').value, appDesc: document.getElementById('o_appDesc').value, subCat: document.getElementById('o_subCat').value, name: document.getElementById('o_name').value, desc: document.getElementById('o_desc').value, status: document.getElementById('o_status').value, price: document.getElementById('o_price').value, icon: document.getElementById('o_icon').value };
+    if (editingProductId) { payload.action = "edit_product"; payload.id = editingProductId; await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }); alert("อัปเดตข้อมูลสำเร็จ!"); cancelEdit(); } 
+    else { payload.action = "add"; await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }); alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว"); document.querySelectorAll('#form_other input').forEach(inp => inp.value = ""); }
   }
-
-  await loadData(); 
-  renderAdminProductList(); 
-  btn.disabled = false;
+  await loadData(); renderAdminProductList(); btn.disabled = false;
   if (!editingProductId) btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
 }
+
+async function loadStatistics() {
+  const btn = document.querySelector('button[onclick="loadStatistics()"]');
+  if(btn) btn.innerText = "กำลังโหลด...";
+  try {
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "get_stats" }) });
+    const data = await res.json();
+    if(data.success) {
+      document.getElementById('stat_views').innerText = data.views.toLocaleString();
+      document.getElementById('stat_revenue').innerText = data.revenue.toLocaleString();
+      document.getElementById('stat_bestapp').innerText = data.bestApp;
+      const tbody = document.getElementById('stat_table_body'); tbody.innerHTML = "";
+      if(data.logs.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px; text-align: center;">ยังไม่มีข้อมูลการขาย</td></tr>'; } 
+      else {
+         data.logs.slice(0, 15).forEach(log => {
+           let statusColor = log.status === "Pending" ? "orange" : "#3B96F5";
+           tbody.innerHTML += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding: 8px;">${log.time}</td><td style="padding: 8px;">${log.items}</td><td style="padding: 8px; color: #4ade80;">${log.price.toLocaleString()}</td><td style="padding: 8px; color: ${statusColor};">${log.status}</td></tr>`;
+         });
+      }
+    }
+  } catch(e) { console.error("เกิดข้อผิดพลาดในการดึงสถิติ"); }
+  if(btn) btn.innerText = "🔄 อัปเดตข้อมูล";
+}
+
+window.addEventListener('load', () => {
+  fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "record_view" }) }).catch(err => console.log(err));
+});
 
 loadData();
 </script>
