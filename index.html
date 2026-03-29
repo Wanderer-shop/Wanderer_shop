@@ -46,8 +46,8 @@ body {
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 0 15px rgba(59,150,245,0.6); margin-bottom: 5px; cursor: pointer; }
 .hero-sub { font-size: 14px; color: #ddd; }
 
-/* Tabs Navigation */
-.tab-nav { display: flex; overflow-x: auto; gap: 10px; padding: 0 20px 15px; justify-content: flex-start; scrollbar-width: none; position: relative; z-index: 10; margin-top: -15px; }
+/* Tabs Navigation - ขยับแท็บไว้ตรงกลาง */
+.tab-nav { display: flex; overflow-x: auto; gap: 10px; padding: 0 20px 15px; justify-content: center; scrollbar-width: none; position: relative; z-index: 10; margin-top: -15px; }
 .tab-nav::-webkit-scrollbar { display: none; }
 .tab-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 20px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border-color: transparent; }
@@ -55,14 +55,15 @@ body {
 /* Content & Grid */
 .content { max-width: 600px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 5; }
 .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
-.app-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s; color: #000; border: 2px solid transparent; }
+.app-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s; color: #000; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; }
 .app-card:hover { transform: translateY(-3px); border-color: var(--primary); }
 .app-card img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-bottom: 10px; }
 .app-card h4 { font-size: 16px; margin-bottom: 5px; }
 .app-card .app-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
 
-.os-btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-.os-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); padding: 6px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; }
+/* OS Buttons - แยกเป็นกล่อง ปรับให้พอดีข้อความและจัดกลาง */
+.os-btn-group { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; width: 100%; }
+.os-btn { background: #fff; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; width: fit-content; }
 .os-btn.outstock { background: #eee; border-color: #ccc; color: #999; cursor: not-allowed; }
 .os-btn:hover:not(.outstock) { background: var(--primary); color: #fff; }
 
@@ -83,7 +84,7 @@ body {
 #adminBtn { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #C49646; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .admin-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; }
 .admin-box { background: #fff; color: #000; padding: 20px; width: 100%; max-width: 450px; border-radius: 15px; position: relative; }
-.admin-box input, .admin-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; background: #fff; }
+.admin-box input[type="text"], .admin-box input[type="number"], .admin-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; background: #fff; }
 .admin-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
 .admin-nav-btn { flex: 1; padding: 10px; border: none; background: #f0f0f0; border-radius: 8px; font-weight: bold; cursor: pointer; color: #555; font-family: inherit; font-size: 14px; transition: 0.2s; }
 .admin-nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 10px rgba(59,150,245,0.3); }
@@ -134,7 +135,10 @@ let adminMode = false;
 let tapCount = 0;
 let currentTabList = []; 
 
-// Particles
+// 🛑 ซ่อนแท็บของระบบทั้งหมด ไม่ให้แสดงทั้งบนเว็บและหน้าเลือกหมวดหมู่ในแอดมิน
+const hiddenSystemTabs = ["Products", "ตั้งค่าร้าน", "ออเดอร์", "Database", "StoreInfo", "Orders"];
+
+// Particles (อิโมจิพื้นหลัง)
 const P = document.getElementById('pts');
 ['🎐','🍃','🌌'].forEach(e => {
   for (let j = 0; j < 5; j++) {
@@ -172,21 +176,20 @@ function applyStoreInfo() {
   }
 }
 
-// 1. ระบบแท็บหน้าเว็บ ล็อก 4 แท็บหลักให้อยู่เสมอ
+// โหลดแท็บหน้าเว็บ (แท็บหลัก 4 แท็บ + แท็บใหม่ ซ่อนแท็บระบบ)
 function renderTabsNav() {
   const tabNav = document.getElementById('tab-navigation'); 
   let html = `<button class="tab-btn active" id="btn_tab_ข้อมูลร้าน" onclick="switchMainTab('ข้อมูลร้าน')">ข้อมูลร้าน</button>`;
   
   const priorityTabs = ["แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
   
-  // ล็อกแท็บหลักให้แสดงเสมอ
   priorityTabs.forEach(t => {
     html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
   });
 
-  // นำแท็บใหม่ที่แอดมินสร้างมาต่อท้าย (ตัดแท็บระบบและแท็บหลักออก)
   currentTabList.forEach(t => {
-    if(!priorityTabs.includes(t) && t !== "ข้อมูลร้าน" && t !== "StoreInfo" && t !== "Orders") {
+    // กรองแท็บระบบออก ไม่ให้เอามาทำเป็นปุ่ม
+    if(!priorityTabs.includes(t) && t !== "ข้อมูลร้าน" && !hiddenSystemTabs.includes(t)) {
       html += `<button class="tab-btn" id="btn_tab_${t}" onclick="switchMainTab('${t}')">${t}</button>`;
     }
   });
@@ -235,6 +238,7 @@ function switchMainTab(tabName) {
           <div class="os-btn-group">`;
             app.osList.forEach(pkg => {
               const outstock = pkg.status === 'outstock' ? 'outstock' : '';
+              // 📱 สร้างปุ่มพอดีตัวหนังสือ (ไม่เชื่อมคำ)
               html += `<button class="os-btn ${outstock}" onclick="${outstock ? '' : `addToCart('${pkg.id}')`}">${pkg.os} - ${pkg.price}฿</button>`;
             });
       html += `</div></div>`;
@@ -350,16 +354,16 @@ async function checkout() {
 
   if (currentTab === "เติมเกม") {
     text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
-    cart.forEach((i, idx) => { text += `${idx + 1}. ${i.name}\n   แพ็กเกจ: ${i.desc || '-'}\n   ราคา: ${i.price} บาท\n`; });
+    cart.forEach((i, idx) => { text += `${idx + 1}. ${i.name}\n   แพ็กเกจ: ${i.os || i.desc || '-'}\n   ราคา: ${i.price} บาท\n`; });
     text += `---------------------------\n*ยอดรวมทั้งสิ้น: ${total} บาท*\n---------------------------\n*แจ้งไอดี ได้เลยค่ะ*`;
   } else if (currentTab === "แอพพรีเมี่ยม") {
     text = `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
-    cart.forEach((i, idx) => { text += `${idx + 1}. ${i.name}\n   แพ็กเกจ: ${i.desc || '-'}\n   ราคา: ${i.price} บาท\n`; });
+    cart.forEach((i, idx) => { text += `${idx + 1}. ${i.name}\n   แพ็กเกจ: ${i.os || i.desc || '-'}\n   ราคา: ${i.price} บาท\n`; });
     text += `---------------------------\n*ยอดรวมทั้งสิ้น: ${total} บาท*\n---------------------------\nรบกวนรอแอดมินตอบก่อนค่อยโอนนะคะ`;
   } else {
     text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
     text += `✿  𓈒  รวมยอด    ꒰  ${total}฿  ꒱  ݂🎐\n`;
-    cart.forEach(i => { text += `♡ 🍃 ݂  ${i.name} 𓈒\n`; });
+    cart.forEach(i => { text += `♡ 🍃 ݂  ${i.name} (${i.os || ''}) 𓈒\n`; });
     text += `---------------------------\nรบกวนรอแม่ค้าเช็คเมล-ยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
   }
 
@@ -391,7 +395,6 @@ function checkAdminLogin() {
   }
 }
 
-// 2. ปรับโฉมหน้าต่าง Admin ใหม่ มีปุ่มสลับเมนูชัดเจน
 function openAdmin() {
   if(document.getElementById('adminPanel')) document.getElementById('adminPanel').remove();
 
@@ -400,7 +403,8 @@ function openAdmin() {
   let allTabsForAdmin = [...new Set([...mainTabs, ...currentTabList])];
 
   allTabsForAdmin.forEach(t => {
-    if (t !== "ข้อมูลร้าน" && t !== "StoreInfo" && t !== "Orders") {
+    // 🛑 กรองแท็บระบบทั้งหมด และกรอง "ข้อมูลร้าน" ออกจาก dropdown เพิ่มสินค้า
+    if (!hiddenSystemTabs.includes(t) && t !== "ข้อมูลร้าน") {
       let val = (t === "แอพ-เกม iOS/Android") ? "IOS-ANDROID" : t;
       tabOptions += `<option value="${val}">${t}</option>`;
     }
@@ -425,16 +429,16 @@ function openAdmin() {
           </select>
           
           <label style="font-size:13px; font-weight:bold; color:#555;">ข้อความต้อนรับ:</label>
-          <input id="st_welcome" placeholder="ข้อความต้อนรับ" value="${storeInfo.welcome || ''}">
+          <input type="text" id="st_welcome" placeholder="ข้อความต้อนรับ" value="${storeInfo.welcome || ''}">
           
           <label style="font-size:13px; font-weight:bold; color:#555;">Line ID ติดต่อ:</label>
-          <input id="st_line" placeholder="Line ID (เช่น @wanderer)" value="${storeInfo.line || ''}">
+          <input type="text" id="st_line" placeholder="Line ID (เช่น @wanderer)" value="${storeInfo.line || ''}">
           
           <label style="font-size:13px; font-weight:bold; color:#555;">เวลาทำการ:</label>
-          <input id="st_hours" placeholder="เช่น 11:00 - 00:00 น." value="${storeInfo.hours || ''}">
+          <input type="text" id="st_hours" placeholder="เช่น 11:00 - 00:00 น." value="${storeInfo.hours || ''}">
           
           <label style="font-size:13px; font-weight:bold; color:#555;">ลิงก์โลโก้ร้าน:</label>
-          <input id="st_logo" placeholder="URL รูปภาพโลโก้ร้าน" value="${storeInfo.logo || ''}">
+          <input type="text" id="st_logo" placeholder="URL รูปภาพโลโก้ร้าน" value="${storeInfo.logo || ''}">
           
           <button onclick="saveStoreInfo(event)" style="width:100%; padding:12px; background:#00c853; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:10px;">💾 บันทึกข้อมูลร้านค้า</button>
         </div>
@@ -443,7 +447,7 @@ function openAdmin() {
           <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e1e8ee;">
             <label style="font-size:13px; font-weight:bold; color:#333;">➕ สร้างแท็บหมวดหมู่ใหม่:</label>
             <div style="display:flex; gap:10px; margin-top:8px;">
-              <input id="new_tab_input" placeholder="ชื่อแท็บใหม่" style="margin-bottom:0; flex:1;">
+              <input type="text" id="new_tab_input" placeholder="ชื่อแท็บใหม่" style="margin-bottom:0; flex:1;">
               <button style="margin-bottom:0; padding:8px 15px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="adminAddTab()">สร้าง</button>
             </div>
           </div>
@@ -454,25 +458,35 @@ function openAdmin() {
           </select>
           
           <div id="form_ios" style="display:none; background:#f0f5fa; padding:12px; border-radius:8px;">
-            <input id="ios_name" placeholder="ชื่อแอป (หมวดหลัก)">
-            <input id="ios_desc" placeholder="รายละเอียดแอป (เว้นได้)">
-            <input id="ios_os" placeholder="ระบบ/แพ็กเกจ (เช่น iOS, 1 เดือน)">
+            <input type="text" id="ios_name" placeholder="ชื่อแอป (หมวดหลัก)">
+            <input type="text" id="ios_desc" placeholder="รายละเอียดแอป (เว้นได้)">
+            
+            <label style="font-size:13px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📱 เลือกระบบ (ติ๊ก 1 หรือ 2 ก็ได้):</label>
+            <div style="display:flex; gap:15px; margin-bottom:12px; background:#fff; padding:10px; border-radius:8px; border:1px solid #ddd;">
+              <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:bold; color:#000;">
+                <input type="checkbox" id="cb_ios" value="iOS" style="width:auto; margin:0;" checked> iOS
+              </label>
+              <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:bold; color:#000;">
+                <input type="checkbox" id="cb_android" value="Android" style="width:auto; margin:0;" checked> Android
+              </label>
+            </div>
+
             <select id="ios_status">
               <option value="ready">สถานะ: พร้อมส่ง</option>
               <option value="not_ready">สถานะ: สินค้าหมด</option>
             </select>
-            <input id="ios_price" type="number" placeholder="ราคา (บาท)">
-            <input id="ios_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
+            <input type="number" id="ios_price" placeholder="ราคา (บาท)">
+            <input type="text" id="ios_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
           </div>
 
           <div id="form_other" style="background:#f0f5fa; padding:12px; border-radius:8px;">
-            <input id="o_cat" placeholder="หมวดหมู่หลัก (ชื่อแอป)">
-            <input id="o_appDesc" placeholder="รายละเอียดแอป (เว้นได้)">
-            <input id="o_subCat" placeholder="กลุ่มตัวเลือกแพ็กเกจ (เว้นได้)">
-            <input id="o_name" placeholder="ชื่อแพ็กเกจย่อย">
-            <input id="o_desc" placeholder="รายละเอียดย่อย (เว้นได้)">
-            <input id="o_price" type="number" placeholder="ราคา (บาท)">
-            <input id="o_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
+            <input type="text" id="o_cat" placeholder="หมวดหมู่หลัก (ชื่อแอป)">
+            <input type="text" id="o_appDesc" placeholder="รายละเอียดแอป (เว้นได้)">
+            <input type="text" id="o_subCat" placeholder="กลุ่มตัวเลือกแพ็กเกจ (เว้นได้)">
+            <input type="text" id="o_name" placeholder="ชื่อแพ็กเกจย่อย">
+            <input type="text" id="o_desc" placeholder="รายละเอียดย่อย (เว้นได้)">
+            <input type="number" id="o_price" placeholder="ราคา (บาท)">
+            <input type="text" id="o_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
           </div>
           
           <button onclick="addProduct(event)" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; margin-top: 15px; font-weight:bold; cursor: pointer;">เพิ่มสินค้าเข้าหมวดนี้</button>
@@ -487,10 +501,9 @@ function openAdmin() {
     </div>
   `);
   
-  switchAdminView('store'); // เปิดมาหน้าแรกให้โชว์ข้อมูลร้านก่อน
+  switchAdminView('store');
 }
 
-// ฟังก์ชันสลับเมนูในแอดมิน
 function switchAdminView(view) {
   document.getElementById('btn_adm_store').classList.remove('active');
   document.getElementById('btn_adm_products').classList.remove('active');
@@ -508,7 +521,6 @@ function switchAdminView(view) {
   }
 }
 
-// ฟังก์ชันเซฟข้อมูลร้าน
 async function saveStoreInfo(e) {
   const btn = e.target;
   const oldText = btn.innerText;
@@ -524,7 +536,7 @@ async function saveStoreInfo(e) {
   };
 
   await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-  await loadData(); // โหลดใหม่
+  await loadData(); 
   btn.innerText = oldText;
   alert("บันทึกข้อมูลร้านค้าเรียบร้อย!");
 }
@@ -539,7 +551,6 @@ async function adminAddTab() {
   loadData();
 }
 
-// 3. จัดกลุ่มสินค้าในแอดมินแยกตามชื่อแอป
 function renderAdminProductList() {
   const container = document.getElementById('admin_product_list');
   if (!container) return; 
@@ -553,7 +564,6 @@ function renderAdminProductList() {
     return;
   }
 
-  // ระบบจัดกลุ่ม (Grouping) ตามชื่อแอป
   let groups = {};
   filteredProducts.forEach(p => {
     let groupName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.name : p.cat;
@@ -603,16 +613,35 @@ async function addProduct(e) {
   btn.innerText = "กำลังบันทึก...";
   
   const tab = document.getElementById('a_tab').value;
-  let payload = { action: "add", tab: tab };
 
   if (tab === "IOS-ANDROID") {
-    payload.name = document.getElementById('ios_name').value;
-    payload.desc = document.getElementById('ios_desc').value;
-    payload.os = document.getElementById('ios_os').value;
-    payload.status = document.getElementById('ios_status').value;
-    payload.price = document.getElementById('ios_price').value;
-    payload.icon = document.getElementById('ios_icon').value;
+    // 📱 เช็คว่าแอดมินติ๊กระบบไหนมาบ้าง
+    let osSelected = [];
+    if(document.getElementById('cb_ios').checked) osSelected.push("iOS");
+    if(document.getElementById('cb_android').checked) osSelected.push("Android");
+
+    if(osSelected.length === 0) {
+      alert("กรุณาเลือกระบบปฏิบัติการอย่างน้อย 1 อย่าง");
+      btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
+      return;
+    }
+
+    // 📱 ลูปบันทึกข้อมูลแยกกันตามระบบที่ติ๊ก (สร้าง 1 หรือ 2 ปุ่มแยกกันอัตโนมัติ)
+    for(let osName of osSelected) {
+      let payload = {
+        action: "add",
+        tab: tab,
+        name: document.getElementById('ios_name').value,
+        desc: document.getElementById('ios_desc').value,
+        os: osName, // ส่งค่า iOS หรือ Android แยกกัน
+        status: document.getElementById('ios_status').value,
+        price: document.getElementById('ios_price').value,
+        icon: document.getElementById('ios_icon').value
+      };
+      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+    }
   } else {
+    let payload = { action: "add", tab: tab };
     payload.cat = document.getElementById('o_cat').value;
     payload.appDesc = document.getElementById('o_appDesc').value;
     payload.subCat = document.getElementById('o_subCat').value;
@@ -620,9 +649,9 @@ async function addProduct(e) {
     payload.desc = document.getElementById('o_desc').value;
     payload.price = document.getElementById('o_price').value;
     payload.icon = document.getElementById('o_icon').value;
+    await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
   }
 
-  await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
   await loadData(); 
   alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
   document.getElementById('adminPanel').remove(); 
