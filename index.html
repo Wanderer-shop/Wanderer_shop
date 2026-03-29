@@ -111,7 +111,6 @@ body {
 .admin-nav-btn { flex: 1; padding: 10px; border: none; background: #f0f0f0; border-radius: 8px; font-weight: bold; cursor: pointer; color: #555; font-family: inherit; font-size: 14px; transition: 0.2s; }
 .admin-nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 10px rgba(59,150,245,0.3); }
 .admin-group-title { background: #eef5ff; color: var(--primary); padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-top: 15px; margin-bottom: 5px; font-size: 14px; border-left: 4px solid var(--primary); }
-.admin-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 5px; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -160,8 +159,8 @@ body {
 </div>
 
 <script>
-// 📌 นำลิงก์ API ของ Google Apps Script มาใส่ตรงนี้ครับ
-const API_URL = "https://script.google.com/macros/s/AKfycbzgtjrkxS0zyH51tYnkl2YV6oAFFkzASRVeoLTCXcInz_SQX8Ipa4vtZq9lb_BFLzYR/exec"; 
+// ใส่ลิงก์ API ของ Google Apps Script ของคุณตรงนี้
+const API_URL = "https://script.google.com/macros/s/AKfycbxnnymzqYG0ElcMrGgEc70yyhbeuFSViYu_9dDATChzp2jLeLdtfzVNvJksbTT58kXx/exec"; 
 
 let products = [];
 let storeInfo = { status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', line: '@wanderer', customCards: [] };
@@ -172,6 +171,7 @@ let tapCount = 0;
 let currentTabList = []; 
 let orderTextToCopy = ""; 
 let tempCustomCards = []; 
+let editingProductId = null; // ตัวแปรเก็บ ID สินค้าที่กำลังแก้ไข
 
 const hiddenSystemTabs = ["Products", "ตั้งค่าร้าน", "ออเดอร์", "Database", "StoreInfo", "Orders"];
 
@@ -656,7 +656,7 @@ function openAdmin() {
             <input type="text" id="o_icon" placeholder="ลิงก์รูปภาพ หรือ อิโมจิ">
           </div>
           
-          <button onclick="addProduct(event)" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; margin-top: 15px; font-weight:bold; cursor: pointer;">เพิ่มสินค้าเข้าหมวดนี้</button>
+          <button id="admin_submit_btn" onclick="addProduct(event)" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; margin-top: 15px; font-weight:bold; cursor: pointer;">เพิ่มสินค้าเข้าหมวดนี้</button>
           
           <hr style="margin:20px 0 15px 0; border: 1px dashed #ccc;">
           <h4 style="margin-bottom:10px; color:#333; font-size:15px;">📦 สินค้าในแท็บนี้</h4>
@@ -689,19 +689,145 @@ function switchAdminView(view) {
   }
 }
 
+function renderAdminProductList() {
+  const container = document.getElementById('admin_product_list');
+  if (!container) return; 
+  
+  const tab = document.getElementById('a_tab').value;
+  let targetTabName = tab === "IOS-ANDROID" ? "แอพ-เกม iOS/Android" : tab;
+  let filteredProducts = products.filter(p => p.tab === targetTabName);
+  
+  if (filteredProducts.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; margin: 20px 0;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
+    return;
+  }
+
+  let groups = {};
+  filteredProducts.forEach(p => {
+    let groupName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.name : p.cat;
+    if(!groupName) groupName = "ไม่มีหมวดหมู่";
+    if(!groups[groupName]) groups[groupName] = [];
+    groups[groupName].push(p);
+  });
+
+  let html = '';
+  for(let gName in groups) {
+    let gStatus = '';
+    if (targetTabName !== 'แอพ-เกม iOS/Android') {
+      let hasNotReady = groups[gName].some(p => p.status === 'not_ready');
+      let allOut = groups[gName].every(p => p.status === 'outstock');
+      if (hasNotReady) gStatus = `<span style="color:#ff1744; font-size:12px; font-weight:normal; margin-left:8px;">(เมลไม่พร้อม)</span>`;
+      else if (allOut) gStatus = `<span style="color:#ff4b7e; font-size:12px; font-weight:normal; margin-left:8px;">(หมด)</span>`;
+    }
+
+    html += `<div class="admin-group-title">${gName}${gStatus}</div>`;
+    
+    groups[gName].forEach(p => {
+      let subName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.os : p.name;
+      let statusColor = p.status === 'outstock' ? '#ff4b7e' : (p.status === 'not_ready' ? '#ff1744' : '#333');
+      let statusText = p.status === 'outstock' ? '(หมด)' : (p.status === 'not_ready' ? '(เมลไม่พร้อม)' : '');
+      
+      html += `
+        <div class="admin-item" style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div style="flex:1; color:${statusColor};">
+            <strong>- ${subName}</strong> <span style="font-size:11px; color:${statusColor};">${statusText}</span><br>
+            <span style="color:#888; font-size:11px; margin-left:10px;">${p.desc || p.appDesc || 'ไม่มีรายละเอียด'}</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px; min-width:80px;">
+            <span style="color:var(--primary); font-weight:bold;">${p.price} ฿</span>
+            <div style="display:flex; gap:5px;">
+              <button onclick="editProduct('${p.id}')" style="background:#ffc107; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">✏️ แก้ไข</button>
+              <button onclick="deleteProduct('${p.id}')" style="background:#ff4b7e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🗑️ ลบ</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+  container.innerHTML = html;
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if(!p) return;
+  
+  editingProductId = id;
+  document.querySelector('.admin-box').scrollTop = 0;
+
+  if (p.tab === "แอพ-เกม iOS/Android") {
+    document.getElementById('a_tab').value = "IOS-ANDROID";
+    toggleAdminForm();
+    document.getElementById('ios_name').value = p.name;
+    document.getElementById('ios_desc').value = p.desc;
+    document.getElementById('ios_status').value = p.status;
+    document.getElementById('ios_price').value = p.price;
+    document.getElementById('ios_icon').value = p.icon;
+    document.getElementById('cb_ios').checked = p.os.toLowerCase().includes("ios");
+    document.getElementById('cb_android').checked = p.os.toLowerCase().includes("android");
+  } else {
+    document.getElementById('a_tab').value = p.tab;
+    toggleAdminForm();
+    document.getElementById('o_cat').value = p.cat;
+    document.getElementById('o_appDesc').value = p.appDesc;
+    document.getElementById('o_subCat').value = p.subCat;
+    document.getElementById('o_name').value = p.name;
+    document.getElementById('o_desc').value = p.desc;
+    document.getElementById('o_status').value = p.status;
+    document.getElementById('o_price').value = p.price;
+    document.getElementById('o_icon').value = p.icon;
+  }
+
+  const submitBtn = document.getElementById('admin_submit_btn');
+  if(submitBtn) {
+    submitBtn.innerText = "💾 บันทึกการแก้ไข";
+    submitBtn.style.background = "#ffc107";
+    submitBtn.style.color = "#000";
+    
+    if(!document.getElementById('cancel_edit_btn')) {
+      const cancelBtn = document.createElement('button');
+      cancelBtn.id = 'cancel_edit_btn';
+      cancelBtn.innerText = "❌ ยกเลิกแก้ไข";
+      cancelBtn.style.cssText = "width: 100%; padding: 10px; background: #eee; color:#333; border: none; border-radius: 8px; font-size: 14px; margin-top: 10px; font-weight:bold; cursor: pointer;";
+      cancelBtn.onclick = cancelEdit;
+      submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
+    }
+  }
+}
+
+function cancelEdit() {
+  editingProductId = null;
+  document.querySelectorAll('#form_ios input, #form_other input').forEach(inp => inp.value = "");
+  document.getElementById('cb_ios').checked = true;
+  document.getElementById('cb_android').checked = true;
+
+  const submitBtn = document.getElementById('admin_submit_btn');
+  if(submitBtn) {
+    submitBtn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
+    submitBtn.style.background = "var(--primary)";
+    submitBtn.style.color = "#fff";
+  }
+  const cancelBtn = document.getElementById('cancel_edit_btn');
+  if(cancelBtn) cancelBtn.remove();
+}
+
+async function deleteProduct(id) {
+  if(!confirm("ยืนยันการลบสินค้านี้? (ลบแล้วกู้คืนไม่ได้นะ)")) return;
+  await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "delete_product", id: id }) });
+  await loadData(); 
+  renderAdminProductList(); 
+  alert("ลบสินค้าเรียบร้อย!");
+}
+
 function adminAddCustomCard() {
   const title = document.getElementById('cc_title').value;
   const desc = document.getElementById('cc_desc').value;
   const icon = document.getElementById('cc_icon').value;
-  
   if(!title) return alert("กรุณาใส่ชื่อหัวข้อการ์ด");
   
   tempCustomCards.push({ title: title, desc: desc, icon: icon });
-  
   document.getElementById('cc_title').value = '';
   document.getElementById('cc_desc').value = '';
   document.getElementById('cc_icon').value = '';
-  
   renderAdminCustomCards();
 }
 
@@ -759,64 +885,6 @@ async function adminAddTab() {
   loadData();
 }
 
-function renderAdminProductList() {
-  const container = document.getElementById('admin_product_list');
-  if (!container) return; 
-  
-  const tab = document.getElementById('a_tab').value;
-  let targetTabName = tab === "IOS-ANDROID" ? "แอพ-เกม iOS/Android" : tab;
-  let filteredProducts = products.filter(p => p.tab === targetTabName);
-  
-  if (filteredProducts.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; margin: 20px 0;">ยังไม่มีสินค้าในหมวดหมู่นี้</p>';
-    return;
-  }
-
-  let groups = {};
-  filteredProducts.forEach(p => {
-    let groupName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.name : p.cat;
-    if(!groupName) groupName = "ไม่มีหมวดหมู่";
-    if(!groups[groupName]) groups[groupName] = [];
-    groups[groupName].push(p);
-  });
-
-  let html = '';
-  for(let gName in groups) {
-    let gStatus = '';
-    
-    if (targetTabName !== 'แอพ-เกม iOS/Android') {
-      let hasNotReady = groups[gName].some(p => p.status === 'not_ready');
-      let allOut = groups[gName].every(p => p.status === 'outstock');
-      if (hasNotReady) {
-        gStatus = `<span style="color:#ff1744; font-size:12px; font-weight:normal; margin-left:8px;">(เมลไม่พร้อม)</span>`;
-      } else if (allOut) {
-        gStatus = `<span style="color:#ff4b7e; font-size:12px; font-weight:normal; margin-left:8px;">(หมด)</span>`;
-      }
-    }
-
-    html += `<div class="admin-group-title">${gName}${gStatus}</div>`;
-    
-    groups[gName].forEach(p => {
-      let subName = (targetTabName === 'แอพ-เกม iOS/Android') ? p.os : p.name;
-      let statusColor = p.status === 'outstock' ? '#ff4b7e' : (p.status === 'not_ready' ? '#ff1744' : '#333');
-      let statusText = p.status === 'outstock' ? '(หมด)' : (p.status === 'not_ready' ? '(เมลไม่พร้อม)' : '');
-      
-      html += `
-        <div class="admin-item">
-          <div style="color:${statusColor};">
-            <strong>- ${subName}</strong> <span style="font-size:11px; color:${statusColor};">${statusText}</span><br>
-            <span style="color:#888; font-size:11px; margin-left:10px;">${p.desc || p.appDesc || 'ไม่มีรายละเอียด'}</span>
-          </div>
-          <div style="color:var(--primary); font-weight:bold; white-space:nowrap;">
-            ${p.price} ฿
-          </div>
-        </div>
-      `;
-    });
-  }
-  container.innerHTML = html;
-}
-
 function toggleAdminForm() {
   const tab = document.getElementById('a_tab').value;
   if(tab === 'IOS-ANDROID') {
@@ -831,49 +899,74 @@ function toggleAdminForm() {
 async function addProduct(e) {
   const btn = e.target; 
   btn.innerText = "กำลังบันทึก...";
+  btn.disabled = true;
   
   const tab = document.getElementById('a_tab').value;
+  let osSelected = [];
+  if(document.getElementById('cb_ios').checked) osSelected.push("iOS");
+  if(document.getElementById('cb_android').checked) osSelected.push("Android");
 
-  if (tab === "IOS-ANDROID") {
-    let osSelected = [];
-    if(document.getElementById('cb_ios').checked) osSelected.push("iOS");
-    if(document.getElementById('cb_android').checked) osSelected.push("Android");
-
-    if(osSelected.length === 0) {
-      alert("กรุณาเลือกระบบปฏิบัติการอย่างน้อย 1 อย่าง");
-      btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
-      return;
+  if (editingProductId) {
+    let payload = { action: "edit_product", id: editingProductId, tab: tab };
+    if (tab === "IOS-ANDROID") {
+      payload.name = document.getElementById('ios_name').value;
+      payload.desc = document.getElementById('ios_desc').value;
+      payload.os = osSelected.join(" / ");
+      payload.status = document.getElementById('ios_status').value;
+      payload.price = document.getElementById('ios_price').value;
+      payload.icon = document.getElementById('ios_icon').value;
+    } else {
+      payload.cat = document.getElementById('o_cat').value;
+      payload.appDesc = document.getElementById('o_appDesc').value;
+      payload.subCat = document.getElementById('o_subCat').value;
+      payload.name = document.getElementById('o_name').value;
+      payload.desc = document.getElementById('o_desc').value;
+      payload.status = document.getElementById('o_status').value; 
+      payload.price = document.getElementById('o_price').value;
+      payload.icon = document.getElementById('o_icon').value;
     }
-
-    for(let osName of osSelected) {
-      let payload = {
-        action: "add",
-        tab: tab,
-        name: document.getElementById('ios_name').value,
-        desc: document.getElementById('ios_desc').value,
-        os: osName, 
-        status: document.getElementById('ios_status').value,
-        price: document.getElementById('ios_price').value,
-        icon: document.getElementById('ios_icon').value
-      };
+    await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+    alert("อัปเดตข้อมูลสำเร็จ!");
+    cancelEdit();
+  } else {
+    if (tab === "IOS-ANDROID") {
+      if(osSelected.length === 0) {
+        alert("กรุณาเลือกระบบปฏิบัติการอย่างน้อย 1 อย่าง");
+        btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
+        btn.disabled = false;
+        return;
+      }
+      for(let osName of osSelected) {
+        let payload = {
+          action: "add", tab: tab, os: osName,
+          name: document.getElementById('ios_name').value,
+          desc: document.getElementById('ios_desc').value,
+          status: document.getElementById('ios_status').value,
+          price: document.getElementById('ios_price').value,
+          icon: document.getElementById('ios_icon').value
+        };
+        await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+      }
+    } else {
+      let payload = { action: "add", tab: tab };
+      payload.cat = document.getElementById('o_cat').value;
+      payload.appDesc = document.getElementById('o_appDesc').value;
+      payload.subCat = document.getElementById('o_subCat').value;
+      payload.name = document.getElementById('o_name').value;
+      payload.desc = document.getElementById('o_desc').value;
+      payload.status = document.getElementById('o_status').value; 
+      payload.price = document.getElementById('o_price').value;
+      payload.icon = document.getElementById('o_icon').value;
       await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
     }
-  } else {
-    let payload = { action: "add", tab: tab };
-    payload.cat = document.getElementById('o_cat').value;
-    payload.appDesc = document.getElementById('o_appDesc').value;
-    payload.subCat = document.getElementById('o_subCat').value;
-    payload.name = document.getElementById('o_name').value;
-    payload.desc = document.getElementById('o_desc').value;
-    payload.status = document.getElementById('o_status').value; 
-    payload.price = document.getElementById('o_price').value;
-    payload.icon = document.getElementById('o_icon').value;
-    await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+    alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
+    document.querySelectorAll('#form_ios input, #form_other input').forEach(inp => inp.value = ""); 
   }
 
   await loadData(); 
-  alert("เพิ่มสำเร็จ! ข้อมูลอัปเดตแล้ว");
-  document.getElementById('adminPanel').remove(); 
+  renderAdminProductList(); 
+  btn.disabled = false;
+  if (!editingProductId) btn.innerText = "เพิ่มสินค้าเข้าหมวดนี้";
 }
 
 loadData();
