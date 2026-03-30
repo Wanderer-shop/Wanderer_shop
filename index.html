@@ -133,7 +133,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 <div id="admin-badge" onclick="openAdmin()">+</div>
 
 <div class="hero">
-  <img src="https://via.placeholder.com/190" id="shopLogo" alt="Logo" onerror="this.style.display='none'">
+  <img src="https://via.placeholder.com/190/E1E8EE/3B96F5?text=Logo" id="shopLogo" alt="Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/190/E1E8EE/3B96F5?text=No+Logo';">
   <div class="hero-title" id="shopNameBtn">Wanderer_Shop</div>
   <div class="hero-sub" id="welcomeText">ยินดีต้อนรับสู่ร้าน Wanderer_Shop</div>
   <div class="tab-container" id="tabContainer"></div>
@@ -260,7 +260,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxmv4nNm_Bu1t-xEV5N5ezi_T9nNEuHBtc9-XESHSxeMb_h8F-0wKquFJv_cTtKjDDz/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwMrMBAXH7L-wN99F1OxL0SAxEMISxFpZKgJBgARACU2U7VQIDFY15bSPIpDgtsvGLY/exec"; 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = [];
 let viewLevel = 'apps'; let selectedAppName = ''; 
 let localCustomCards = []; // เก็บข้อมูลการ์ดชั่วคราว
@@ -326,7 +326,7 @@ function updateShopStatus(status) {
 function renderTabs() {
   const tc = document.getElementById('tabContainer');
   let html = `<button class="tab-btn active" onclick="switchTab('info')" id="tab-info">ข้อมูลร้าน</button>`;
-  const predefinedOrder = ["แอพพรีเมี่ยม", "เติมเกม", "IOS-ANDROID", "แอพ-เกม iOS/Android"];
+  const predefinedOrder = ["แอพพรีเมี่ยม", "เติมเกม", "IOS-ANDROID"];
   let sortedTabs = [...tabsList].filter(t => t !== "ข้อมูลร้าน" && t !== "StoreInfo").sort((a, b) => {
      let idxA = predefinedOrder.indexOf(a); let idxB = predefinedOrder.indexOf(b);
      if(idxA === -1) idxA = 99; if(idxB === -1) idxB = 99; return idxA - idxB;
@@ -423,7 +423,7 @@ function renderProducts() {
       });
     }
   } 
-  else if (currentTab === 'แอพ-เกม iOS/Android' || currentTab === 'IOS-ANDROID') {
+  else if (currentTab === 'IOS-ANDROID' || currentTab === 'IOS-ANDROID') {
       let groupedApps = {};
       
       products.forEach(p => {
@@ -596,8 +596,8 @@ function updateBottomBar() {
 
 function calculateTotal() {
   let total = 0;
-  const iosItems = cart.filter(p => p.tab === "แอพ-เกม iOS/Android" || p.tab === "IOS-ANDROID");
-  const otherItems = cart.filter(p => p.tab !== "แอพ-เกม iOS/Android" && p.tab !== "IOS-ANDROID");
+  const iosItems = cart.filter(p => p.tab === "IOS-ANDROID" || p.tab === "IOS-ANDROID");
+  const otherItems = cart.filter(p => p.tab !== "IOS-ANDROID" && p.tab !== "IOS-ANDROID");
   
   otherItems.forEach(p => total += Number(p.price));
 
@@ -625,7 +625,7 @@ function checkout() {
   if(cart.length === 0) return;
   let text = ""; let total = calculateTotal(); const mainTab = cart[0].tab;
 
-  if (mainTab === "แอพ-เกม iOS/Android" || mainTab === "IOS-ANDROID") {
+  if (mainTab === "IOS-ANDROID" || mainTab === "IOS-ANDROID") {
     text = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n✿  𓈒  รวมยอด    ꒰  ${total}฿  ꒱  ݂🎐\n`;
     cart.forEach(item => { 
         let cleanName = (item.cat || item.name || '').replace(/\[iOS\]/i, '').replace(/\[Android\]/i, '').trim();
