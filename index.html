@@ -33,7 +33,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 .hero { background: linear-gradient(135deg, var(--bg-main) 0%, rgba(59,150,245,0.2) 100%); padding: 60px 20px 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; border-bottom: 2px solid var(--border-color); margin-bottom: 45px; box-shadow: 0 4px 30px rgba(10,29,58,0.5); }
 #shopLogo { width: 190px; height: 190px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 2px solid var(--border-color); box-shadow: 0 0 15px rgba(196,150,70,0.4); background: #fff; }
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 4px; letter-spacing: 0.5px; text-shadow: 0 0 15px rgba(59,150,245,0.6); cursor: pointer; user-select: none; }
-#welcomeText { font-size: 16px !important; font-weight: 400; color: rgba(255,255,255,0.9); cursor: pointer; margin-top: 5px; }
+#welcomeText { font-size: 20px !important; font-weight: 400; color: rgba(255,255,255,0.9); cursor: pointer; margin-top: 5px; }
 
 .tab-container { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; padding: 4px; width: 95%; max-width: 500px; z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.4); overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
 .tab-container::-webkit-scrollbar { display: none; }
@@ -54,10 +54,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 .card-title { font-size: 14px; font-weight: 600; margin-top: 4px; color: var(--bg-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 .card-desc, .package-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-price { font-size: 14px; font-weight: 700; color: var(--secondary); margin-top: 8px; }
-
-.admin-card-actions { display: flex; gap: 5px; width: 100%; margin-top: 12px; z-index: 10; }
-.btn-card-edit { flex: 1; background: #3B96F5; color: #fff; border: none; padding: 6px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'Kanit'; font-weight: 600; }
-.btn-card-del { flex: 1; background: #ff3b3b; color: #fff; border: none; padding: 6px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'Kanit'; font-weight: 600; }
 
 .check-circle { position: absolute; top: 10px; left: 10px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.8); z-index: 2; transition: 0.2s; }
 .item-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
@@ -255,7 +251,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 </div>
 
 <script>
-// 🚀 เปลี่ยน URL ตรงนี้ด้วยครับ
 const API_URL = "https://script.google.com/macros/s/AKfycbyqRsE1T3fTLWirpDhKjVpobfFwruAP58W9ALcdml7TBhbYgqLPwly138FN_hhFT05v/exec"; 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = [];
 let viewLevel = 'apps'; let selectedAppName = ''; 
@@ -344,7 +339,6 @@ function switchTab(tabName) {
   if(tabName === 'info') renderInfoPage(); else renderProducts();
 }
 
-// 👇👇 ฟังก์ชันเปิดดูแพ็กเกจย่อยที่หายไป กลับมาแล้วครับ 👇👇
 function openPackages(appName) { selectedAppName = appName; viewLevel = 'packages'; renderProducts(); }
 function backToApps() { viewLevel = 'apps'; selectedAppName = ''; renderProducts(); }
 
@@ -490,23 +484,17 @@ function renderProducts() {
   applySearch(); 
 }
 
+// 🚀 เปลี่ยนแปลง: ลบปุ่มแก้ไข/ลบออกจากการ์ดหน้าเว็บหลัก ให้สะอาดตาที่สุด
 function generatePackageCard(p) {
   const isSelected = cart.some(item => item.id === p.id);
-  const adminButtons = isAdmin ? `
-    <div class="admin-card-actions" style="margin-top: 8px;">
-      <button class="btn-card-edit" onclick="event.stopPropagation(); openAdminForEditById('${p.id}')">✏️ แก้ไข</button>
-      <button class="btn-card-del" onclick="event.stopPropagation(); quickDelete('${p.id}', '${p.tab}')">🗑️ ลบ</button>
-    </div>
-  ` : '';
 
   return `
-    <div class="package-card ${isSelected ? 'selected' : ''}" ${!isAdmin ? `onclick="toggleItem('${p.id}')"` : ''}>
-      ${!isAdmin ? `<div class="check-circle"></div>` : ''}
+    <div class="package-card ${isSelected ? 'selected' : ''}" onclick="toggleItem('${p.id}')">
+      <div class="check-circle"></div>
       <div style="width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-right:12px; ${p.status === 'ready' ? 'background:#00d300; box-shadow:0 0 5px #00d300;' : 'background:#ff3b3b; box-shadow:0 0 5px #ff3b3b;'}"></div>
       <div class="package-details">
         <div class="package-title">${p.name}</div>
         ${p.desc ? `<div class="package-desc">${p.desc}</div>` : ''}
-        ${adminButtons}
       </div>
       <div class="package-price">${p.price} ฿</div>
     </div>
@@ -668,7 +656,6 @@ function openAdmin() {
   document.getElementById('adminOverlay').style.display = 'flex'; 
   clearAdminForm(); 
   
-  // 👇👇 ระบบดึงข้อมูลร้านเดิมมาใส่ฟอร์มอัตโนมัติ (แก้ปัญหาข้อมูลหายถ้าไม่ได้กรอก) 👇👇
   document.getElementById('store_status').value = storeInfo.status || 'open';
   document.getElementById('store_logo').value = storeInfo.logo || '';
   document.getElementById('store_media').value = storeInfo.mediaLink || '';
