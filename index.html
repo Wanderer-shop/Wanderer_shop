@@ -12,42 +12,37 @@
     --primary: #3B96F5; --secondary: #FF4B7E; --bg-main: #0A1D3A; 
     --bg-card: #E1E8EE; --border-color: #C49646; --text-muted: #666; 
 }
-body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff; overflow-x: hidden; padding-bottom: 120px; }
+body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff; overflow-x: hidden; padding-bottom: 110px; }
 
 /* เอฟเฟกต์พื้นหลัง */
-.bg-glow-1 { position: fixed; top: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(59,150,245,0.2) 0%, transparent 70%); z-index: -1; pointer-events: none; }
-.bg-glow-2 { position: fixed; bottom: 20%; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,75,126,0.15) 0%, transparent 70%); z-index: -1; pointer-events: none; }
+.bg-glow-1 { position: fixed; top: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(176,38,255,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; }
+.bg-glow-2 { position: fixed; bottom: 20%; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,210,255,0.1) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; }
 #pts { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .pt { position: absolute; animation: ptUp linear infinite; opacity: 0; }
-@keyframes ptUp { 0% { transform: translateY(105vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
+@keyframes ptUp { 0% { transform: translateY(105vh); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
 
 /* ป้ายสถานะร้าน */
-.status { position: fixed; top: 12px; left: 12px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; color: #fff; z-index: 999; animation: pulse 1.5s infinite; box-shadow: 0 0 10px rgba(0,0,0,0.5); text-transform: uppercase; }
-.status.open { background: #00c853; } .status.closed { background: #ff1744; } .status.slow { background: #fbc02d; color:#000; } .status.pause { background: #f57c00; }
+.status { padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 11px; text-transform: uppercase; animation: pulse 1.5s infinite; box-shadow: 0 0 10px rgba(0,0,0,0.3); display: inline-block; }
+.status.open { background: #00c853; color:#fff; } .status.closed { background: #ff1744; color:#fff; } .status.slow { background: #fbc02d; color:#000; } .status.pause { background: #f57c00; color:#fff; }
 @keyframes pulse { 0% { transform: scale(1); opacity:1;} 50% { transform: scale(1.05); opacity:0.8;} 100% { transform: scale(1); opacity:1;} }
 
-/* Hero Section & Slider */
-.hero { display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(10,29,58,0.9) 0%, rgba(59,150,245,0.2) 100%); padding: 50px 20px 30px; text-align: center; border-bottom: 2px solid var(--border-color); position: relative; z-index: 2; margin-bottom: 20px; }
-.hero-slider { display: flex; align-items: center; gap: 15px; }
-.slider-btn { background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.hero-logo-frame { width: 140px; height: 140px; background: var(--bg-card); border: 4px solid var(--border-color); border-radius: 15px; overflow: hidden; }
+/* Hero Section */
+.hero { display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(10,29,58,0.9) 0%, rgba(59,150,245,0.2) 100%); padding: 60px 20px 30px; text-align: center; border-bottom: 2px solid var(--border-color); position: relative; z-index: 2; margin-bottom: 25px; }
+.hero-logo-frame { width: 180px; height: 180px; background: var(--bg-card); border: 4px solid var(--border-color); border-radius: 50%; overflow: hidden; box-shadow: 0 0 20px rgba(59,150,245,0.3); }
 .hero-logo-img { width: 100%; height: 100%; object-fit: cover; }
-.hero-title { font-family: 'Mitr', sans-serif; font-size: 28px; font-weight: 700; color: #fff; text-shadow: 0 0 10px var(--primary); cursor: pointer; user-select: none; }
+.hero-glowing-title { font-family: 'Mitr', sans-serif; font-size: 28px; font-weight: 700; color: #fff; text-shadow: 0 0 10px var(--primary); margin-top: 5px; cursor: pointer; user-select: none; }
 .hero-welcome { font-size: 14px; color: #ddd; background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--primary); }
 
 /* แท็บเมนู */
-.tab-nav { display: flex; overflow-x: auto; gap: 10px; padding: 10px 20px; justify-content: flex-start; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.tab-nav::-webkit-scrollbar { display: none; }
+.tab-nav { display: flex; overflow-x: auto; gap: 10px; padding: 0 20px 15px; justify-content: center; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-top: -10px; margin-bottom: 15px; }.tab-nav::-webkit-scrollbar { display: none; }
 .tab-btn { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border-color: transparent; }
 
-/* หัวข้อและจัดเรียง */
-.content-header { max-width: 600px; margin: 15px auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
-.content-title { font-size: 16px; font-weight: bold; color: var(--primary); }
-.sort-select { background: var(--bg-card); color: #000; border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 8px; font-size: 12px; outline: none; }
-
-/* Grid สินค้า */
+/* พื้นที่คอนเทนต์หลัก (หัวข้อ & สินค้า) */
 .content { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+.content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.content-title { font-size: 16px; font-weight: bold; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+.sort-select { background: var(--bg-card); color: #000; border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-family: inherit; font-weight: bold; outline: none; }
 .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
 
 /* การ์ดสินค้า */
@@ -57,15 +52,29 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 .app-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; padding: 3px 6px; border-radius: 8px; color: #fff; font-weight: bold; z-index: 5; }
 .badge-ready { background: #00c853; } .badge-notready { background: #ff1744; }
 .app-card img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-bottom: 8px; }
-.app-name { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; margin-bottom: 5px; }
-.app-desc { font-size: 11px; color: #666; margin-bottom: 8px; height: 16px; overflow: hidden; }
+.app-name { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; margin-bottom: 5px; color:#0A1D3A; }
+.app-desc { font-size: 11px; color: #666; margin-bottom: 8px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-/* OS Card เฉพาะ (160x175) */
-.os-card { width: 160px; height: 175px; margin: 0 auto; }
+/* OS Card เฉพาะ */
+.os-card { width: 160px; min-height: 175px; margin: 0 auto; }
 .os-buttons { display: flex; gap: 5px; width: 100%; margin-top: auto; }
 .os-btn { flex: 1; padding: 5px; font-size: 11px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
 .os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 .price-tag { font-weight: bold; color: var(--secondary); font-size: 14px; margin-top: auto; }
+
+/* ระบบสไลเดอร์หน้าข้อมูลร้าน */
+.store-media-container { position: relative; width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; min-height: 200px; }
+.store-slide { width: 100%; max-height: 250px; object-fit: cover; display: none; }
+.store-slide.active { display: block; }
+.store-slide-iframe { width: 100%; height: 250px; display: none; border: none; }
+.store-slide-iframe.active { display: block; }
+.slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+.slider-btn:hover { background: var(--primary); }
+.slider-btn.prev { left: 10px; }
+.slider-btn.next { right: 10px; }
+.slider-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+.slider-dot { width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; transition: 0.3s; }
+.slider-dot.active { background: var(--primary); transform: scale(1.2); }
 
 /* ตะกร้าสินค้า */
 .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 29, 58, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: 0.3s; z-index: 1000; }
@@ -74,53 +83,62 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 /* Modals */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10001; display: none; align-items: center; justify-content: center; padding: 20px; }
-.modal-box { background: #fff; color: #000; padding: 20px; border-radius: 16px; width: 100%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
-.btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
-.btn-close { background: #eee; color: #333; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 5px; }
+.modal-box { background: #fff; color: #000; border-radius: 16px; width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; position:relative; }
+.modal-header-color { background:#9c27b0; color:#fff; padding:15px; border-radius: 16px 16px 0 0; text-align:center; font-weight:bold; position:sticky; top:0; z-index:10; }
+.modal-body { padding:20px; }
+.btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; padding: 12px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; font-size:16px; }
+.btn-action { background: var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:14px; width:100%; margin-bottom:10px; }
+.btn-delete { background: #ff1744; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:14px; }
+.btn-close { background: #eee; color: #333; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 5px; font-weight:bold; }
 
-/* Admin Panel */
-.admin-tab-nav { display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto; }
-.admin-tab { padding: 5px 10px; background: #eee; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
-.admin-tab.active { background: var(--primary); color: #fff; }
-.admin-input { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
-.admin-icon { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: #b39ddb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: none; }
+/* Admin Panel UI */
+.admin-top-nav { display:flex; gap:10px; margin-bottom:15px; border-bottom:2px solid #eee; padding-bottom:10px; }
+.admin-top-tab { flex:1; padding:10px; text-align:center; background:#f5f5f5; border-radius:8px; cursor:pointer; font-weight:bold; color:#555; }
+.admin-top-tab.active { background:var(--primary); color:#fff; }
+.admin-input, .admin-textarea, .admin-select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 8px; font-family:inherit; font-size:14px; background:#fafafa; }
+.admin-textarea { min-height: 80px; resize:vertical; }
+.admin-label { font-size: 13px; font-weight: bold; color: var(--primary); margin-bottom: 4px; display: block; }
+.checkbox-group { display: flex; gap: 15px; margin-bottom: 12px; }
+.product-list-card { border:1px solid #eee; background:#fafafa; border-radius:8px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px; }
+.product-list-header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #ddd; padding-bottom:5px; }
+
+/* ปุ่มลอยแอดมิน */
+.admin-icon { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: #CDB4DB; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: none; border: 2px solid #fff; }
 </style>
 </head>
 <body>
 
 <div class="bg-glow-1"></div><div class="bg-glow-2"></div><div id="pts"></div>
 
-<div id="shopStatus" class="status open">OPEN</div>
-
 <div class="hero">
-  <div class="hero-slider">
-    <button class="slider-btn" onclick="slideImage(-1)">◀</button>
-    <div class="hero-logo-frame"><img src="https://via.placeholder.com/150" id="shopLogo" class="hero-logo-img"></div>
-    <button class="slider-btn" onclick="slideImage(1)">▶</button>
+  <div style="position:absolute; top:15px; left:15px;">
+    <div id="shopStatusPill" class="status open">OPEN</div>
   </div>
-  <h1 class="hero-title" id="shopTitle">Wanderer_Shop</h1>
+  <div class="hero-logo-frame"><img src="https://via.placeholder.com/180" id="shopLogo" class="hero-logo-img"></div>
+  <div class="hero-glowing-title" id="shopTitleHeader">Wanderer_Shop</div>
   <div class="hero-welcome" id="welcomeMsg">ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ</div>
 </div>
 
 <div class="tab-nav" id="tabNavigation"></div>
 
-<div class="content-header">
-  <div class="content-title">รายการสินค้า</div>
-  <select class="sort-select" id="sortSelect" onchange="renderProducts()">
-    <option value="name">เรียงตามอักษร</option>
-    <option value="price_asc">ราคา (น้อยไปมาก)</option>
-    <option value="price_desc">ราคา (มากไปน้อย)</option>
-  </select>
-</div>
-
 <div class="content">
+  
+  <div class="content-header" id="productGridHeader">
+    <div class="content-title">รายการสินค้า</div>
+    <select class="sort-select" id="sortSelect" onchange="renderProducts()">
+      <option value="name">เรียงตามอักษร</option>
+      <option value="price_asc">ราคา (น้อยไปมาก)</option>
+      <option value="price_desc">ราคา (มากไปน้อย)</option>
+    </select>
+  </div>
+
   <div id="main-content" class="app-grid">
-    <div style="text-align:center; grid-column:1/-1; padding:40px;">กำลังโหลดข้อมูล...</div>
+    <div style="text-align:center; grid-column:1/-1; padding:40px;">กำลังโหลดข้อมูลจากฐานข้อมูล...</div>
   </div>
 </div>
 
 <div class="bottom-bar" id="bottomBar">
-  <div class="cart-header-box" onclick="openCheckoutModal()">
+  <div class="cart-header-box" onclick="toggleCheckoutModal()">
     <div style="font-size:12px; font-weight:bold; color:var(--primary);">🛒 ดูรายการที่เลือก</div>
     <div style="font-size:11px; color:#fff;" id="cartCountText">0 รายการ | 0฿</div>
   </div>
@@ -129,17 +147,19 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 <div id="checkoutModal" class="modal-overlay">
   <div class="modal-box">
-    <h3 style="color:var(--primary); text-align:center; margin-bottom:15px;">🛒 สรุปรายการสั่งซื้อ</h3>
-    <textarea id="checkoutTextarea" style="width:100%; height:200px; padding:10px; font-family:inherit; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;" readonly></textarea>
-    <button class="btn-main" id="confirmOrderBtn" onclick="confirmOrder()">คัดลอกและไปที่ LINE</button>
-    <button class="btn-close" onclick="closeModal('checkoutModal')">ปิด</button>
+    <div class="modal-header-color">🛒 รายการสั่งซื้อ (Wanderer Shop)</div>
+    <div class="modal-body">
+        <textarea id="checkoutTextarea" style="width:100%; height:200px; padding:10px; font-family:inherit; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;" readonly></textarea>
+        <button class="btn-main" id="confirmOrderBtn" onclick="confirmOrder()" style="background:#00c853;">คัดลอกข้อความและทักไลน์</button>
+        <button class="btn-close" onclick="closeModal('checkoutModal')">ยกเลิก</button>
+    </div>
   </div>
 </div>
 
 <div id="adminLoginModal" class="modal-overlay">
-  <div class="modal-box" style="text-align:center;">
+  <div class="modal-box" style="text-align:center; padding:20px; border-radius:16px;">
     <h3>🔒 เข้าสู่ระบบแอดมิน</h3>
-    <input type="password" id="adminPwd" class="admin-input" style="margin-top:15px;" placeholder="รหัสผ่าน">
+    <input type="password" id="adminPwd" class="admin-input" style="margin-top:15px; text-align:center;" placeholder="ใส่รหัสผ่าน">
     <button class="btn-main" onclick="verifyAdmin()">ยืนยัน</button>
     <button class="btn-close" onclick="closeModal('adminLoginModal')">ยกเลิก</button>
   </div>
@@ -147,15 +167,17 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 <div id="adminDashboard" class="modal-overlay">
   <div class="modal-box">
-    <h3>⚙️ จัดการร้านค้า</h3>
-    <div class="admin-tab-nav" id="adminTabs">
-      <button class="admin-tab active" onclick="switchAdminTab('shop')">ร้านค้า</button>
-      <button class="admin-tab" onclick="switchAdminTab('products')">สินค้า</button>
-      <button class="admin-tab" onclick="switchAdminTab('stats')">สถิติ</button>
+    <div class="modal-header-color" style="background:#0A1D3A;">⚙️ โหมดผู้ดูแลระบบ</div>
+    <div class="modal-body">
+        <div class="admin-top-nav">
+            <div class="admin-top-tab active" id="tabShopSet" onclick="switchAdminMain('shop')">🏪 ข้อมูลร้านค้า</div>
+            <div class="admin-top-tab" id="tabProdSet" onclick="switchAdminMain('product')">📦 หมวดหมู่สินค้า</div>
+        </div>
+        
+        <div id="adminContentArea"></div>
+        
+        <button class="btn-close" style="margin-top:20px;" onclick="closeModal('adminDashboard')">ปิดหน้าต่าง</button>
     </div>
-    <div id="adminContent" style="max-height: 50vh; overflow-y:auto; padding-right:5px;"></div>
-    <button class="btn-main" onclick="saveAdminData()" style="background:#00c853;">💾 บันทึกข้อมูล</button>
-    <button class="btn-close" onclick="closeModal('adminDashboard')">ปิด (ย่อไว้)</button>
   </div>
 </div>
 
@@ -163,17 +185,15 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 <script>
 // ================= การตั้งค่าพื้นฐาน =================
-const API_URL = "https://script.google.com/macros/s/AKfycbxSgNZkAvnU5bw33tu9RM2AZOCpgrvASdU_nZVbdjzJ8__5DZFGLn0NEmP24o9aXvnF/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxSgNZkAvnU5bw33tu9RM2AZOCpgrvASdU_nZVbdjzJ8__5DZFGLn0NEmP24o9aXvnF/exec"; // ⚠️ ตรวจสอบ URL อีกครั้ง
 
-let storeData = { 
-    status: 'open', welcome: 'ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ', 
-    line: '@wanderer', images: ['https://via.placeholder.com/150'] 
-};
+let storeData = { status: 'open', welcome: '', line: '', logo: '', mediaLink: '', hours: '', warranty: '' };
 let products = [];
+let allTabs = [];
 let cart = [];
 let currentTab = "";
-let currentImgIndex = 0;
-let isAdmin = false;
+let editingProductId = null;
+let currentStoreMediaIdx = 0; // สำหรับระบบสไลเดอร์หน้าข้อมูลร้าน
 
 // ================= ระบบตกแต่ง =================
 const P = document.getElementById('pts');
@@ -186,15 +206,6 @@ const P = document.getElementById('pts');
   }
 });
 
-// Slider รูปภาพ
-function slideImage(dir) {
-    if(storeData.images.length === 0) return;
-    currentImgIndex += dir;
-    if(currentImgIndex >= storeData.images.length) currentImgIndex = 0;
-    if(currentImgIndex < 0) currentImgIndex = storeData.images.length - 1;
-    document.getElementById('shopLogo').src = storeData.images[currentImgIndex];
-}
-
 // ================= ระบบดึงข้อมูล =================
 async function initApp() {
     try {
@@ -202,128 +213,195 @@ async function initApp() {
         const data = await response.json();
         if (data) {
             products = data.products || [];
-            storeData = data.storeInfo || storeData;
+            if(data.storeInfo) storeData = { ...storeData, ...data.storeInfo };
+            allTabs = data.tabs || [];
             applyStoreInfo();
             renderTabs();
         }
     } catch(err) {
-        document.getElementById('main-content').innerHTML = `<p style="color:red; text-align:center;">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรช</p>`;
+        document.getElementById('main-content').innerHTML = `<p style="color:red; text-align:center;">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรชหน้าจอ</p>`;
     }
 }
 
 function applyStoreInfo() {
-    const st = document.getElementById('shopStatus');
-    st.className = `status ${storeData.status.toLowerCase()}`;
-    st.innerText = storeData.status.toUpperCase();
-    document.getElementById('welcomeMsg').innerText = storeData.welcome;
-    if(storeData.images && storeData.images.length > 0) {
-        document.getElementById('shopLogo').src = storeData.images[0];
-    }
+    const stTop = document.getElementById('shopStatusPill');
+    stTop.className = `status ${storeData.status.toLowerCase()}`;
+    const statusMap = { 'open':'OPEN', 'closed':'CLOSED', 'slow':'SLOW', 'pause':'PAUSE' };
+    stTop.innerText = statusMap[storeData.status] || 'OPEN';
+
+    document.getElementById('welcomeMsg').innerText = storeData.welcome || "ยินดีต้อนรับสู่ร้าน Wanderer_Shop รับอะไรดีคะ";
+    if(storeData.logo) document.getElementById('shopLogo').src = storeData.logo;
 }
 
-// ================= ระบบแท็บ & สินค้า =================
+// ================= ระบบแท็บ & แสดงสินค้า =================
 function renderTabs() {
     const nav = document.getElementById('tabNavigation');
-    let tabs = [...new Set(products.map(p => p.tab))].filter(t => t);
-    tabs.unshift("ข้อมูลร้าน"); // แท็บพิเศษ
+    let baseTabs = ["ข้อมูลร้าน", "แอพพรีเมี่ยม", "เติมเกม", "แอพ-เกม iOS/Android"];
+    let combinedTabs = [...new Set([...baseTabs, ...allTabs])];
     
-    if(!currentTab) currentTab = tabs[0];
+    if(!currentTab) currentTab = combinedTabs[0];
     
-    nav.innerHTML = tabs.map(t => `<button class="tab-btn ${t === currentTab ? 'active' : ''}" onclick="switchTab('${t}')">${t}</button>`).join('');
+    nav.innerHTML = combinedTabs.map(t => `<button class="tab-btn ${t === currentTab ? 'active' : ''}" onclick="switchTab('${t}')">${t}</button>`).join('');
     renderProducts();
 }
 
 function switchTab(tab) {
     currentTab = tab;
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.toggle('active', b.innerText === tab);
-    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.innerText === tab));
     renderProducts();
+}
+
+// ฟังก์ชันเลื่อนภาพในสไลเดอร์หน้าข้อมูลร้าน
+function changeStoreMedia(dir, max) {
+    // ปิดรูปเดิม
+    document.getElementById('s_media_' + currentStoreMediaIdx).classList.remove('active');
+    if(document.getElementById('s_dot_' + currentStoreMediaIdx)) {
+        document.getElementById('s_dot_' + currentStoreMediaIdx).classList.remove('active');
+    }
+    
+    // เปลี่ยน index
+    currentStoreMediaIdx += dir;
+    if(currentStoreMediaIdx >= max) currentStoreMediaIdx = 0;
+    if(currentStoreMediaIdx < 0) currentStoreMediaIdx = max - 1;
+    
+    // โชว์รูปใหม่
+    document.getElementById('s_media_' + currentStoreMediaIdx).classList.add('active');
+    if(document.getElementById('s_dot_' + currentStoreMediaIdx)) {
+        document.getElementById('s_dot_' + currentStoreMediaIdx).classList.add('active');
+    }
 }
 
 function renderProducts() {
     const content = document.getElementById('main-content');
+    const header = document.getElementById('productGridHeader');
     
-    // หน้าข้อมูลติดต่อ
+    // --- โหมดหน้า "ข้อมูลร้าน" ---
     if(currentTab === "ข้อมูลร้าน") {
+        header.style.display = 'none'; // ซ่อนส่วนจัดเรียงเมื่ออยู่หน้าติดต่อร้าน
+        content.style.display = 'block'; // ถอด grid ออก
+        
+        let sliderHtml = '';
+        if(storeData.mediaLink) {
+            // แยกบรรทัดหรือลูกน้ำ เพื่อเอาลิงก์หลายอัน
+            let links = storeData.mediaLink.split(/[\n,]+/).map(s => s.trim()).filter(s => s);
+            if(links.length > 0) {
+                currentStoreMediaIdx = 0;
+                sliderHtml = `<div class="store-media-container">`;
+                
+                links.forEach((link, idx) => {
+                    let isActive = idx === 0 ? 'active' : '';
+                    let isVid = link.includes('youtube.com') || link.includes('youtu.be');
+                    if(isVid) {
+                        sliderHtml += `<iframe class="store-slide-iframe ${isActive}" id="s_media_${idx}" src="${link}" frameborder="0" allowfullscreen></iframe>`;
+                    } else {
+                        sliderHtml += `<img class="store-slide ${isActive}" id="s_media_${idx}" src="${link}">`;
+                    }
+                });
+
+                if(links.length > 1) {
+                    sliderHtml += `<button class="slider-btn prev" onclick="changeStoreMedia(-1, ${links.length})">❮</button>`;
+                    sliderHtml += `<button class="slider-btn next" onclick="changeStoreMedia(1, ${links.length})">❯</button>`;
+                    sliderHtml += `<div class="slider-dots">` + links.map((_, i) => `<div class="slider-dot ${i===0?'active':''}" id="s_dot_${i}"></div>`).join('') + `</div>`;
+                }
+                sliderHtml += `</div>`;
+            }
+        }
+
         content.innerHTML = `
             <div style="background:var(--bg-card); color:#000; padding:20px; border-radius:15px; text-align:center;">
+                ${sliderHtml}
                 <h3 style="color:var(--primary); margin-bottom:10px;">ช่องทางการติดต่อ</h3>
-                <p>LINE: <strong>${storeData.line}</strong> <button onclick="navigator.clipboard.writeText('${storeData.line}'); alert('คัดลอกแล้ว');" style="padding:2px 8px; font-size:10px; border-radius:5px;">คัดลอก</button></p>
-                <p style="margin-top:10px;">เวลาทำการ: ${storeData.hours || 'ไม่ได้ระบุ'}</p>
+                <p>LINE OA: <strong>${storeData.line}</strong> <button onclick="navigator.clipboard.writeText('${storeData.line}')" style="padding:4px 10px; font-size:12px; border-radius:8px; border:none; background:var(--primary); color:white; cursor:pointer; margin-left:5px;">คัดลอก</button></p>
+                <p style="margin-top:10px;">เวลาทำการ: ${storeData.hours || '-'}</p>
                 <p style="margin-top:10px; font-size:12px; color:#555;">${storeData.warranty || ''}</p>
             </div>`;
         return;
     }
 
-    // กรองและเรียงสินค้า
+    // --- โหมดหน้า "สินค้าอื่นๆ" ---
+    header.style.display = 'flex'; // แสดงส่วนจัดเรียง
+    content.style.display = 'grid'; // คืนค่า grid
+
     let filtered = products.filter(p => p.tab === currentTab);
     const sortVal = document.getElementById('sortSelect').value;
-    if(sortVal === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
+    
+    // ตั้งชื่อที่จะใช้โชว์และจัดเรียง
+    filtered.forEach(p => { p.displayName = p.cat || p.name || 'ไม่มีชื่อ'; });
+
+    if(sortVal === 'name') filtered.sort((a,b) => a.displayName.localeCompare(b.displayName));
     if(sortVal === 'price_asc') filtered.sort((a,b) => Number(a.price) - Number(b.price));
     if(sortVal === 'price_desc') filtered.sort((a,b) => Number(b.price) - Number(a.price));
 
     if(filtered.length === 0) {
-        content.innerHTML = `<div style="grid-column:1/-1; text-align:center;">ไม่มีสินค้าในหมวดนี้</div>`;
+        content.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#fff;">ไม่มีสินค้าในหมวดนี้</div>`;
         return;
     }
 
+    const isIOSTab = currentTab === "แอพ-เกม iOS/Android" || currentTab === "แอพ/เกม IOS-ANDROID";
+
     content.innerHTML = filtered.map(p => {
-        // เช็คว่าอยู่ในตะกร้าไหม
         const inCart = cart.find(c => c.id === p.id);
-        const cardClass = currentTab === "แอพ/เกม IOS-ANDROID" ? "app-card os-card" : "app-card";
-        const badge = p.status === 'not_ready' ? `<div class="app-badge badge-notready">เมลไม่พร้อม</div>` : `<div class="app-badge badge-ready">พร้อมส่ง</div>`;
+        const cardClass = isIOSTab ? "app-card os-card" : "app-card";
+        
+        // เช็คสถานะสินค้า
+        let isReady = false;
+        if(isIOSTab) isReady = p.status === 'ready' || p.status === 'พร้อมส่ง';
+        else isReady = !p.status || p.status === 'ready' || p.status === 'พร้อมส่ง';
+        
+        const badge = isReady ? `<div class="app-badge badge-ready">พร้อมส่ง</div>` : `<div class="app-badge badge-notready">เมลไม่พร้อม</div>`;
         
         let osButtons = '';
-        if(currentTab === "แอพ/เกม IOS-ANDROID") {
+        if(isIOSTab) {
             const selectedOS = inCart ? inCart.os : '';
-            osButtons = `
-                <div class="os-buttons">
-                    <button class="os-btn ${selectedOS === 'iOS' ? 'active' : ''}" onclick="event.stopPropagation(); toggleCart('${p.id}', 'iOS')">iOS</button>
-                    <button class="os-btn ${selectedOS === 'Android' ? 'active' : ''}" onclick="event.stopPropagation(); toggleCart('${p.id}', 'Android')">Android</button>
-                </div>`;
+            const availableOS = p.os ? p.os.split(',') : ['iOS','Android']; 
+            osButtons = `<div class="os-buttons">`;
+            if(availableOS.includes('iOS')) osButtons += `<button class="os-btn ${selectedOS === 'iOS' ? 'active' : ''}" onclick="event.stopPropagation(); toggleCart('${p.id}', 'iOS')">iOS</button>`;
+            if(availableOS.includes('Android')) osButtons += `<button class="os-btn ${selectedOS === 'Android' ? 'active' : ''}" onclick="event.stopPropagation(); toggleCart('${p.id}', 'Android')">Android</button>`;
+            osButtons += `</div>`;
         }
+
+        const appTitle = isIOSTab ? p.name : p.cat;
+        let appSubTitle = '';
+        if(isIOSTab) {
+            appSubTitle = p.desc || '';
+        } else {
+            const pkgName = p.name ? `[${p.name}] ` : '';
+            appSubTitle = pkgName + (p.appDesc || p.desc || '');
+        }
+
+        let priceButton = isIOSTab ? `<div class="price-tag">${p.price}฿</div>` : `<button class="btn-main" style="font-size:12px; margin-top:5px; padding:6px 15px;" onclick="event.stopPropagation(); toggleCart('${p.id}', null)">${p.price}฿</button>`;
 
         return `
             <div class="${cardClass} ${inCart ? 'selected' : ''}" onclick="toggleCart('${p.id}', null)">
                 ${badge}
-                <img src="${p.image}" onerror="this.src='https://via.placeholder.com/70'">
-                <div class="app-name">${p.name}</div>
-                <div class="app-desc">${p.desc || ''}</div>
-                <div class="price-tag">${p.price}฿</div>
+                <img src="${p.icon || 'https://via.placeholder.com/70'}" onerror="this.src='https://via.placeholder.com/70'">
+                <div class="app-name">${appTitle}</div>
+                <div class="app-desc">${appSubTitle}</div>
+                ${priceButton}
                 ${osButtons}
             </div>
         `;
     }).join('');
 }
 
-// ================= ระบบตะกร้า & โปรโมชัน =================
+// ================= ระบบตะกร้า & บิลสั่งซื้อ =================
 function toggleCart(id, osForce) {
     if(currentTab === "ข้อมูลร้าน") return;
-    
     const product = products.find(p => p.id === id);
     if(!product) return;
-
     const existingIdx = cart.findIndex(c => c.id === id);
     
-    // ถ้าระบุ OS ให้จัดการอัปเดตหรือลบ
     if(osForce) {
-        if(existingIdx > -1 && cart[existingIdx].os === osForce) {
-            cart.splice(existingIdx, 1); // กดซ้ำเอาออก
-        } else if (existingIdx > -1) {
-            cart[existingIdx].os = osForce; // เปลี่ยน OS
-        } else {
-            cart.push({...product, os: osForce, cartTab: currentTab});
-        }
+        if(existingIdx > -1 && cart[existingIdx].os === osForce) cart.splice(existingIdx, 1);
+        else if (existingIdx > -1) cart[existingIdx].os = osForce;
+        else cart.push({...product, os: osForce, cartTab: currentTab});
     } else {
-        // หมวดปกติ กดเพื่อสลับเข้า/ออก
-        if(currentTab === "แอพ/เกม IOS-ANDROID") return; // หมวดนี้บังคับกดปุ่ม OS
+        if(currentTab === "แอพ-เกม iOS/Android") return; 
         if(existingIdx > -1) cart.splice(existingIdx, 1);
         else cart.push({...product, cartTab: currentTab});
     }
-
     updateCartUI();
-    renderProducts(); // รีเฟรชกรอบสีม่วง
+    renderProducts();
 }
 
 function updateCartUI() {
@@ -331,24 +409,16 @@ function updateCartUI() {
     if(cart.length > 0) bar.classList.add('active');
     else bar.classList.remove('active');
 
-    // คำนวณยอด
     let total = 0;
-    
-    // แยกหมวดหมู่คำนวณ
-    const iosApps = cart.filter(c => c.cartTab === "แอพ/เกม IOS-ANDROID");
-    const otherApps = cart.filter(c => c.cartTab !== "แอพ/เกม IOS-ANDROID");
+    const iosApps = cart.filter(c => c.cartTab === "แอพ-เกม iOS/Android");
+    const otherApps = cart.filter(c => c.cartTab !== "แอพ-เกม iOS/Android");
 
-    // คำนวณหมวดอื่นๆ ปกติ
     otherApps.forEach(item => total += Number(item.price));
 
-    // ระบบโปรโมชัน IOS-ANDROID
-    let countPromoApps = 0;
-    let nonPromoTotal = 0;
-
+    let countPromoApps = 0; let nonPromoTotal = 0;
     iosApps.forEach(app => {
         const p = Number(app.price);
-        if(p >= 20 && p <= 25) countPromoApps++;
-        else nonPromoTotal += p; // ราคา 35-50 ไม่ร่วมโปร
+        if(p >= 20 && p <= 25) countPromoApps++; else nonPromoTotal += p; 
     });
 
     let promoTotal = 0;
@@ -356,48 +426,41 @@ function updateCartUI() {
     else if(countPromoApps === 15) promoTotal = 210;
     else if(countPromoApps === 8) promoTotal = 80;
     else if(countPromoApps >= 3) {
-        // ลดหลั่นตามขั้น
-        const set8 = Math.floor(countPromoApps / 8);
-        const rem8 = countPromoApps % 8;
-        const set3 = Math.floor(rem8 / 3);
-        const rem3 = rem8 % 3;
-        promoTotal = (set8 * 80) + (set3 * 45) + (rem3 * 20); // สมมติฐานราคาเต็ม 20
+        const set8 = Math.floor(countPromoApps / 8), rem8 = countPromoApps % 8;
+        const set3 = Math.floor(rem8 / 3), rem3 = rem8 % 3;
+        promoTotal = (set8 * 80) + (set3 * 45) + (rem3 * 20);
     }
-    else if(countPromoApps === 2) promoTotal = 45; // เงื่อนไข 13.2 รับ 2 แอพ 45฿
+    else if(countPromoApps === 2) promoTotal = 45;
     else promoTotal = countPromoApps * 20;
 
     total += nonPromoTotal + promoTotal;
-
     document.getElementById('cartCountText').innerText = `${cart.length} รายการ | ${total}฿`;
     return total;
 }
 
-// ================= ระบบบิล & สั่งซื้อ =================
-function openCheckoutModal() {
+function toggleCheckoutModal() {
     if(cart.length === 0) return;
     const total = updateCartUI();
     let billText = "";
 
-    // สร้างฟอร์แมตตามแท็บ
-    if(currentTab === "แอพ/เกม IOS-ANDROID") {
+    if(cart[0].cartTab === "แอพ-เกม iOS/Android") {
         billText = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n✿ 𓈒 รวมยอด ꒰ ${total}฿ ꒱ ݂🎐 ♡ 🍃 ݂\n`;
-        cart.forEach(c => {
-            billText += `${c.name} [${c.os || ''}] 𓈒\n`;
-        });
+        cart.forEach(c => { billText += `${c.name} [${c.os || ''}] 𓈒\n`; });
         billText += `---------------------------\nรบกวนรอแม่ค้าเช็คเมล-ยอดและส่งเลขบัญชีให้ทีครับ/ค่ะ 🙏`;
     } 
-    else if(currentTab === "เติมเกม") {
+    else if(cart[0].cartTab === "เติมเกม") {
         billText = `🛒 *รายการสั่งซื้อ (Wanderer Shop)*\n---------------------------\n`;
-        cart.forEach((c, i) => {
-            billText += `${i+1}. ${c.name}\n   แพ็กเกจ: ${c.subPackage || '-'}\n   ราคา: ${c.price} บาท\n`;
+        cart.forEach((c, i) => { 
+            billText += `${i+1}. ${c.cat}\n   แพ็กเกจ: ${c.name}\n   ราคา: ${c.price} บาท\n`; 
         });
         billText += `---------------------------\n*ยอดรวมทั้งสิ้น: ${total} บาท*\n---------------------------\n*แจ้งไอดี ได้เลยค่ะ*`;
     }
-    else {
-        // ค่าเริ่มต้น / แอพพรีเมียม
+    else { 
         billText = `🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n`;
-        cart.forEach((c, i) => {
-            billText += `${i+1}. ${c.name}\n   แพ็กเกจ: ${c.subPackage || c.desc || '-'}\n   ราคา: ${c.price} บาท\n`;
+        cart.forEach((c, i) => { 
+            let pkgDesc = c.name + (c.desc ? ` (${c.desc})` : '');
+            let appMain = c.cat + (c.appDesc ? ` ${c.appDesc}` : '');
+            billText += `${i+1}. ${appMain}\n   แพ็กเกจ: ${pkgDesc}\n   ราคา: ${c.price} บาท\n`; 
         });
         billText += `---------------------------\n*ยอดรวมทั้งสิ้น: ${total} บาท*\n---------------------------\nรบกวนรอแอดมินตอบก่อนค่อยโอนนะคะ`;
     }
@@ -406,44 +469,35 @@ function openCheckoutModal() {
     document.getElementById('checkoutModal').style.display = 'flex';
 }
 
-function processCheckout() { openCheckoutModal(); }
+function processCheckout() { toggleCheckoutModal(); }
 
 async function confirmOrder() {
     const text = document.getElementById('checkoutTextarea').value;
     const btn = document.getElementById('confirmOrderBtn');
+    const oldText = btn.innerText;
+    btn.innerText = "⏳ กำลังคัดลอก..."; btn.disabled = true;
     
-    // เก็บลงชีต (ยิงแบบไม่รอเพื่อไม่ให้ค้าง)
-    btn.innerText = "กำลังบันทึก...";
     try {
-        await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: "save_order", items: text }),
-            signal: AbortSignal.timeout(3000)
-        });
-    } catch(e) {} // ข้ามถ้าเน็ตช้า
+        await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "add_order", items: text, total: updateCartUI() }), signal: AbortSignal.timeout(3000) });
+    } catch(e) {} 
 
-    // คัดลอกและไปไลน์
     navigator.clipboard.writeText(text).then(() => {
         window.location.href = `https://line.me/R/ti/p/~${storeData.line}`;
-    }).catch(() => {
-        alert("คัดลอกด้วยตัวเองแล้วกดส่งไปที่ไลน์: " + storeData.line);
-        window.location.href = `https://line.me/R/ti/p/~${storeData.line}`;
-    });
+    }).catch(() => { window.location.href = `https://line.me/R/ti/p/~${storeData.line}`; });
+    
+    btn.innerText = oldText; btn.disabled = false;
+    closeModal('checkoutModal');
 }
-
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 // ================= ระบบแอดมิน =================
 let clickCount = 0;
-document.getElementById('shopTitle').addEventListener('click', () => {
+document.getElementById('shopTitleHeader').addEventListener('click', () => {
     clickCount++;
     if(clickCount >= 5) {
         clickCount = 0;
-        if(sessionStorage.getItem('adminLogged') === 'true') {
-            openAdminDashboard();
-        } else {
-            document.getElementById('adminLoginModal').style.display = 'flex';
-        }
+        if(sessionStorage.getItem('adminLogged') === 'true') openAdminDashboard();
+        else document.getElementById('adminLoginModal').style.display = 'flex';
     }
     setTimeout(() => clickCount = 0, 2000);
 });
@@ -452,73 +506,228 @@ function verifyAdmin() {
     if(document.getElementById('adminPwd').value === "170647") {
         sessionStorage.setItem('adminLogged', 'true');
         document.getElementById('adminLoginModal').style.display = 'none';
-        document.getElementById('adminFloatBtn').style.display = 'flex'; // แสดงปุ่มลอย
+        document.getElementById('adminFloatBtn').style.display = 'flex';
         openAdminDashboard();
-    } else {
-        alert("รหัสผิด!");
-    }
+    } else { alert("รหัสผิด!"); }
 }
 
-// ถ้าเคยล็อกอินแล้ว ให้แสดงปุ่มลอยเลยตอนโหลด
-if(sessionStorage.getItem('adminLogged') === 'true') {
-    document.getElementById('adminFloatBtn').style.display = 'flex';
-}
+if(sessionStorage.getItem('adminLogged') === 'true') document.getElementById('adminFloatBtn').style.display = 'flex';
 
 function openAdminDashboard() {
     document.getElementById('adminDashboard').style.display = 'flex';
-    switchAdminTab('shop'); // เปิดแท็บแรก
+    switchAdminMain('shop'); 
 }
 
-function switchAdminTab(tab) {
-    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+function switchAdminMain(type) {
+    document.getElementById('tabShopSet').classList.toggle('active', type === 'shop');
+    document.getElementById('tabProdSet').classList.toggle('active', type === 'product');
     
-    const content = document.getElementById('adminContent');
-    if(tab === 'shop') {
-        content.innerHTML = `
-            <label>สถานะร้าน</label>
-            <select id="admStatus" class="admin-input">
-                <option value="open">เปิด (OPEN)</option>
-                <option value="closed">ปิด (CLOSED)</option>
-                <option value="slow">ตอบช้า (SLOW)</option>
-                <option value="pause">พักส่ง (PAUSE)</option>
+    const area = document.getElementById('adminContentArea');
+    if(type === 'shop') {
+        area.innerHTML = `
+            <label class="admin-label">สถานะร้าน:</label>
+            <select id="admStatus" class="admin-select">
+                <option value="open">OPEN (สีเขียว)</option>
+                <option value="closed">CLOSED (สีแดง)</option>
+                <option value="slow">SLOW (สีเหลือง)</option>
+                <option value="pause">PAUSE (สีส้ม)</option>
             </select>
-            <label>ไลน์ร้าน (มี @)</label>
-            <input type="text" id="admLine" class="admin-input" value="${storeData.line}">
-            <label>ข้อความต้อนรับ</label>
-            <input type="text" id="admWelcome" class="admin-input" value="${storeData.welcome}">
+            <label class="admin-label">โลโก้ร้าน 📸 เปลี่ยนลิงก์รูปโลโก้</label>
+            <input type="text" id="admLogo" class="admin-input" placeholder="ลิงก์รูปโลโก้..." value="${storeData.logo||''}">
+            <label class="admin-label">รูปภาพหน้าปก / แบนเนอร์ / วิดีโอ (ใส่ลิงก์ คั่นด้วยการเคาะ Enter)</label>
+            <textarea id="admMediaLink" class="admin-textarea" placeholder="https://...\nhttps://...">${storeData.mediaLink||''}</textarea>
+            <label class="admin-label">ไอดี Line (ใส่ @ ด้วย):</label>
+            <input type="text" id="admLine" class="admin-input" value="${storeData.line||''}">
+            <label class="admin-label">เวลาทำการ:</label>
+            <input type="text" id="admHours" class="admin-input" value="${storeData.hours||''}">
+            <label class="admin-label">การรับประกัน:</label>
+            <input type="text" id="admWarranty" class="admin-input" value="${storeData.warranty||''}">
+            <button class="btn-action" onclick="saveStoreSettings()">💾 บันทึกข้อมูลร้านค้า</button>
         `;
-        document.getElementById('admStatus').value = storeData.status;
-    } else if (tab === 'products') {
-        content.innerHTML = `
-            <p style="font-size:12px; color:red;">*แก้ไขข้อมูลแล้วอย่าลืมกดบันทึก</p>
-            ${products.map((p, i) => `
-                <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:8px;">
-                    <input type="text" class="admin-input" value="${p.name}" id="p_name_${i}" placeholder="ชื่อแอป">
-                    <input type="text" class="admin-input" value="${p.price}" id="p_price_${i}" placeholder="ราคา">
-                    <button style="background:red; color:white; border:none; padding:5px; border-radius:5px;" onclick="alert('ฟังก์ชันลบจะลบข้อมูลในชีต')">ลบสินค้านี้</button>
-                </div>
-            `).join('')}
+        document.getElementById('admStatus').value = storeData.status || 'open';
+    } 
+    else if (type === 'product') {
+        area.innerHTML = `
+            <label class="admin-label">เลือกแท็บ:</label>
+            <select id="admProdTab" class="admin-select" onchange="renderAdminProductForm()">
+                <option value="แอพพรีเมี่ยม">แอพพรีเมี่ยม</option>
+                <option value="เติมเกม">เติมเกม</option>
+                <option value="แอพ-เกม iOS/Android">แอพ-เกม iOS/Android</option>
+            </select>
+            <div id="adminProdFormContainer" style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #ddd; margin-bottom:15px;"></div>
+            <h4 style="color:var(--primary); margin-bottom:10px;">📦 สินค้าในแท็บนี้</h4>
+            <div id="adminProdListContainer"></div>
+        `;
+        renderAdminProductForm();
+    }
+}
+
+async function saveStoreSettings() {
+    const payload = {
+        action: "save_store",
+        status: document.getElementById('admStatus').value,
+        logo: document.getElementById('admLogo').value,
+        mediaLink: document.getElementById('admMediaLink').value,
+        line: document.getElementById('admLine').value,
+        hours: document.getElementById('admHours').value,
+        warranty: document.getElementById('admWarranty').value,
+        welcome: storeData.welcome 
+    };
+    try {
+        await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        alert("บันทึกข้อมูลร้านค้าเรียบร้อยแล้ว! (กรุณารีเฟรชหน้าเว็บ)");
+        location.reload();
+    } catch(e) { alert("เกิดข้อผิดพลาดในการบันทึก"); }
+}
+
+function renderAdminProductForm() {
+    const tab = document.getElementById('admProdTab').value;
+    const formArea = document.getElementById('adminProdFormContainer');
+    editingProductId = null; // เคลียร์สถานะแก้ไข
+    
+    if(tab === "แอพ-เกม iOS/Android") {
+        formArea.innerHTML = `
+            <label class="admin-label">ชื่อแอป</label> <input type="text" id="pf_name" class="admin-input">
+            <label class="admin-label">รายละเอียดแอป</label> <textarea id="pf_desc" class="admin-textarea"></textarea>
+            <label class="admin-label">ระบบ (iOS/Android)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="pf_ios" checked> iOS</label>
+                <label><input type="checkbox" id="pf_and" checked> Android</label>
+            </div>
+            <label class="admin-label">สถานะ (ready/not_ready)</label>
+            <select id="pf_status" class="admin-select">
+                <option value="ready">ready (พร้อมส่ง)</option>
+                <option value="not_ready">not_ready (เมลไม่พร้อม)</option>
+            </select>
+            <label class="admin-label">ราคา (บาท)</label> <input type="number" id="pf_price" class="admin-input">
+            <label class="admin-label">ลิงก์รูปไอคอน</label> <input type="text" id="pf_icon" class="admin-input">
+            <button class="btn-action" id="btnSaveProd" onclick="saveProductData('${tab}')">➕ เพิ่มสินค้าใหม่</button>
+            <button class="btn-close" id="btnCancelEdit" style="display:none;" onclick="renderAdminProductForm()">ยกเลิกการแก้ไข</button>
         `;
     } else {
-        content.innerHTML = `<p style="text-align:center;">ระบบสถิติกำลังพัฒนา</p>`;
+        formArea.innerHTML = `
+            <label class="admin-label">ชื่อแอป / หมวดหมู่</label> <input type="text" id="pf_cat" class="admin-input">
+            <label class="admin-label">รายละเอียดใต้ชื่อแอป (เคาะบรรทัดได้)</label> <textarea id="pf_appDesc" class="admin-textarea"></textarea>
+            <label class="admin-label">ตัวเลือกแพ็กเกจ (จัดกลุ่มสินค้า)</label> <input type="text" id="pf_subCat" class="admin-input">
+            <label class="admin-label">ชื่อแพ็กเกจย่อย</label> <input type="text" id="pf_name" class="admin-input">
+            <label class="admin-label">รายละเอียดย่อย (เว้นว่างได้)</label> <textarea id="pf_desc" class="admin-textarea" style="min-height:50px;"></textarea>
+            <label class="admin-label">สถานะแอป</label>
+            <select id="pf_status" class="admin-select">
+                <option value="ready">พร้อมส่ง</option>
+                <option value="not_ready">เมลไม่พร้อม</option>
+            </select>
+            <label class="admin-label">ราคา (บาท)</label> <input type="number" id="pf_price" class="admin-input">
+            <label class="admin-label">รูปภาพแอป</label> <input type="text" id="pf_icon" class="admin-input">
+            <button class="btn-action" id="btnSaveProd" onclick="saveProductData('${tab}')">➕ เพิ่มสินค้าใหม่</button>
+            <button class="btn-close" id="btnCancelEdit" style="display:none;" onclick="renderAdminProductForm()">ยกเลิกการแก้ไข</button>
+        `;
     }
+    renderAdminProductList(tab);
 }
 
-async function saveAdminData() {
-    // ดึงค่ามาบันทึก
-    if(document.getElementById('admStatus')) {
-        storeData.status = document.getElementById('admStatus').value;
-        storeData.line = document.getElementById('admLine').value;
-        storeData.welcome = document.getElementById('admWelcome').value;
+function renderAdminProductList(tab) {
+    const listArea = document.getElementById('adminProdListContainer');
+    let prods = products.filter(p => p.tab === tab);
+    
+    if(prods.length === 0) {
+        listArea.innerHTML = `<p style="text-align:center; color:#888; font-size:12px;">ยังไม่มีสินค้าในแท็บนี้</p>`;
+        return;
+    }
+
+    listArea.innerHTML = prods.map(p => {
+        let title = tab === "แอพ-เกม iOS/Android" ? p.name : `${p.cat||''} -> ${p.name||''}`;
+        return `
+            <div class="product-list-card">
+                <div class="product-list-header">
+                    <strong style="font-size:14px; color:#333;">${title}</strong>
+                    <span style="color:var(--primary); font-weight:bold;">${p.price}฿</span>
+                </div>
+                <div style="font-size:12px; color:#666;">
+                    ${tab === "แอพ-เกม iOS/Android" ? `ระบบ: ${p.os} | สถานะ: ${p.status}` : `กลุ่ม: ${p.subCat||'-'} | สถานะ: ${p.status||'ready'}`}
+                </div>
+                <div style="display:flex; gap:10px; margin-top:5px;">
+                    <button class="btn-action" style="flex:1; margin:0;" onclick="editProduct('${p.id}')">✏️ แก้ไข</button>
+                    <button class="btn-delete" style="flex:1;" onclick="deleteProduct('${p.id}')">🗑️ ลบ</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function editProduct(id) {
+    const p = products.find(x => x.id === id);
+    if(!p) return;
+    editingProductId = id;
+    
+    if(p.tab === "แอพ-เกม iOS/Android") {
+        document.getElementById('pf_name').value = p.name || '';
+        document.getElementById('pf_desc').value = p.desc || '';
+        document.getElementById('pf_ios').checked = (p.os||'').includes('iOS');
+        document.getElementById('pf_and').checked = (p.os||'').includes('Android');
+        document.getElementById('pf_status').value = p.status || 'ready';
+        document.getElementById('pf_price').value = p.price || 0;
+        document.getElementById('pf_icon').value = p.icon || '';
+    } else {
+        document.getElementById('pf_cat').value = p.cat || '';
+        document.getElementById('pf_appDesc').value = p.appDesc || '';
+        document.getElementById('pf_subCat').value = p.subCat || '';
+        document.getElementById('pf_name').value = p.name || '';
+        document.getElementById('pf_desc').value = p.desc || '';
+        document.getElementById('pf_status').value = p.status || 'ready';
+        document.getElementById('pf_price').value = p.price || 0;
+        document.getElementById('pf_icon').value = p.icon || '';
     }
     
-    alert("บันทึกข้อมูลเรียบร้อย (ระบบจะซิงค์กับชีต)");
-    applyStoreInfo();
-    // ⚠️ หมายเหตุ: หน้าต่างแอดมินจะไม่ปิดเองตามที่ขอในข้อ 1.สามารถเพิ่มระบบให้หน้าแอดมินไม่เด้งออกทุกครั้งที่บันทึกได้ไหม 
+    document.getElementById('btnSaveProd').innerText = "💾 บันทึกการแก้ไข";
+    document.getElementById('btnCancelEdit').style.display = "block";
+    document.getElementById('adminProdFormContainer').scrollIntoView({behavior: 'smooth'});
 }
 
-// เริ่มต้นโหลดแอป
+async function saveProductData(tab) {
+    let payload = { action: editingProductId ? "edit_product" : "add", tab: tab };
+    if(editingProductId) payload.id = editingProductId;
+    
+    if(tab === "แอพ-เกม iOS/Android") {
+        let osArr = [];
+        if(document.getElementById('pf_ios').checked) osArr.push("iOS");
+        if(document.getElementById('pf_and').checked) osArr.push("Android");
+        payload.name = document.getElementById('pf_name').value;
+        payload.desc = document.getElementById('pf_desc').value;
+        payload.os = osArr.join(',');
+        payload.status = document.getElementById('pf_status').value;
+        payload.price = document.getElementById('pf_price').value;
+        payload.icon = document.getElementById('pf_icon').value;
+    } else {
+        payload.cat = document.getElementById('pf_cat').value;
+        payload.appDesc = document.getElementById('pf_appDesc').value;
+        payload.subCat = document.getElementById('pf_subCat').value;
+        payload.name = document.getElementById('pf_name').value;
+        payload.desc = document.getElementById('pf_desc').value;
+        payload.status = document.getElementById('pf_status').value;
+        payload.price = document.getElementById('pf_price').value;
+        payload.icon = document.getElementById('pf_icon').value;
+    }
+
+    const btn = document.getElementById('btnSaveProd');
+    btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
+    
+    try {
+        await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        alert("บันทึกข้อมูลสินค้าเรียบร้อย!");
+        location.reload();
+    } catch(e) { alert("เกิดข้อผิดพลาด"); btn.disabled = false; }
+}
+
+async function deleteProduct(id) {
+    if(!confirm("คุณแน่ใจหรือไม่ที่จะลบสินค้ารายการนี้?")) return;
+    try {
+        await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "delete_product", id: id }) });
+        alert("ลบสำเร็จ!");
+        location.reload();
+    } catch(e) { alert("ลบไม่สำเร็จ"); }
+}
+
+// เริ่มต้นทำงาน
 window.onload = initApp;
 
 </script>
