@@ -33,8 +33,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 .hero { background: linear-gradient(135deg, var(--bg-main) 0%, rgba(59,150,245,0.2) 100%); padding: 60px 20px 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; border-bottom: 2px solid var(--border-color); margin-bottom: 45px; box-shadow: 0 4px 30px rgba(10,29,58,0.5); }
 #shopLogo { width: 190px; height: 190px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 2px solid var(--border-color); box-shadow: 0 0 15px rgba(196,150,70,0.4); background: #fff; }
 .hero-title { font-family: 'Mitr', sans-serif; font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 4px; letter-spacing: 0.5px; text-shadow: 0 0 15px rgba(59,150,245,0.6); cursor: pointer; user-select: none; }
-
-/* 🚀 ปรับขนาดตัวอักษรข้อความต้อนรับ */
 #welcomeText { font-size: 16px !important; font-weight: 400; color: rgba(255,255,255,0.9); cursor: pointer; margin-top: 5px; }
 
 .tab-container { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; padding: 4px; width: 95%; max-width: 500px; z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.4); overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
@@ -258,7 +256,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 <script>
 // 🚀 เปลี่ยน URL ตรงนี้ด้วยครับ
-const API_URL = "https://script.google.com/macros/s/AKfycbx61gVCsqzlR8xrC3KfzKYhg-_JoTVM98OrpXB8XgKW-sbdSfHm2N0Qe0nN6FTp22Pk/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbyqRsE1T3fTLWirpDhKjVpobfFwruAP58W9ALcdml7TBhbYgqLPwly138FN_hhFT05v/exec"; 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = [];
 let viewLevel = 'apps'; let selectedAppName = ''; 
 let localCustomCards = []; 
@@ -345,6 +343,10 @@ function switchTab(tabName) {
   
   if(tabName === 'info') renderInfoPage(); else renderProducts();
 }
+
+// 👇👇 ฟังก์ชันเปิดดูแพ็กเกจย่อยที่หายไป กลับมาแล้วครับ 👇👇
+function openPackages(appName) { selectedAppName = appName; viewLevel = 'packages'; renderProducts(); }
+function backToApps() { viewLevel = 'apps'; selectedAppName = ''; renderProducts(); }
 
 function applySearch() {
   let input = document.getElementById('searchInput');
@@ -551,7 +553,6 @@ function renderInfoPage() {
     }).join('');
   }
 
-  // 🚀 วิดีโอ แก้ให้ใช้ <video> แทน <img>
   let mediaHtml = '';
   if (storeInfo.mediaLink) {
     if (storeInfo.mediaLink.toLowerCase().includes('.mp4')) {
@@ -666,10 +667,21 @@ function checkout() {
 function openAdmin() { 
   document.getElementById('adminOverlay').style.display = 'flex'; 
   clearAdminForm(); 
+  
+  // 👇👇 ระบบดึงข้อมูลร้านเดิมมาใส่ฟอร์มอัตโนมัติ (แก้ปัญหาข้อมูลหายถ้าไม่ได้กรอก) 👇👇
+  document.getElementById('store_status').value = storeInfo.status || 'open';
+  document.getElementById('store_logo').value = storeInfo.logo || '';
+  document.getElementById('store_media').value = storeInfo.mediaLink || '';
+  document.getElementById('store_mediaText').value = storeInfo.mediaText || '';
+  document.getElementById('store_line').value = storeInfo.line || '';
+  document.getElementById('store_hours').value = storeInfo.hours || '';
+  document.getElementById('store_warranty').value = storeInfo.warranty || '';
+  
   switchAdminFormTab('STORE_INFO', document.querySelector('.admin-tab-btn')); 
 }
 
 function closeAdmin() { document.getElementById('adminOverlay').style.display = 'none'; }
+
 function clearAdminForm() { 
   document.querySelectorAll('.admin-form input[type="text"], .admin-form input[type="number"], .admin-form textarea').forEach(i => i.value=''); 
   document.getElementById('os_ios').checked = false; document.getElementById('os_android').checked = false;
