@@ -265,7 +265,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 
 <script>
 // 🚀 เปลี่ยน URL ตรงนี้ด้วยครับ
-const API_URL = "https://script.google.com/macros/s/AKfycbzySiCj4Fbwutk-8Nq1KMa3Cktbafbr4OfoLBhFJApZaBy9e-nqDICr6ecimmEpWCO3/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzjQ3G91yzguSBUSGe45nZDwYAFfSeBrTzb-7SpemKUqKVqY8sd1fUuBd2U5OFMGfmQ/exec"; 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = []; let reviewsList = [];
 let viewLevel = 'apps'; let selectedAppName = ''; let localCustomCards = []; let editingCardIndex = -1;
 let isAdmin = false;
@@ -359,7 +359,7 @@ function renderProducts() {
   if (sortType === 'price') products.sort((a,b) => a.price - b.price);
 
   let html = '';
-  if (currentTab === 'แอพพรีเมี่ยม' || currentTab === 'เติมเกม') {
+  if (currentTab === 'แอพพรีเมี่ยม' || currentTab === 'เติมเกม' || currentTab === 'เติมเหรียญนิยาย') {
     if (viewLevel === 'apps') {
       let uniqueApps = {};
       products.forEach(p => { if (!uniqueApps[p.cat]) uniqueApps[p.cat] = { cat: p.cat, icon: p.icon || getAppIcon(p.cat), appDesc: p.appDesc }; });
