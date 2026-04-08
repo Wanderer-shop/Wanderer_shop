@@ -63,9 +63,36 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
   text-align: center; 
   box-shadow: 0 8px 25px rgba(0,0,0,0.2); 
   color: #000; 
-  /* เพิ่มคำสั่งเปิดใช้ Flexbox */
+  /* --- ส่วนที่เพิ่มเข้ามาเพื่อจัดเรียงบน-ล่าง --- */
   display: flex; 
   flex-direction: column; 
+}
+
+/* ลำดับที่ 1: หัวข้อ "ช่องทางการติดต่อ" ให้อยู่บนสุดเสมอ */
+.info-card > h3 { 
+  order: 1; 
+  margin-bottom: 15px; 
+}
+
+/* ลำดับที่ 2: บรรทัดข้อมูลติดต่อต่างๆ (Line, เวลาทำการ, รับประกัน) */
+.info-card > .info-row { 
+  order: 2; 
+}
+
+/* ลำดับที่ 3: ดันรูปภาพ, วิดีโอ, แกลเลอรี่ ลงมาอยู่ล่างสุด */
+.info-card > img, 
+.info-card > video,
+.info-card > .gallery-container,
+.info-card > .custom-card-gallery { 
+  order: 3; 
+  margin-top: 20px; /* เพิ่มระยะห่างด้านบนไม่ให้ชิดข้อความเกินไป */
+  max-width: 100%;
+  border-radius: 12px; /* เพิ่มความโค้งมนให้สื่อ */
+}
+
+/* ลำดับที่ 4: สำหรับข้อความบรรยาย (ถ้ามี) ให้อยู่ใต้รูปภาพอีกที */
+.info-card > p {
+  order: 4;
 }
 /* =======================================================
    เพิ่มโค้ดส่วนนี้ต่อท้าย เพื่อสลับลำดับ (Order) การแสดงผล
