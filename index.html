@@ -37,13 +37,13 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 .content { max-width: 800px; margin: 0 auto; padding: 0 20px 50px; position: relative; z-index: 5; }
 
 /* ================== 🚀 กล่องขั้นตอนการสั่งซื้อ ================== */
-.steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; /* ซ่อนเป็นค่าเริ่มต้น จะเปิดโชว์ด้วย JS */ }
+.steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
 .steps-container h3 { color: var(--primary); font-size: 16px; margin-bottom: 12px; text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; }
 .steps-container ol { padding-left: 20px; margin: 0; font-size: 13px; line-height: 1.6; }
 .steps-container li { margin-bottom: 8px; }
 .steps-container .highlight { color: var(--secondary); font-size: 11px; display: block; margin-top: 2px; }
 
-/* ================== 🚀 แถบแยกหมวดหมู่ (IOS-ANDROID) ================== */
+/* ================== 🚀 แถบแยกหมวดหมู่ ================== */
 .category-separator { background: linear-gradient(90deg, var(--primary), transparent); color: #fff; padding: 8px 15px; font-size: 15px; font-weight: 600; border-left: 4px solid var(--secondary); margin: 20px 0 5px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
 .filter-row { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
@@ -167,7 +167,6 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 </div>
 
 <div class="content">
-
   <div class="steps-container" id="stepsBox">
       <h3>🛒 ขั้นตอนเลือกสินค้าในเว็บ</h3>
       <ol>
@@ -238,10 +237,20 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
         <input type="number" id="pg_price" placeholder="ราคา (บาท)">
         <input type="text" id="pg_icon" placeholder="รูปลิงก์ไอคอนแอป">
       </div>
+
       <div id="zone-ios-android" style="display:none; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
         <input type="text" id="ia_cat" placeholder="ชื่อแอป">
         <textarea id="ia_desc" placeholder="รายละเอียด (ขึ้นบรรทัดใหม่ได้)" rows="3"></textarea>
-        <label style="font-size: 13px; color: #555; display:block; margin-top:5px; margin-bottom:5px;">ระบบที่รองรับ:</label>
+        
+        <label style="font-size: 13px; color: #555; display:block; margin-top:5px; margin-bottom:5px; font-weight:bold;">หมวดหมู่กลุ่มแอป:</label>
+        <select id="ia_group" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: 'Kanit';">
+            <option value="📱 แอพอื่นๆ">📱 แอพอื่นๆ</option>
+            <option value="🎮 เกมล้วน">🎮 เกมล้วน</option>
+            <option value="📚 แอพการเรียน">📚 แอพการเรียน</option>
+            <option value="📷 แอพกล้อง / แต่งรูป">📷 แอพกล้อง / แต่งรูป</option>
+        </select>
+
+        <label style="font-size: 13px; color: #555; display:block; margin-top:5px; margin-bottom:5px; font-weight:bold;">ระบบที่รองรับ:</label>
         <div style="display:flex; gap: 15px; margin-bottom: 15px; border: 1px solid #eee; padding: 10px; border-radius: 8px; background: #fafafa;">
           <label style="font-size: 14px; font-weight: 600;"><input type="checkbox" id="os_ios" value="iOS" style="width: auto; margin-right: 5px;"> iOS</label>
           <label style="font-size: 14px; font-weight: 600;"><input type="checkbox" id="os_android" value="Android" style="width: auto; margin-right: 5px;"> Android</label>
@@ -249,6 +258,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
         <input type="number" id="ia_price" placeholder="ราคา (บาท)">
         <input type="text" id="ia_icon" placeholder="รูปลิงก์ไอคอนแอป">
       </div>
+
       <div id="zone-product-status" style="display:none; margin-top: 10px;">
         <label style="font-size: 13px; color: #555;">สถานะแอป:</label>
         <select id="a_status" style="font-weight: bold;">
@@ -301,8 +311,7 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg-main); color: #fff
 </div>
 
 <script>
-// 🚀 ใส่ URL จาก Apps Script ที่นี่
-const API_URL = "https://script.google.com/macros/s/AKfycbzagh1iLk9WE2CG7ctv6zaJBSD2WtWwzWJUH9ifrnVrXLd1JySxmEIoC--klJfGk6lj/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwJANMx_kEypcaqpasFT2Y8njodc2DVQ2jeiAei1GQuBxQQTYbgyA_5aUpGnP78_mRz/exec"; 
 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = []; let reviewsList = [];
 let viewLevel = 'apps'; let selectedAppName = ''; let localCustomCards = []; let editingCardIndex = -1;
@@ -385,7 +394,6 @@ function switchTab(tabName) {
   
   let searchInput = document.getElementById('searchInput'); if(searchInput) searchInput.value = '';
   
-  // ซ่อนกล่องขั้นตอน ถ้าอยู่หน้าข้อมูลร้าน โชว์ถ้าอยู่หน้าสินค้า
   if(tabName === 'info') {
       document.getElementById('stepsBox').style.display = 'none';
       renderInfoPage(); 
@@ -421,16 +429,16 @@ function renderProducts() {
 
   let html = '';
   
-  // 🚀 โลจิกสำหรับ IOS-ANDROID พร้อมแยกระบบหมวดหมู่อัตโนมัติ (แอดมินไม่ต้องแก้ฐานข้อมูล)
   if (currentTab === 'IOS-ANDROID' || currentTab === 'แอพ-เกม iOS/Android') {
       let groupedApps = {};
       products.forEach(p => {
         let cleanTitle = (p.cat || p.name || '').replace(/\[iOS\]/i, '').replace(/\[Android\]/i, '').replace(/\(iOS\)/i, '').replace(/\(Android\)/i, '').trim();
-        if (!groupedApps[cleanTitle]) groupedApps[cleanTitle] = { title: cleanTitle, icon: p.icon || getAppIcon(cleanTitle), desc: p.desc || '', status: p.status || 'ready', items: [] };
+        // 🚀 ดึงหมวดหมู่จาก p.subCat ที่ส่งมาจากกล่องตัวเลือก (ถ้าไม่มีให้เป็น '📱 แอพอื่นๆ')
+        if (!groupedApps[cleanTitle]) groupedApps[cleanTitle] = { title: cleanTitle, icon: p.icon || getAppIcon(cleanTitle), desc: p.desc || '', status: p.status || 'ready', subCat: p.subCat || '📱 แอพอื่นๆ', items: [] };
         groupedApps[cleanTitle].items.push(p);
       });
       
-      let gamesHtml = '', eduHtml = '', camHtml = '', otherHtml = '';
+      let catHtml = {};
       
       Object.values(groupedApps).forEach(app => {
         let isCardSelected = false; let osButtons = `<div style="display:flex; gap:5px; margin-top:8px; width:100%; justify-content:center;">`; let prices = [];
@@ -447,24 +455,27 @@ function renderProducts() {
         
         let cardStr = `<div class="item-card ${isCardSelected ? 'selected' : ''}"><div class="app-status ${app.status === 'ready' ? 'status-ready' : 'status-notready'}">${app.status === 'ready' ? '🟢 พร้อมส่ง' : '🔴 ไม่พร้อม'}</div>${app.icon ? `<img src="${app.icon}" onerror="this.style.display='none'" class="card-icon">` : '<div class="card-icon"></div>'}<div class="card-title">${app.title}</div><div class="card-desc">${app.desc}</div>${osButtons}<div class="card-price" style="margin-top: 5px;">${priceText}</div></div>`;
         
-        // 🚀 ดักคีย์เวิร์ดเพื่อแยกหมวดหมู่
-        let checkText = (app.title + " " + app.desc).toLowerCase();
-        if(checkText.includes('เกม') || checkText.includes('game') || checkText.includes('rov') || checkText.includes('pubg') || checkText.includes('freefire')) {
-            gamesHtml += cardStr;
-        } else if(checkText.includes('เรียน') || checkText.includes('goodnotes') || checkText.includes('notability') || checkText.includes('แปล') || checkText.includes('ภาษา')) {
-            eduHtml += cardStr;
-        } else if(checkText.includes('กล้อง') || checkText.includes('แต่งรูป') || checkText.includes('lightroom') || checkText.includes('vsco') || checkText.includes('procreate') || checkText.includes('วิดีโอ')) {
-            camHtml += cardStr;
-        } else {
-            otherHtml += cardStr;
-        }
+        // 🚀 นำการ์ดไปใส่ตามหมวดหมู่
+        let groupName = app.subCat || "📱 แอพอื่นๆ";
+        if (!catHtml[groupName]) catHtml[groupName] = "";
+        catHtml[groupName] += cardStr;
       });
       
-      // นำหมวดหมู่ที่ถูกแยกมารวมกัน
-      if(gamesHtml) html += `<div class="category-separator" style="grid-column: 1/-1;">🎮 เกมล้วน</div>${gamesHtml}`;
-      if(eduHtml) html += `<div class="category-separator" style="grid-column: 1/-1;">📚 แอพการเรียน</div>${eduHtml}`;
-      if(camHtml) html += `<div class="category-separator" style="grid-column: 1/-1;">📷 แอพกล้อง / แต่งรูป</div>${camHtml}`;
-      if(otherHtml) html += `<div class="category-separator" style="grid-column: 1/-1;">📱 แอพอื่นๆ</div>${otherHtml}`;
+      // 🚀 เรียงลำดับการแสดงผลหมวดหมู่บนหน้าจอ
+      const order = ["🎮 เกมล้วน", "📚 แอพการเรียน", "📷 แอพกล้อง / แต่งรูป"];
+      order.forEach(cat => {
+          if (catHtml[cat]) { html += `<div class="category-separator" style="grid-column: 1/-1;">${cat}</div>${catHtml[cat]}`; delete catHtml[cat]; }
+      });
+      
+      // หมวดหมู่อื่นๆ (ถ้าคุณพิมพ์ชื่อแปลกๆ เพิ่มมาในแอดมินหรือชีต)
+      Object.keys(catHtml).forEach(cat => {
+          if (cat !== "📱 แอพอื่นๆ" && catHtml[cat]) { html += `<div class="category-separator" style="grid-column: 1/-1;">${cat}</div>${catHtml[cat]}`; }
+      });
+      
+      // ให้ "แอพอื่นๆ" อยู่ล่างสุดเสมอ
+      if (catHtml["📱 แอพอื่นๆ"]) {
+          html += `<div class="category-separator" style="grid-column: 1/-1;">📱 แอพอื่นๆ</div>${catHtml["📱 แอพอื่นๆ"]}`;
+      }
       
   } 
   else {
@@ -639,7 +650,15 @@ function renderAdminTabButtons() {
 
 function openAdmin() { document.getElementById('adminOverlay').style.display = 'flex'; clearAdminForm(); renderAdminTabButtons(); document.getElementById('store_status').value = storeInfo.status || 'open'; document.getElementById('store_logo').value = storeInfo.logo || ''; document.getElementById('store_media').value = storeInfo.mediaLink || ''; document.getElementById('store_mediaText').value = storeInfo.mediaText || ''; document.getElementById('store_line').value = storeInfo.line || ''; document.getElementById('store_hours').value = storeInfo.hours || ''; document.getElementById('store_warranty').value = storeInfo.warranty || ''; switchAdminFormTab('STORE_INFO', document.querySelector('.admin-tab-btn')); }
 function closeAdmin() { document.getElementById('adminOverlay').style.display = 'none'; }
-function clearAdminForm() { document.querySelectorAll('.admin-form input[type="text"], .admin-form input[type="number"], .admin-form textarea').forEach(i => i.value=''); document.getElementById('os_ios').checked = false; document.getElementById('os_android').checked = false; document.getElementById('a_status').value = 'ready'; document.getElementById('a_id').value = ''; }
+
+function clearAdminForm() { 
+    document.querySelectorAll('.admin-form input[type="text"], .admin-form input[type="number"], .admin-form textarea').forEach(i => i.value=''); 
+    document.getElementById('os_ios').checked = false; 
+    document.getElementById('os_android').checked = false; 
+    document.getElementById('a_status').value = 'ready'; 
+    document.getElementById('a_id').value = ''; 
+    document.getElementById('ia_group').value = '📱 แอพอื่นๆ'; // 🚀 รีเซ็ตค่า dropdown กลับเป็นค่าปกติ
+}
 
 function switchAdminFormTab(tabVal, btnElement) { document.getElementById('a_tab').value = tabVal; document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); if(btnElement) btnElement.classList.add('active'); toggleAdminFields(); }
 
@@ -673,7 +692,37 @@ function addCustomCard() { let title = document.getElementById('cc_title').value
 function deleteCustomCard(i) { if(confirm("ลบการ์ดนี้ใช่หรือไม่?")) { localCustomCards.splice(i, 1); renderAdminCustomCards(); } }
 
 function openAdminForEditById(id) { const product = allProducts.find(p => p.id === id); if (product) { openAdminForEdit(product); document.querySelector('.admin-modal').scrollTo({ top: 0, behavior: 'smooth' }); } }
-function openAdminForEdit(product) { document.getElementById('adminOverlay').style.display = 'flex'; document.getElementById('a_id').value = product.id; let targetTab = product.tab.includes("IOS") ? "IOS-ANDROID" : product.tab; document.querySelectorAll('.admin-tab-btn').forEach(btn => { if(btn.innerText.includes(targetTab.replace('แอพ', ''))) switchAdminFormTab(targetTab, btn); }); document.getElementById('a_status').value = product.status || "ready"; if (product.tab.includes("IOS")) { document.getElementById('ia_cat').value = product.cat || product.name || ""; document.getElementById('ia_desc').value = product.desc || ""; document.getElementById('ia_price').value = product.price || 0; document.getElementById('ia_icon').value = product.icon || ""; document.getElementById('os_ios').checked = product.os ? product.os.includes('iOS') : false; document.getElementById('os_android').checked = product.os ? product.os.includes('Android') : false; } else { document.getElementById('pg_cat').value = product.cat || ""; document.getElementById('pg_appDesc').value = product.appDesc || ""; document.getElementById('pg_subCat').value = product.subCat || ""; document.getElementById('pg_name').value = product.name || ""; document.getElementById('pg_desc').value = product.desc || ""; document.getElementById('pg_price').value = product.price || 0; document.getElementById('pg_icon').value = product.icon || ""; } }
+function openAdminForEdit(product) { 
+    document.getElementById('adminOverlay').style.display = 'flex'; 
+    document.getElementById('a_id').value = product.id; 
+    let targetTab = product.tab.includes("IOS") ? "IOS-ANDROID" : product.tab; 
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => { if(btn.innerText.includes(targetTab.replace('แอพ', ''))) switchAdminFormTab(targetTab, btn); }); 
+    document.getElementById('a_status').value = product.status || "ready"; 
+    if (product.tab.includes("IOS")) { 
+        document.getElementById('ia_cat').value = product.cat || product.name || ""; 
+        document.getElementById('ia_desc').value = product.desc || ""; 
+        
+        // 🚀 ดึงหมวดหมู่กลับมาโชว์ในกล่องตัวเลือก
+        let g = document.getElementById('ia_group');
+        let options = Array.from(g.options).map(o => o.value);
+        // ถ้าค่าเดิมไม่มีใน list (เช่นเป็นชื่อที่พิมพ์เอง) ให้ตั้งเป็น "📱 แอพอื่นๆ" หรือถ้าจะอนุญาตให้มีตัวเลือกนั้นเดี๋ยวเพิ่มได้ชั่วคราว
+        if(options.includes(product.subCat)) { g.value = product.subCat; } 
+        else { g.value = "📱 แอพอื่นๆ"; }
+
+        document.getElementById('ia_price').value = product.price || 0; 
+        document.getElementById('ia_icon').value = product.icon || ""; 
+        document.getElementById('os_ios').checked = product.os ? product.os.includes('iOS') : false; 
+        document.getElementById('os_android').checked = product.os ? product.os.includes('Android') : false; 
+    } else { 
+        document.getElementById('pg_cat').value = product.cat || ""; 
+        document.getElementById('pg_appDesc').value = product.appDesc || ""; 
+        document.getElementById('pg_subCat').value = product.subCat || ""; 
+        document.getElementById('pg_name').value = product.name || ""; 
+        document.getElementById('pg_desc').value = product.desc || ""; 
+        document.getElementById('pg_price').value = product.price || 0; 
+        document.getElementById('pg_icon').value = product.icon || ""; 
+    } 
+}
 
 async function fetchStats(btn) { if(btn) { btn.innerText = "⏳ กำลังโหลด..."; btn.disabled = true; } try { const response = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "get_stats" }) }); const result = await response.json(); if(result.success) { document.getElementById('stats-container').innerHTML = `<div class="stat-card"><h4>👁️ คนเข้าเว็บ (ครั้ง)</h4><p>${result.views}</p></div><div class="stat-card highlight"><h4>💰 ยอดเงินรวม (บาท)</h4><p>${result.revenue} ฿</p></div><div class="stat-card"><h4>📦 ออเดอร์ทั้งหมด</h4><p>${result.orders}</p></div>`; } } catch(err) { alert("เชื่อมต่อผิดพลาด"); } if(btn) { btn.innerText = "🔄 โหลดสถิติล่าสุด"; btn.disabled = false; } }
 
@@ -681,7 +730,38 @@ async function quickDelete(id, tab) { if(!confirm("ยืนยันการ�
 
 async function submitStoreAction(event) { const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const payload = { action: "save_store", status: document.getElementById('store_status').value, logo: document.getElementById('store_logo').value, mediaLink: document.getElementById('store_media').value, mediaText: document.getElementById('store_mediaText').value, line: document.getElementById('store_line').value, hours: document.getElementById('store_hours').value, warranty: document.getElementById('store_warranty').value, customCards: localCustomCards }; await sendAdminPost(payload, btn, originalText); }
 async function submitTabAction(event, actionType) { const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const payload = { action: actionType, tabName: document.getElementById('new_tab_name').value }; if(!payload.tabName) { alert("กรุณาใส่ชื่อแท็บ"); btn.innerText = originalText; return; } await sendAdminPost(payload, btn, originalText); }
-async function submitAdminAction(event, actionType) { const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const tab = document.getElementById('a_tab').value; let payload = { action: actionType, id: document.getElementById('a_id').value, tab: tab, status: document.getElementById('a_status').value }; if (tab.includes("IOS") || tab.includes("iOS")) { let osArr = []; if(document.getElementById('os_ios').checked) osArr.push('iOS'); if(document.getElementById('os_android').checked) osArr.push('Android'); payload.os = osArr.join('/'); if(!payload.os) { alert("กรุณาเลือกระบบ"); btn.innerText = originalText; return; } payload.name = document.getElementById('ia_cat').value; payload.cat = document.getElementById('ia_cat').value; payload.desc = document.getElementById('ia_desc').value; payload.price = Number(document.getElementById('ia_price').value) || 0; payload.icon = document.getElementById('ia_icon').value; } else { payload.cat = document.getElementById('pg_cat').value; payload.appDesc = document.getElementById('pg_appDesc').value; payload.subCat = document.getElementById('pg_subCat').value; payload.name = document.getElementById('pg_name').value; payload.desc = document.getElementById('pg_desc').value; payload.price = Number(document.getElementById('pg_price').value) || 0; payload.icon = document.getElementById('pg_icon').value; } if (actionType !== 'add' && !payload.id) { alert("กรุณาเลือกสินค้าก่อน"); btn.innerText = originalText; return; } await sendAdminPost(payload, btn, originalText); }
+
+async function submitAdminAction(event, actionType) { 
+    const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const tab = document.getElementById('a_tab').value; let payload = { action: actionType, id: document.getElementById('a_id').value, tab: tab, status: document.getElementById('a_status').value }; 
+    if (tab.includes("IOS") || tab.includes("iOS")) { 
+        let osArr = []; 
+        if(document.getElementById('os_ios').checked) osArr.push('iOS'); 
+        if(document.getElementById('os_android').checked) osArr.push('Android'); 
+        payload.os = osArr.join('/'); 
+        if(!payload.os) { alert("กรุณาเลือกระบบ"); btn.innerText = originalText; return; } 
+        
+        payload.name = document.getElementById('ia_cat').value; 
+        payload.cat = document.getElementById('ia_cat').value; 
+        payload.desc = document.getElementById('ia_desc').value; 
+        
+        // 🚀 ดึงค่าจากกล่องเลือกหมวดหมู่ย่อย และยัดเข้าตัวแปร subCat
+        payload.subCat = document.getElementById('ia_group').value; 
+
+        payload.price = Number(document.getElementById('ia_price').value) || 0; 
+        payload.icon = document.getElementById('ia_icon').value; 
+    } else { 
+        payload.cat = document.getElementById('pg_cat').value; 
+        payload.appDesc = document.getElementById('pg_appDesc').value; 
+        payload.subCat = document.getElementById('pg_subCat').value; 
+        payload.name = document.getElementById('pg_name').value; 
+        payload.desc = document.getElementById('pg_desc').value; 
+        payload.price = Number(document.getElementById('pg_price').value) || 0; 
+        payload.icon = document.getElementById('pg_icon').value; 
+    } 
+    if (actionType !== 'add' && !payload.id) { alert("กรุณาเลือกสินค้าก่อน"); btn.innerText = originalText; return; } 
+    await sendAdminPost(payload, btn, originalText); 
+}
+
 async function sendAdminPost(payload, btn, originalText) { try { const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }); const result = await response.json(); if(result.success) { alert("✅ สำเร็จ!"); await loadData(); if(payload.action === 'add' || payload.action === 'delete_product') clearAdminForm(); } } catch(err) { alert("เกิดข้อผิดพลาดในการเชื่อมต่อ"); } btn.innerText = originalText; }
 
 window.onload = loadData;
