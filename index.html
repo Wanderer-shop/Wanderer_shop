@@ -366,49 +366,25 @@ document.getElementById('shopNameBtn').addEventListener('click', () => {
   }
 });
 
-// ==========================================
-// 🚀 โค้ดโหลดข้อมูลตัวใหม่ (แก้ปัญหา Cache & ตรวจสอบข้อผิดพลาด)
-// ==========================================
 async function loadData() {
+  // เปิดหน้าจอโหลดดิ้ง
   document.getElementById('loadingOverlay').style.display = 'flex';
   
-  // เปลี่ยนชื่อ Cache เป็น v3 เพื่อบังคับให้เครื่องลูกค้าทิ้งของเก่าแล้วดึงใหม่
-  const cacheKey = 'wandererShopData_v3'; 
-  const cachedData = localStorage.getItem(cacheKey);
-  
-  if (cachedData) { 
-      try { 
-          processLoadedData(JSON.parse(cachedData)); 
-          document.getElementById('loadingOverlay').style.display = 'none'; 
-      } catch(e) {} 
-  }
-  
   try {
+    // วิ่งไปดึงข้อมูลสดๆ จาก Google Sheets เสมอ (ใส่ ?t=Date.now() เพื่อกันเบราว์เซอร์จำลิงก์)
     const res = await fetch(API_URL + "?t=" + Date.now());
-    
-    // เช็คว่า Google บล็อกและส่งหน้าเว็บ HTML (หน้าล็อกอิน) กลับมาแทนข้อมูลหรือไม่
-    const contentType = res.headers.get("content-type");
-    if (contentType && contentType.indexOf("text/html") !== -1) {
-        throw new Error("ติดสิทธิ์ Google (กรุณาตั้งค่า 'ผู้มีสิทธิ์เข้าถึง' เป็น 'ทุกคน')");
-    }
-    
     const data = await res.json();
-    localStorage.setItem(cacheKey, JSON.stringify(data)); // เซฟลง Cache ตัวใหม่
+    
+    // โหลดข้อมูลเสร็จ เอาไปแสดงผล
     processLoadedData(data);
     
   } catch (err) {
-    console.error("Fetch Error:", err);
-    if(!cachedData) {
-        // ถ้าพัง จะโชว์ข้อความแจ้งเตือนสีแดงให้รู้ทันที
-        document.getElementById('productGrid').innerHTML = `
-        <div style='grid-column:1/-1; text-align:center; padding:30px 20px; background:rgba(255,59,59,0.1); border:1px solid #ff3b3b; border-radius:12px;'>
-            <div style='font-size:24px; margin-bottom:10px;'>⚠️</div>
-            <b style='color:#ff3b3b; font-size:16px;'>โหลดข้อมูลไม่สำเร็จ</b><br><br>
-            <span style='color:#fff; font-size:13px;'>สาเหตุ: ${err.message}</span><br><br>
-            <small style='color:#ccc; font-size:11px;'>*ถ้าขึ้นว่า 'ติดสิทธิ์' หรือ 'Unexpected token <' <br>แปลว่าตอน Deploy ลืมตั้งค่า ผู้มีสิทธิ์เข้าถึง เป็น 'ทุกคน (Anyone)'</small>
-        </div>`;
-    }
+    // ถ้าดึงข้อมูลไม่สำเร็จ (เช่น เน็ตหลุด)
+    console.error("Error loading data:", err);
+    document.getElementById('productGrid').innerHTML = "<p style='text-align:center;width:100%;color:#fff;'>ไม่สามารถโหลดข้อมูลได้ โปรดลองรีเฟรชหน้าเว็บอีกครั้ง</p>";
   }
+  
+  // ปิดหน้าจอโหลดดิ้ง
   document.getElementById('loadingOverlay').style.display = 'none';
 }
 
