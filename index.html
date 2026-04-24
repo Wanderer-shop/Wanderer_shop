@@ -54,16 +54,15 @@ body {
 /* ================== 🌟 CSS สำหรับป้าย NEW (ติดมุมซ้ายบนของการ์ด) ================== */
 .badge-new-top-left {
     position: absolute;
-    top: -1px;
-    left: -1px;
+    top: 0;
+    left: 0;
     background: #FFEB3B;
     color: #d32f2f;
-    padding: 3px 10px;
-    border-radius: 16px 0 16px 0;
-    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 14px 0 14px 0;
+    font-size: 11px;
     font-weight: bold !important;
-    z-index: 5;
-    border: 1px solid #fbc02d;
+    z-index: 10;
     animation: blinker 0.8s linear infinite;
     -webkit-text-stroke: 0px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
@@ -84,10 +83,10 @@ body {
 
 /* กล่องขั้นตอนการสั่งซื้อ */
 .steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
-.steps-container h3 { color: var(--primary); font-size: 16px; margin-bottom: 16px; text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
-.steps-container ol { padding-left: 20px; margin: 0; font-size: 18px; line-height: 1.6; }
-.steps-container li { margin-bottom: 16px; }
-.steps-container .highlight { color: var(--secondary); font-size: 16px; display: block; margin-top: 2px; }
+.steps-container h3 { color: var(--primary); font-size: 18px; margin-bottom: 16px; text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
+.steps-container ol { padding-left: 22px; margin: 0; font-size: 15px; line-height: 1.6; }
+.steps-container li { margin-bottom: 15px; }
+.steps-container .highlight { color: var(--secondary); font-size: 14px; display: block; margin-top: 2px; }
 
 /* แถบแยกหมวดหมู่ */
 .category-separator { background: linear-gradient(90deg, var(--primary), transparent); color: #fff; padding: 8px 15px; font-size: 15px; border-left: 4px solid var(--secondary); margin: 20px 0 5px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
@@ -124,6 +123,21 @@ body {
 
 .group-header { background: var(--bg-card); color: var(--bg-main); border-left: 4px solid var(--primary); padding: 8px 12px; margin: 15px 0 10px; border-radius: 6px; font-size: 14px; grid-column: 1 / -1; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: left; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
+/* ================== 🌟 สถานะสินค้าของหมด / ไม่พร้อม ================== */
+.disabled-item {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    pointer-events: none; /* ป้องกันการกดทุกกรณี */
+}
+.os-btn.disabled-btn {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    background: #ccc;
+    color: #777;
+    border-color: #bbb;
+}
+
 /* ================== 🌟 การ์ดแพ็คเกจย่อย แบ่งสัดส่วน 3 ส่วน (ซ้าย-กลาง-ขวา) ================== */
 .package-card { 
     background: var(--bg-card); border: 2px solid transparent; border-radius: 12px; 
@@ -154,7 +168,7 @@ body {
 .package-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .package-card.selected .check-circle::after { 
     content: '✓'; color: #fff; font-size: 13px; font-weight: bold; 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -45%); /* ดันขึ้นนิดนึงให้สวยงาม */
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -45%);
 }
 
 /* ========================================================================================= */
@@ -398,7 +412,7 @@ body {
       
       <div id="admin-product-list-container" style="display:none; margin-top: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <h4 style="color: var(--primary); font-size: 15px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;"> สินค้าในแท็บนี้</h4>
+            <h4 style="color: var(--primary); font-size: 15px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;">📦 สินค้าในแท็บนี้</h4>
         </div>
         <div id="admin-product-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 5px; background: #fafafa; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
         </div>
@@ -593,10 +607,13 @@ function renderProducts() {
           if (itemOsList.length === 0) { if ((item.cat || item.name || '').match(/Android/i)) itemOsList.push('Android'); else itemOsList.push('iOS'); }
           itemOsList.forEach(os => {
             let isSelected = cart.some(c => c.id === item.id && c.selectedOs === os); if (isSelected) isCardSelected = true;
-            osButtons += `<button class="os-btn ${isSelected ? 'active' : ''}" onclick="toggleItemOs(event, '${item.id}', '${os}')">${os}</button>`;
+            let disabledClass = item.status === 'notready' ? 'disabled-btn' : '';
+            osButtons += `<button class="os-btn ${isSelected ? 'active' : ''} ${disabledClass}" onclick="toggleItemOs(event, '${item.id}', '${os}')">${os}</button>`;
           });
           
-          if (item.isNew === true || item.isNew === "TRUE" || item.isNew === "true") hasNew = true;
+          // 🌟 เช็คป้าย NEW แบบครอบคลุมทุกรูปแบบ (รวมถึงเผลอเคาะ spacebar)
+          let isNewVal = String(item.isNew).trim().toLowerCase();
+          if (item.isNew === true || isNewVal === "true" || isNewVal === "1") hasNew = true;
         });
         osButtons += `</div>`;
         let minPrice = Math.min(...prices); let maxPrice = Math.max(...prices); let priceText = minPrice === maxPrice ? `${minPrice} ฿` : `${minPrice} - ${maxPrice} ฿`;
@@ -661,11 +678,11 @@ function renderProducts() {
 function generatePackageCard(p) {
   const isSelected = cart.some(item => item.id === p.id);
   let statusColor = p.status === 'ready' ? '#00d300' : '#ff3b3b';
+  let disabledClass = p.status === 'notready' ? 'disabled-item' : '';
   
-  // 🌟 จัดโครงสร้างการ์ดแพ็คเกจย่อย (ซ้าย: วงกลมติ๊กถูก+สถานะ+ชื่อ / กลาง: รายละเอียด / ขวา: ราคา)
-  return `<div class="package-card ${isSelected ? 'selected' : ''}" onclick="toggleItem('${p.id}')">
+  // 🌟 จัดโครงสร้างการ์ดแพ็คเกจย่อยใหม่ (ซ้าย: ไฟสถานะ+ชื่อ / กลาง: รายละเอียด / ขวา: ราคา+วงกลมติ๊กถูก)
+  return `<div class="package-card ${isSelected ? 'selected' : ''} ${disabledClass}" onclick="toggleItem('${p.id}')">
       <div class="pkg-left-col">
-          <div class="check-circle"></div>
           <div class="status-dot-pkg" style="background:${statusColor}; box-shadow:0 0 5px ${statusColor};"></div>
           <div class="package-title">${p.name}</div>
       </div>
@@ -676,6 +693,7 @@ function generatePackageCard(p) {
       
       <div class="pkg-right-col">
           <div class="package-price">${p.price} ฿</div>
+          <div class="check-circle"></div>
       </div>
   </div>`;
 }
@@ -741,8 +759,23 @@ async function submitReview(btn) {
     } catch(err) { alert("เกิดข้อผิดพลาด"); btn.innerText = "ส่งรีวิว"; btn.disabled = false; }
 }
 
-function toggleItem(id) { const p = allProducts.find(x => x.id === id); if(!p) return; const idx = cart.findIndex(x => x.id === id); if (idx > -1) cart.splice(idx, 1); else cart.push(p); renderProducts(); updateBottomBar(); }
-function toggleItemOs(e, id, os) { if(e) e.stopPropagation(); const p = allProducts.find(x => x.id === id); if(!p) return; const idx = cart.findIndex(x => x.id === id && x.selectedOs === os); if (idx > -1) { cart.splice(idx, 1); } else { cart.push({...p, selectedOs: os}); } renderProducts(); updateBottomBar(); }
+function toggleItem(id) { 
+    const p = allProducts.find(x => x.id === id); 
+    if(!p || p.status === 'notready') return;
+    const idx = cart.findIndex(x => x.id === id); 
+    if (idx > -1) cart.splice(idx, 1); else cart.push(p); 
+    renderProducts(); updateBottomBar(); 
+}
+
+function toggleItemOs(e, id, os) { 
+    if(e) e.stopPropagation(); 
+    const p = allProducts.find(x => x.id === id); 
+    if(!p || p.status === 'notready') return;
+    const idx = cart.findIndex(x => x.id === id && x.selectedOs === os); 
+    if (idx > -1) { cart.splice(idx, 1); } else { cart.push({...p, selectedOs: os}); } 
+    renderProducts(); updateBottomBar(); 
+}
+
 function updateBottomBar() { const bar = document.getElementById('bottomBar'); if (cart.length > 0) { bar.classList.add('active'); document.getElementById('cartCount').innerText = cart.length; document.getElementById('cartTotal').innerText = calculateTotal(); } else { bar.classList.remove('active'); } }
 
 function calculateTotal() {
@@ -827,7 +860,7 @@ function clearCart() {
 function confirmCheckout() {
   if (cart.length === 0) return;
   let total = calculateTotal();
-  let text = "🛒 รายการสั่งซื้อ (Wanderer Shop)\n---------------------------\n";
+  let text = "🛒 รายการสั่งซื้อ (Wanderer_Shop)\n---------------------------\n";
   
   let hasApp = false;
   let hasGame = false;
