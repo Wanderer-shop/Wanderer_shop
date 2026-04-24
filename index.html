@@ -51,24 +51,27 @@ body {
 .status-text { font-size: 13px; color: #fff; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 .status-text.closed { color: #FF4444; }
 
-/* ================== 🌟 CSS สำหรับป้าย NEW (ติดมุมซ้ายบนของการ์ด) ================== */
+/* ================== 🌟 CSS สำหรับป้าย NEW (ลอยเด่นที่มุมซ้ายบนของการ์ด) ================== */
 .badge-new-top-left {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -8px; /* ดึงให้ลอยออกนอกกรอบนิดนึงเพื่อให้เห็นชัดเจน */
+    left: -8px;
     background: #FFEB3B;
     color: #d32f2f;
     padding: 4px 12px;
-    border-radius: 14px 0 14px 0;
+    border-radius: 12px;
     font-size: 11px;
     font-weight: bold !important;
     z-index: 10;
     animation: blinker 0.8s linear infinite;
     -webkit-text-stroke: 0px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 @keyframes blinker {
-    50% { opacity: 0; }
+    50% { opacity: 0.2; }
 }
 
 .hero { background: linear-gradient(135deg, var(--bg-main) 0%, rgba(59,150,245,0.2) 100%); padding: 60px 20px 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; border-bottom: 2px solid var(--border-color); margin-bottom: 45px; box-shadow: 0 4px 30px rgba(10,29,58,0.5); }
@@ -81,7 +84,6 @@ body {
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 2px 10px rgba(255,75,126,0.3); }
 .content { max-width: 800px; margin: 0 auto; padding: 0 20px 50px; position: relative; z-index: 5; }
 
-/* กล่องขั้นตอนการสั่งซื้อ */
 .steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
 .steps-container h3 { color: var(--primary); font-size: 18px; margin-bottom: 16px; text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 .steps-container ol { padding-left: 22px; margin: 0; font-size: 15px; line-height: 1.6; }
@@ -108,7 +110,7 @@ body {
 .sort-select { padding: 10px 15px; border-radius: 20px; border: none; font-family: inherit; font-size: 13px; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; background: var(--bg-card); color: var(--bg-main); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-.item-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; cursor: pointer; transition: all 0.2s ease; color: #000; min-height: 175px; overflow: hidden; }
+.item-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; cursor: pointer; transition: all 0.2s ease; color: #000; min-height: 175px; /* ลบ overflow: hidden ออกเพื่อให้ป้าย NEW เด้งออกมาได้เต็มที่ */ }
 .item-card.selected { border-color: var(--primary); background: #ffffff !important; box-shadow: 0 4px 15px rgba(59, 150, 245, 0.3); }
 .card-icon { width: 55px; height: 55px; border-radius: 12px; object-fit: cover; margin-bottom: 10px; background: #ccc; }
 .card-title { font-size: 14px; margin-top: 4px; color: var(--bg-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
@@ -159,16 +161,16 @@ body {
 .pkg-right-col { flex: 0.8; display: flex; align-items: center; justify-content: flex-end; }
 .package-price { font-size: 15px; color: var(--secondary); font-weight: bold; white-space: nowrap; }
 
-/* 🌟 วงกลมติ๊กถูกที่อยู่ฝั่งซ้าย และจัดให้อยู่ตรงกลางเป๊ะๆ */
+/* 🌟 วงกลมติ๊กถูกที่อยู่ฝั่งซ้ายสุด และจัดให้อยู่ตรงกลางเป๊ะๆ โดยใช้ Flexbox */
 .package-card .check-circle { 
     width: 22px; height: 22px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; 
     display: flex; justify-content: center; align-items: center; background: #fff; 
-    transition: 0.2s; flex-shrink: 0; margin: 0; position: relative;
+    transition: 0.2s; flex-shrink: 0; margin: 0;
 }
 .package-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
 .package-card.selected .check-circle::after { 
-    content: '✓'; color: #fff; font-size: 13px; font-weight: bold; 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -45%);
+    content: '✓'; color: #fff; font-size: 14px; font-weight: bold; 
+    display: block; line-height: 1; /* บังคับให้ ✓ อยู่ตรงกลางเป๊ะ */
 }
 
 /* ========================================================================================= */
@@ -611,14 +613,18 @@ function renderProducts() {
             osButtons += `<button class="os-btn ${isSelected ? 'active' : ''} ${disabledClass}" onclick="toggleItemOs(event, '${item.id}', '${os}')">${os}</button>`;
           });
           
-          // 🌟 เช็คป้าย NEW แบบครอบคลุมทุกรูปแบบ (รวมถึงเผลอเคาะ spacebar)
-          let isNewVal = String(item.isNew).trim().toLowerCase();
-          if (item.isNew === true || isNewVal === "true" || isNewVal === "1") hasNew = true;
+          // 🌟 ระบบเช็คป้าย NEW ให้ดักจับทุกเคส ไม่ว่าจะมาจาก True, 1 หรือ "true"
+          if (item.isNew !== undefined && item.isNew !== null) {
+              let isNewStr = String(item.isNew).trim().toLowerCase();
+              if (item.isNew === true || isNewStr === "true" || isNewStr === "1" || isNewStr === "yes") {
+                  hasNew = true;
+              }
+          }
         });
         osButtons += `</div>`;
         let minPrice = Math.min(...prices); let maxPrice = Math.max(...prices); let priceText = minPrice === maxPrice ? `${minPrice} ฿` : `${minPrice} - ${maxPrice} ฿`;
         
-        // 🌟 ป้าย NEW มุมซ้ายบนของการ์ด
+        // 🌟 ป้าย NEW ที่ถูกสั่งให้ลอยเด่นมุมบนซ้ายของการ์ด
         let newBadge = hasNew ? `<div class="badge-new-top-left">NEW</div>` : '';
 
         let cardStr = `<div class="item-card ${isCardSelected ? 'selected' : ''}">
@@ -680,9 +686,10 @@ function generatePackageCard(p) {
   let statusColor = p.status === 'ready' ? '#00d300' : '#ff3b3b';
   let disabledClass = p.status === 'notready' ? 'disabled-item' : '';
   
-  // 🌟 จัดโครงสร้างการ์ดแพ็คเกจย่อยใหม่ (ซ้าย: ไฟสถานะ+ชื่อ / กลาง: รายละเอียด / ขวา: ราคา+วงกลมติ๊กถูก)
+  // 🌟 จัดโครงสร้างการ์ดแพ็คเกจย่อยใหม่ 
   return `<div class="package-card ${isSelected ? 'selected' : ''} ${disabledClass}" onclick="toggleItem('${p.id}')">
       <div class="pkg-left-col">
+          <div class="check-circle"></div>
           <div class="status-dot-pkg" style="background:${statusColor}; box-shadow:0 0 5px ${statusColor};"></div>
           <div class="package-title">${p.name}</div>
       </div>
@@ -693,7 +700,6 @@ function generatePackageCard(p) {
       
       <div class="pkg-right-col">
           <div class="package-price">${p.price} ฿</div>
-          <div class="check-circle"></div>
       </div>
   </div>`;
 }
@@ -874,7 +880,7 @@ function confirmCheckout() {
         hasApp = true;
         let title = [item.cat, item.appDesc].filter(Boolean).join(' ');
         let pkg = [item.subCat, item.name].filter(Boolean).join(' ');
-        text += `${index + 1}. ชื่อแอพ : ${title}\n   แพ็กเกจ : ${pkg}\n   ราคา : ${item.price} บาท\n`;
+        text += `${index + 1}. ชื่อแอพ : ${title}\n   แพ็กเกจ: ${pkg}\n   ราคา: ${item.price} บาท\n`;
     } 
     else if (itemTab === "IOS-ANDROID" || itemTab === "แอพ-เกม iOS/Android") {
         hasOS = true;
