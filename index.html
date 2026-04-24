@@ -25,7 +25,6 @@ body {
     overflow-x: hidden; 
     padding-bottom: 110px; 
     min-height: 100vh; 
-    /* 🌟 ปรับให้ฟอนต์คมชัด ไม่เบลอ */
     -webkit-font-smoothing: antialiased; 
     -moz-osx-font-smoothing: grayscale; 
 }
@@ -40,27 +39,6 @@ body {
 .floating-emojis span { position: absolute; bottom: -50px; font-size: 24px; opacity: 0; animation: floatUp 12s infinite linear, twinkle 4s infinite ease-in-out; }
 @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.8); } 100% { transform: translateY(-120vh) rotate(360deg) scale(1.2); } }
 @keyframes twinkle { 0%, 100% { opacity: 0.2; text-shadow: 0 0 5px rgba(255,255,255,0.1); } 50% { opacity: 0.8; text-shadow: 0 0 15px rgba(59, 150, 245, 0.8); } }
-
-/* ================== 🌟 ปุ่มกลับหน้าหลัก (มุมขวาบน) ================== */
-.back-home-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #fff;
-    color: #000;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-    z-index: 50;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: 0.2s;
-    font-weight: normal !important;
-    -webkit-text-stroke: 0.3px currentColor;
-}
-.back-home-btn:active { transform: scale(0.95); }
 
 /* ================== 🌟 ป้ายสถานะ เปิด/ปิด (มุมซ้ายบน) ================== */
 .shop-status-badge { 
@@ -107,8 +85,18 @@ body {
 /* แถบแยกหมวดหมู่ */
 .category-separator { background: linear-gradient(90deg, var(--primary), transparent); color: #fff; padding: 8px 15px; font-size: 15px; border-left: 4px solid var(--secondary); margin: 20px 0 5px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
+/* ================== 🌟 แถบค้นหา และ ปุ่มวงกลม ================== */
 .filter-row { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
-.search-input { flex: 1; padding: 10px 15px; border-radius: 20px; border: none; font-family: inherit; font-size: 14px; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.btn-back-circle { 
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.btn-back-circle:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.3); }
+.btn-back-circle svg { width: 18px; height: 18px; margin-right: 2px; }
+
+.search-input { flex: 1; padding: 10px 15px; border-radius: 20px; border: none; font-family: inherit; font-size: 14px; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); min-width: 150px; }
 .sort-select { padding: 10px 15px; border-radius: 20px; border: none; font-family: inherit; font-size: 13px; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; background: var(--bg-card); color: var(--bg-main); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
@@ -129,7 +117,7 @@ body {
 .os-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 8px rgba(59, 150, 245, 0.4); }
 
 .group-header { background: var(--bg-card); color: var(--bg-main); border-left: 4px solid var(--primary); padding: 8px 12px; margin: 15px 0 10px; border-radius: 6px; font-size: 14px; grid-column: 1 / -1; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: left; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
-.back-btn { display: inline-block; background: var(--primary); color:#fff; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; margin-bottom: 15px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
+
 .package-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 12px; padding: 12px 15px; display: flex; align-items: center; cursor: pointer; position: relative; color: #000; transition: 0.2s; margin-bottom: 10px; }
 .package-card.selected { border-color: var(--primary); background: #ffffff !important; box-shadow: 0 4px 12px rgba(59, 150, 245, 0.2); }
 .package-card .check-circle { position: relative; top: auto; left: auto; width: 22px; height: 22px; flex-shrink: 0; margin-right: 12px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; background: #fff; transition: 0.2s; }
@@ -219,8 +207,6 @@ body {
 <div id="admin-badge" onclick="openAdmin()">+</div>
 
 <div class="hero">
-  <button class="back-home-btn" onclick="window.location.href='#'">⬅️ กลับหน้าหลัก</button>
-
   <div class="shop-status-badge" id="shopStatusBadge">
       <div class="status-indicator"></div>
       <span class="status-text">เปิดให้บริการ</span>
@@ -245,6 +231,9 @@ body {
   </div>
 
   <div class="filter-row">
+    <div class="btn-back-circle" onclick="handleBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+    </div>
     <input type="text" id="searchInput" class="search-input" placeholder="🔍 ค้นหาแอป หรือแพ็กเกจ..." onkeyup="applySearch()">
     <select class="sort-select" id="sortSelect" onchange="renderProducts()">
       <option value="name">เรียงอักษร</option>
@@ -485,9 +474,45 @@ function switchTab(tabName) {
 function openPackages(appName) { selectedAppName = appName; viewLevel = 'packages'; renderProducts(); }
 function backToApps() { viewLevel = 'apps'; selectedAppName = ''; renderProducts(); }
 
+// 🌟 ระบบควบคุมปุ่มวงกลม (ถ้าอยู่หน้าแพ็กเกจให้กลับไปหน้าแอป ถ้าอยู่หน้าแอปให้กลับเว็บหลัก)
+function handleBack() {
+    if (viewLevel === 'packages') {
+        backToApps();
+    } else {
+        window.location.href = 'https://wanderer-shop.github.io/Wanderer_shop/'; // 👈 **เปลี่ยน # เป็นลิงก์เว็บหลักของคุณ**
+    }
+}
+
+// 🌟 ระบบค้นหาแบบทะลุทะลวง (หาชื่อแพ็คเกจและรายละเอียดเจอแม้ในหน้าแอปหลัก)
 function applySearch() {
   let input = document.getElementById('searchInput'); if (!input) return; let filter = input.value.toLowerCase();
-  document.querySelectorAll('.item-card, .package-card').forEach(card => { card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"; });
+  
+  if (currentTab === 'IOS-ANDROID' || currentTab === 'แอพ-เกม iOS/Android') {
+      document.querySelectorAll('.item-card').forEach(card => { 
+          card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"; 
+      });
+  } else {
+      if (viewLevel === 'apps') {
+          let appCards = document.querySelectorAll('.item-card');
+          appCards.forEach(card => {
+              let appName = card.querySelector('.card-title').innerText;
+              let pkgs = allProducts.filter(p => p.cat === appName && p.tab === currentTab);
+              let match = appName.toLowerCase().includes(filter);
+              pkgs.forEach(p => {
+                  if ((p.name && p.name.toLowerCase().includes(filter)) || 
+                      (p.desc && p.desc.toLowerCase().includes(filter))) {
+                      match = true;
+                  }
+              });
+              card.style.display = match ? "" : "none";
+          });
+      } else {
+          document.querySelectorAll('.package-card').forEach(card => { 
+              card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"; 
+          });
+      }
+  }
+
   document.querySelectorAll('.group-header, .category-separator').forEach(header => {
       let nextEl = header.nextElementSibling; let hasVisible = false;
       while(nextEl && !nextEl.classList.contains('group-header') && !nextEl.classList.contains('category-separator')) {
@@ -565,8 +590,14 @@ function renderProducts() {
     } else {
       let pkgProducts = products.filter(p => p.cat === selectedAppName);
       let appDescription = pkgProducts.length > 0 ? (pkgProducts[0].appDesc || '') : '';
-      let descHtml = appDescription ? `<div style="color:#ccc; font-size:13px; margin: 10px 0 20px; white-space: pre-line; line-height: 1.4;">${appDescription}</div>` : '';
-      html += `<div style="grid-column: 1/-1; text-align:center;"><div class="back-btn" onclick="backToApps()">⬅️ กลับหน้าแอป</div><h3 style="color:#fff; font-size: 18px; margin-bottom: 5px;">📦 ${selectedAppName}</h3>${descHtml}</div>`;
+      let descHtml = appDescription ? `<div style="color:#ccc; font-size:13px; margin: 5px 0 10px; white-space: pre-line; line-height: 1.4; text-align: left;">${appDescription}</div>` : '';
+      
+      // ลบปุ่มกลับหน้าแอปแบบเก่าออก เพราะเรามีปุ่มวงกลมด้านซ้ายบนคอยจัดการให้แล้ว
+      html += `<div style="grid-column: 1/-1; text-align: left; margin-bottom: 10px;">
+          <h3 style="color:#fff; font-size: 18px; margin-bottom: 0; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;">📦 ${selectedAppName}</h3>
+          ${descHtml}
+      </div>`;
+
       let groups = {};
       pkgProducts.forEach(p => { if(!p.icon) p.icon = getAppIcon(p.cat); let g = p.subCat || 'ทั่วไป'; if(!groups[g]) groups[g] = []; groups[g].push(p); });
       Object.keys(groups).forEach(g => { html += `<div class="group-header" style="grid-column: 1/-1;">📌 ${g}</div><div style="grid-column: 1/-1;">${groups[g].map(p => generatePackageCard(p)).join('')}</div>`; });
@@ -647,7 +678,6 @@ function toggleItem(id) { const p = allProducts.find(x => x.id === id); if(!p) r
 function toggleItemOs(e, id, os) { if(e) e.stopPropagation(); const p = allProducts.find(x => x.id === id); if(!p) return; const idx = cart.findIndex(x => x.id === id && x.selectedOs === os); if (idx > -1) { cart.splice(idx, 1); } else { cart.push({...p, selectedOs: os}); } renderProducts(); updateBottomBar(); }
 function updateBottomBar() { const bar = document.getElementById('bottomBar'); if (cart.length > 0) { bar.classList.add('active'); document.getElementById('cartCount').innerText = cart.length; document.getElementById('cartTotal').innerText = calculateTotal(); } else { bar.classList.remove('active'); } }
 
-// 🚀 ระบบคำนวณโปรโมชันและยอดรวม (ของเดิมของคุณ)
 function calculateTotal() {
   let total = 0; 
   const iosItems = cart.filter(p => p.tab === "แอพ-เกม iOS/Android" || p.tab === "IOS-ANDROID"); 
