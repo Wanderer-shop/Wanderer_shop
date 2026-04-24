@@ -708,7 +708,10 @@ function renderInfoPage() {
     customCardsHtml = localCustomCards.map(c => {
       let imgHtml = '';
       if (c.images && c.images.length > 0) { imgHtml = `<div class="custom-card-gallery">` + c.images.map(img => `<img src="${img}" onerror="this.style.display='none'">`).join('') + `</div>` + (c.images.length > 1 ? `<div style="font-size:10px; color:#999; margin-top:8px;">👈 ปัดซ้าย-ขวาเพื่อดูรูปเพิ่มเติม 👉</div>` : ''); }
-      return `<div class="info-card" style="grid-column: 1/-1; margin-bottom: 15px; padding: 20px;">${c.title ? `<h3 style="color:var(--primary); margin-bottom: 8px; font-size:16px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;">${c.title}</h3>` : ''}${c.desc ? `<p style="font-size:13px; color:#555; white-space:pre-line; margin-bottom:12px; text-align:left;">${c.desc}</p>` : ''}${imgHtml}</div>`;
+      return `<div class="info-card" style="grid-column: 1/-1; margin-bottom: 15px; padding: 20px;">${c.title ? `<h3 style="color:var(--primary); margin-bottom: 10px; font-size:18
+
+
+px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;">${c.title}</h3>` : ''}${c.desc ? `<p style="font-size:16px; color:#555; white-space:pre-line; margin-bottom:12px; text-align:left;">${c.desc}</p>` : ''}${imgHtml}</div>`;
     }).join('');
   }
 
