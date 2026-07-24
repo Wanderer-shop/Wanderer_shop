@@ -81,12 +81,12 @@ body {
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 2px 10px rgba(255,75,126,0.3); }
 .content { max-width: 800px; margin: 0 auto; padding: 0 20px 50px; position: relative; z-index: 5; }
 
-/* ================== 🌟 กล่องขั้นตอนการสั่งซื้อ (ปรับขนาด/ความหนาได้ตรงนี้) ================== */
+/* ================== 🌟 กล่องขั้นตอนการสั่งซื้อ ================== */
 .steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
 .steps-container h3 { 
     color: var(--primary); 
-    font-size: 16px; /* 👈 ปรับขนาดหัวขั้วตรงนี้ */
-    font-weight: normal !important; /* 👈 ปรับความหนาหัวขั้วตรงนี้ (normal, bold, 600) */
+    font-size: 16px; 
+    font-weight: normal !important; 
     margin-bottom: 12px; 
     text-align: center; 
     border-bottom: 1px dashed rgba(255,255,255,0.2); 
@@ -96,15 +96,15 @@ body {
 .steps-container ol { 
     padding-left: 20px; 
     margin: 0; 
-    font-size: 13px; /* 👈 ปรับขนาดข้อความรายการ 1-5 ตรงนี้ */
-    font-weight: normal; /* 👈 ปรับความหนารายการตรงนี้ */
+    font-size: 13px; 
+    font-weight: normal; 
     line-height: 1.6; 
 }
 .steps-container li { margin-bottom: 8px; }
 .steps-container .highlight { 
     color: var(--secondary); 
-    font-size: 11px; /* 👈 ปรับขนาดข้อความสีชมพูตรงนี้ */
-    font-weight: normal; /* 👈 ปรับความหนาตรงนี้ */
+    font-size: 11px; 
+    font-weight: normal; 
     display: block; 
     margin-top: 2px; 
 }
@@ -159,7 +159,7 @@ body {
 .pkg-right-col { flex: 0.8; display: flex; align-items: center; justify-content: flex-end; }
 .package-price { font-size: 15px; color: var(--secondary); font-weight: bold; white-space: nowrap; }
 
-/* 🌟 กรณีที่แพ็กเกจไม่มีข้อความรายละเอียดย่อย (ปรับให้พอดี ไม่โล่ง) */
+/* 🌟 กรณีที่แพ็กเกจไม่มีข้อความรายละเอียดย่อย */
 .package-card.no-desc {
     padding: 14px 18px;
     justify-content: space-between;
@@ -429,7 +429,7 @@ body {
 
 <script>
 // 🚀 URL ของคุณ
-const API_URL = "https://script.google.com/macros/s/AKfycbwP6JwFlu9YbZDa-wxTBio1BiRttVB8yOQqrxYwieSasMpBdXeHyqSpwdE2fXERcaHg/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxEHXHoG6Z8f3kN83lprzljX6brtSDvXb7Dlu1FCEwI1hh5gtOckJKXDgBjSGZI9E82/exec"; 
 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = []; 
 let viewLevel = 'apps'; let selectedAppName = ''; let localCustomCards = []; let editingCardIndex = -1;
@@ -694,13 +694,12 @@ function renderProducts() {
   grid.innerHTML = html; applySearch(); 
 }
 
-// 🌟 ฟังก์ชันสร้างการ์ดแพ็กเกจ พร้อมเงื่อนไขเช็คว่ามีข้อความรายละเอียดย่อยหรือไม่
+// 🌟 ฟังก์ชันสร้างการ์ดแพ็กเกจ
 function generatePackageCard(p) {
   const isSelected = cart.some(item => item.id === p.id);
   let statusColor = p.status === 'ready' ? '#00d300' : '#ff3b3b';
   let disabledClass = p.status === 'notready' ? 'disabled-item' : '';
   
-  // ตรวจสอบว่ามีรายละเอียดย่อยหรือไม่ ถ้าไม่มีให้ใส่คลาส no-desc
   let hasDesc = p.desc && p.desc.trim() !== "";
   let noDescClass = hasDesc ? '' : 'no-desc';
   
