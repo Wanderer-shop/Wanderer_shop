@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wanderer_Shop</title>
 <style>
-/* ================== นำเข้าฟอนต์ Lowell (.woff2) ================== */
+/* ================== นำเข้าฟอนต์ Lowell (.ttf) ================== */
 @font-face {
     font-family: 'LowellCustom';
-    src: url('Lowell (2).woff2') format('woff2');
+    src: url('Lowell.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -81,12 +81,33 @@ body {
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 2px 10px rgba(255,75,126,0.3); }
 .content { max-width: 800px; margin: 0 auto; padding: 0 20px 50px; position: relative; z-index: 5; }
 
-/* กล่องขั้นตอนการสั่งซื้อ */
+/* ================== 🌟 กล่องขั้นตอนการสั่งซื้อ (ปรับขนาด/ความหนาได้ตรงนี้) ================== */
 .steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
-.steps-container h3 { color: var(--primary); font-size: 16px; margin-bottom: 12px; text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
-.steps-container ol { padding-left: 20px; margin: 0; font-size: 13px; line-height: 1.6; }
+.steps-container h3 { 
+    color: var(--primary); 
+    font-size: 16px; /* 👈 ปรับขนาดหัวขั้วตรงนี้ */
+    font-weight: normal !important; /* 👈 ปรับความหนาหัวขั้วตรงนี้ (normal, bold, 600) */
+    margin-bottom: 12px; 
+    text-align: center; 
+    border-bottom: 1px dashed rgba(255,255,255,0.2); 
+    padding-bottom: 8px; 
+    -webkit-text-stroke: 0.3px currentColor; 
+}
+.steps-container ol { 
+    padding-left: 20px; 
+    margin: 0; 
+    font-size: 13px; /* 👈 ปรับขนาดข้อความรายการ 1-5 ตรงนี้ */
+    font-weight: normal; /* 👈 ปรับความหนารายการตรงนี้ */
+    line-height: 1.6; 
+}
 .steps-container li { margin-bottom: 8px; }
-.steps-container .highlight { color: var(--secondary); font-size: 11px; display: block; margin-top: 2px; }
+.steps-container .highlight { 
+    color: var(--secondary); 
+    font-size: 11px; /* 👈 ปรับขนาดข้อความสีชมพูตรงนี้ */
+    font-weight: normal; /* 👈 ปรับความหนาตรงนี้ */
+    display: block; 
+    margin-top: 2px; 
+}
 
 /* แถบแยกหมวดหมู่ */
 .category-separator { background: linear-gradient(90deg, var(--primary), transparent); color: #fff; padding: 8px 15px; font-size: 15px; border-left: 4px solid var(--secondary); margin: 20px 0 5px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
@@ -108,9 +129,7 @@ body {
 
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 
-/* 🌟 แก้ไข: ลบ overflow: hidden ออกเพื่อให้ป้าย NEW เด้งข้ามขอบการ์ดได้ */
 .item-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; cursor: pointer; transition: all 0.2s ease; color: #000; min-height: 175px; }
-
 .item-card.selected { border-color: var(--primary); background: #ffffff !important; box-shadow: 0 4px 15px rgba(59, 150, 245, 0.3); }
 .card-icon { width: 55px; height: 55px; border-radius: 12px; object-fit: cover; margin-bottom: 10px; background: #ccc; }
 .card-title { font-size: 14px; margin-top: 4px; color: var(--bg-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
@@ -129,7 +148,7 @@ body {
 .disabled-item { opacity: 0.6; cursor: not-allowed !important; pointer-events: none; }
 .os-btn.disabled-btn { opacity: 0.5; cursor: not-allowed !important; pointer-events: none; background: #ccc; color: #777; border-color: #bbb; }
 
-/* ================== 🌟 การ์ดแพ็คเกจย่อย ================== */
+/* ================== 🌟 การ์ดแพ็กเกจย่อย ================== */
 .package-card { background: var(--bg-card); border: 2px solid transparent; border-radius: 12px; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; color: #000; transition: 0.2s; margin-bottom: 10px; gap: 8px; }
 .package-card.selected { border-color: var(--primary); background: #ffffff !important; box-shadow: 0 4px 12px rgba(59, 150, 245, 0.2); }
 .pkg-left-col { flex: 1.2; display: flex; align-items: center; gap: 8px; text-align: left; justify-content: flex-start; }
@@ -140,7 +159,19 @@ body {
 .pkg-right-col { flex: 0.8; display: flex; align-items: center; justify-content: flex-end; }
 .package-price { font-size: 15px; color: var(--secondary); font-weight: bold; white-space: nowrap; }
 
-/* 🌟 แก้ไข: ใช้ Flexbox จัดให้เครื่องหมาย ✓ อยู่กึ่งกลางวงกลมเป๊ะๆ */
+/* 🌟 กรณีที่แพ็กเกจไม่มีข้อความรายละเอียดย่อย (ปรับให้พอดี ไม่โล่ง) */
+.package-card.no-desc {
+    padding: 14px 18px;
+    justify-content: space-between;
+}
+.package-card.no-desc .pkg-left-col {
+    flex: 1;
+}
+.package-card.no-desc .pkg-right-col {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+}
+
 .package-card .check-circle { 
     width: 22px; height: 22px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; 
     display: flex; justify-content: center; align-items: center; background: #fff; 
@@ -217,7 +248,6 @@ body {
 
 <!-- 🌟 ส่วน Header: ป้ายเปิดปิดอยู่ซ้ายบน -->
 <div class="hero">
-  <!-- ป้ายสถานะร้าน (มุมซ้ายบน) -->
   <div class="shop-status-badge" id="shopStatusBadge">
       <div class="status-indicator"></div>
       <span class="status-text">เปิดให้บริการ</span>
@@ -435,11 +465,8 @@ async function loadData() {
   const cacheTime = sessionStorage.getItem('wanderer_time');
   const now = Date.now();
 
-  // ถ้ามีข้อมูลที่จำไว้ และเวลาผ่านไปยังไม่ถึง 5 นาที (300,000 มิลลิวินาที) ให้โชว์ทันที
   if (cachedData && cacheTime && (now - cacheTime < 300000)) {
       processLoadedData(JSON.parse(cachedData));
-      
-      // ดึงข้อมูลใหม่แบบเงียบๆ หลังบ้าน เผื่อมีการอัปเดต
       fetch(API_URL + "?t=" + Date.now()).then(res => res.json()).then(data => {
           sessionStorage.setItem('wanderer_data', JSON.stringify(data));
           sessionStorage.setItem('wanderer_time', Date.now());
@@ -451,11 +478,8 @@ async function loadData() {
   try {
     const res = await fetch(API_URL + "?t=" + Date.now());
     const data = await res.json();
-    
-    // บันทึกข้อมูลลง Cache
     sessionStorage.setItem('wanderer_data', JSON.stringify(data));
     sessionStorage.setItem('wanderer_time', Date.now());
-    
     processLoadedData(data);
   } catch (err) {
     console.error("Fetch Error:", err);
@@ -616,7 +640,6 @@ function renderProducts() {
         
         let newBadge = hasNew ? `<div class="badge-new-top-left">NEW</div>` : '';
 
-        // 🌟 อัปเกรด: เพิ่ม loading="lazy" ในรูปไอคอน
         let cardStr = `<div class="item-card ${isCardSelected ? 'selected' : ''}">
             ${newBadge}
             <div class="app-status ${app.status === 'ready' ? 'status-ready' : 'status-notready'}">${app.status === 'ready' ? '🟢 พร้อมส่ง' : '🔴 ไม่พร้อม'}</div>
@@ -650,7 +673,6 @@ function renderProducts() {
     if (viewLevel === 'apps') {
       let uniqueApps = {};
       products.forEach(p => { if (!uniqueApps[p.cat]) uniqueApps[p.cat] = { cat: p.cat, icon: p.icon || getAppIcon(p.cat), appDesc: p.appDesc }; });
-      // 🌟 อัปเกรด: เพิ่ม loading="lazy" ในรูปการ์ดแอป
       html = Object.values(uniqueApps).map(app => `<div class="item-card" onclick="openPackages('${app.cat}')">${app.icon ? `<img src="${app.icon}" loading="lazy" onerror="this.style.display='none'" class="card-icon">` : '<div class="card-icon"></div>'}<div class="card-title">${app.cat || 'ไม่ระบุชื่อ'}</div>${app.appDesc ? `<div class="card-desc" style="color:var(--primary); font-weight:600; width:100%;">${app.appDesc}</div>` : ''}</div>`).join('');
     } else {
       let pkgProducts = products.filter(p => p.cat === selectedAppName);
@@ -672,27 +694,29 @@ function renderProducts() {
   grid.innerHTML = html; applySearch(); 
 }
 
+// 🌟 ฟังก์ชันสร้างการ์ดแพ็กเกจ พร้อมเงื่อนไขเช็คว่ามีข้อความรายละเอียดย่อยหรือไม่
 function generatePackageCard(p) {
   const isSelected = cart.some(item => item.id === p.id);
   let statusColor = p.status === 'ready' ? '#00d300' : '#ff3b3b';
   let disabledClass = p.status === 'notready' ? 'disabled-item' : '';
   
-  return `<div class="package-card ${isSelected ? 'selected' : ''} ${disabledClass}" onclick="toggleItem('${p.id}')">
+  // ตรวจสอบว่ามีรายละเอียดย่อยหรือไม่ ถ้าไม่มีให้ใส่คลาส no-desc
+  let hasDesc = p.desc && p.desc.trim() !== "";
+  let noDescClass = hasDesc ? '' : 'no-desc';
+  
+  return `<div class="package-card ${isSelected ? 'selected' : ''} ${disabledClass} ${noDescClass}" onclick="toggleItem('${p.id}')">
       <div class="pkg-left-col">
           <div class="check-circle"></div>
           <div class="status-dot-pkg" style="background:${statusColor}; box-shadow:0 0 5px ${statusColor};"></div>
           <div class="package-title">${p.name}</div>
       </div>
-      <div class="pkg-mid-col">
-          ${p.desc ? `<div class="package-desc">${p.desc}</div>` : ''}
-      </div>
+      ${hasDesc ? `<div class="pkg-mid-col"><div class="package-desc">${p.desc}</div></div>` : ''}
       <div class="pkg-right-col">
           <div class="package-price">${p.price} ฿</div>
       </div>
   </div>`;
 }
 
-// 🌟 ฟังก์ชันแสดงหน้าข้อมูลร้านค้า (ลบระบบรีวิวออกแล้ว + เพิ่ม Lazy Loading)
 function renderInfoPage() { 
   let customCardsHtml = '';
   if (localCustomCards && localCustomCards.length > 0) {
@@ -1019,7 +1043,6 @@ async function quickDelete(id, tab) {
         const result = await response.json(); 
         if(result.success) { 
             alert("✅ ลบสำเร็จ!"); 
-            // ล้าง Cache ทันทีเพื่อให้แอดมินเห็นข้อมูลใหม่
             sessionStorage.removeItem('wanderer_data');
             sessionStorage.removeItem('wanderer_time');
             await loadData(); 
@@ -1066,7 +1089,6 @@ async function sendAdminPost(payload, btn, originalText) {
         const result = await response.json(); 
         if(result.success) { 
             alert("✅ สำเร็จ!"); 
-            // ล้าง Cache ทันทีเพื่อให้แอดมินเห็นข้อมูลใหม่
             sessionStorage.removeItem('wanderer_data');
             sessionStorage.removeItem('wanderer_time');
             await loadData(); 
