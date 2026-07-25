@@ -59,7 +59,7 @@ body {
 }
 .status-indicator { width: 10px; height: 10px; background: #00FF00; border-radius: 50%; box-shadow: 0 0 8px #00FF00; }
 .status-indicator.closed { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
-.status-text { font-size: 115px; color: #fff; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
+.status-text { font-size: 15px; color: #fff; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 .status-text.closed { color: #FF4444; }
 
 /* ================== 🌟 CSS สำหรับป้าย NEW (มุมซ้ายบน) ================== */
@@ -207,7 +207,7 @@ body {
 }
 @keyframes pulseText { 0%, 100% { opacity: 0.6; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.02); } }
 
-.admin-modal { background: #fff; color: #000; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 20px; position: relative; }
+.admin-modal { background: #fff; color: #000; width: 90%; max-width: 650px; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 20px; position: relative; }
 .admin-form input, .admin-form select, .admin-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; }
 .admin-btn { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-family: inherit; color:#fff;}
 .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; background: #fff;}
@@ -231,6 +231,13 @@ body {
 .custom-card-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; border-top: 1px dashed #ddd; padding-top: 8px; }
 .btn-sm-edit-card { background: #ff9800; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 .btn-sm-del-card { background: #ff3b3b; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
+
+/* 🌟 CSS เพิ่มเติมสำหรับระบบ Live Preview ตั้งค่าตัวอักษรให้เหมือนในสกรีนช็อต[cite: 7] */
+.preview-grid-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+.preview-card-item { background: #ffffff; border: 1px solid #dde5ed; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left; }
+.preview-tag { background: #e8f0fe; color: #1a73e8; font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; font-weight: 600; }
+.preview-card-item h5 { color: #1e293b; margin-bottom: 4px; font-size: 15px; }
+.preview-card-item p { color: #64748b; font-size: 13px; margin: 0; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -394,19 +401,64 @@ body {
         <input type="text" id="store_hours" placeholder="เวลาทำการ (เช่น 10:00 - 22:00)">
         <textarea id="store_warranty" placeholder="การรับประกัน (เงื่อนไข, ขึ้นบรรทัดใหม่ได้)" rows="3"></textarea>
         
-        <!-- 🌟 5. ตั้งค่าขนาดและความหนาของตัวอักษรผ่านหน้าแอดมิน -->
-        <label style="font-size: 13px; color: #3B96F5; font-weight:bold; display:block; margin-top:10px;">🎨 ตั้งค่าฟอนต์และตัวอักษรร้านค้า:</label>
-        <div style="display: flex; gap: 10px;">
-          <select id="store_fontSize" style="flex:1;">
-            <option value="14px">ขนาดตัวอักษร: ปกติ (14px)</option>
-            <option value="15px">ขนาดตัวอักษร: กลาง (15px)</option>
-            <option value="16px">ขนาดตัวอักษร: ใหญ่ (16px)</option>
-          </select>
-          <select id="store_fontWeight" style="flex:1;">
-            <option value="normal">ความหนา: ปกติ (Normal)</option>
-            <option value="bold">ความหนา: ตัวหนา (Bold)</option>
-          </select>
+        <input type="hidden" id="store_fontSize" value="14px">
+        <input type="hidden" id="store_fontWeight" value="normal">
+      </div>
+
+      <!-- 🌟 1. เพิ่มโซนกล่องข้อความแอดมินสำหรับ "ตั้งค่าตัวอักษร" โดยเฉพาะ (ตรงตามภาพสกรีนช็อต 100%)[cite: 7] -->
+      <div id="zone-font-settings" style="display:none; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fff;">
+        <h3 style="color: #FF4B7E; font-size: 16px; margin-bottom: 6px;">T↕ กำหนดขนาดตัวอักษรบนเว็บไซต์ (Px)</h3>
+        <p style="font-size: 12px; color: #777; margin-bottom: 15px;">ตั้งค่าแยกขนาดหัวข้อใหญ่และข้อความปกติ สำหรับกล่องข้อความทุกประเภทในเว็บไซต์</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 140px;">
+            <label style="font-size: 13px; color: #333; font-weight: bold; display: block; margin-bottom: 6px;">📏 ขนาดตัวอักษร (Font Size):</label>
+            <select id="fs_size" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background:#fff;" onchange="updateLivePreview()">
+              <option value="13px">เล็ก (13px)</option>
+              <option value="14px">ปกติ (14px) - แนะนำ</option>
+              <option value="15px">กลาง (15px)</option>
+              <option value="16px">ใหญ่ (16px)</option>
+            </select>
+          </div>
+          <div style="flex: 1; min-width: 140px;">
+            <label style="font-size: 13px; color: #333; font-weight: bold; display: block; margin-bottom: 6px;">🅱️ ความหนา (Font Weight):</label>
+            <select id="fs_weight" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background:#fff;" onchange="updateLivePreview()">
+              <option value="normal">ปกติ (Normal)</option>
+              <option value="bold">ตัวหนา (Bold)</option>
+            </select>
+          </div>
         </div>
+
+        <!-- 🌟 UI Live Preview ตามรูปสกรีนช็อต 4 กล่อง[cite: 7] -->
+        <div style="border: 1.5px dashed #3B96F5; border-radius: 12px; padding: 15px; background: #f8fbff;">
+            <div style="font-size: 13px; color: #3B96F5; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+               👁️ ตัวอย่างการแสดงผลบนเว็บไซต์จริง (Live Preview)
+            </div>
+            <div class="preview-grid-box" id="livePreviewContainer">
+                <div class="preview-card-item">
+                    <span class="preview-tag">1. การ์ดรูปภาพ</span>
+                    <h5 class="preview-title">หัวข้อ: โปรโมชันพิเศษ</h5>
+                    <p class="preview-text">ข้อความ: รายละเอียดสินค้าและโปรโมชัน</p>
+                </div>
+                <div class="preview-card-item">
+                    <span class="preview-tag">2. ขั้นตอนเลือกสินค้า</span>
+                    <h5 class="preview-title">ขั้นตอนที่ 1: เลือกสินค้า</h5>
+                    <p class="preview-text">ข้อความ: กดหยิบสินค้าลงตะกร้าได้เลย</p>
+                </div>
+                <div class="preview-card-item">
+                    <span class="preview-tag">3. กล่องข้อความอื่นๆ</span>
+                    <h5 class="preview-title">ประกาศสำคัญจากร้าน</h5>
+                    <p class="preview-text">ข้อความ: วันนี้ร้านปิดปรับปรุงระบบชั่วคราว</p>
+                </div>
+                <div class="preview-card-item">
+                    <span class="preview-tag">4. หัวข้อและเมนูหลัก</span>
+                    <h5 class="preview-title">ยินดีต้อนรับสู่เว็บของเรา</h5>
+                    <p class="preview-text">ข้อความ: เมนูหลัก / ติดต่อเรา / เกี่ยวกับเรา</p>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="admin-btn" style="background: #FF4B7E; margin-top: 15px;" onclick="saveFontSettings(event)">💾 บันทึกการตั้งค่าตัวอักษร</button>
       </div>
       
       <div id="zone-custom-cards" style="display:none; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
@@ -952,6 +1004,7 @@ function confirmCheckout() {
   closeCheckoutModal();
 }
 
+// 🌟 เพิ่มปุ่มแท็บ "🎨 ตั้งค่าตัวอักษร" ในเมนูแอดมินตามภาพ[cite: 7]
 function renderAdminTabButtons() {
     let html = `<button type="button" class="admin-tab-btn active" onclick="switchAdminFormTab('STORE_INFO', this)">⚙️ ร้านค้า</button>
                 <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('แอพพรีเมี่ยม', this)">📦 พรีเมี่ยม</button>
@@ -959,9 +1012,10 @@ function renderAdminTabButtons() {
                 <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('เติมเหรียญนิยาย', this)">🪙 เติมนิยาย</button>
                 <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('IOS-ANDROID', this)">📱 IOS/Android</button>`;
     tabsList.forEach(t => {
-        if(!["แอพพรีเมี่ยม", "เติมเกม", "เติมเหรียญนิยาย", "IOS-ANDROID", "แอพ-เกม iOS/Android", "StoreInfo", "ข้อมูลร้าน", "Reviews", "Orders"].includes(t)) { html += `<button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('${t}', this)">📁 ${t}</button>`; }
+        if(!["แอพพรีเมี่ยม", "เติมเกม", "เติมเหรียญนิยาย", "IOS-ANDROID", "แอพ-เกม iOS/Android", "StoreInfo", "ข้อมูลร้าน", "Reviews", "Orders", "ตั้งค่าตัวอักษร", "FONT_SETTINGS"].includes(t)) { html += `<button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('${t}', this)">📁 ${t}</button>`; }
     });
-    html += `<button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('CUSTOM_CARDS', this)">🖼️ การ์ดรูปภาพ</button>
+    html += `<button type="button" class="admin-tab-btn" style="background:#fff0f5; border-color:#FF4B7E; color:#FF4B7E;" onclick="switchAdminFormTab('FONT_SETTINGS', this)">🎨 ตั้งค่าตัวอักษร</button>
+             <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('CUSTOM_CARDS', this)">🖼️ การ์ดรูปภาพ</button>
              <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('MANAGE_TABS', this)">➕ เพิ่มแท็บ</button>
              <button type="button" class="admin-tab-btn" style="background:#fff5f8; border-color:var(--secondary);" onclick="switchAdminFormTab('STATS', this)">📊 สถิติร้าน</button>`;
     document.getElementById('adminTabButtons').innerHTML = html;
@@ -976,7 +1030,6 @@ function openAdmin() {
     document.getElementById('store_hours').value = storeInfo.hours || ''; 
     document.getElementById('store_warranty').value = storeInfo.warranty || ''; 
     
-    // 🌟 5. ดึงค่าตัวอักษรมาโชว์ในแอดมิน
     document.getElementById('store_fontSize').value = storeInfo.fontSize || '14px';
     document.getElementById('store_fontWeight').value = storeInfo.fontWeight || 'normal';
 
@@ -996,17 +1049,87 @@ function clearAdminForm() {
 
 function switchAdminFormTab(tabVal, btnElement) { document.getElementById('a_tab').value = tabVal; document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); if(btnElement) btnElement.classList.add('active'); toggleAdminFields(); }
 
+// 🌟 อัปเดตให้รองรับแท็บ "FONT_SETTINGS" และการตั้งค่า Live Preview
 function toggleAdminFields() {
   const tab = document.getElementById('a_tab').value;
-  ['zone-premium-game', 'zone-ios-android', 'zone-product-status', 'zone-store', 'zone-tabs', 'zone-custom-cards', 'zone-stats'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['zone-premium-game', 'zone-ios-android', 'zone-product-status', 'zone-store', 'zone-tabs', 'zone-custom-cards', 'zone-stats', 'zone-font-settings'].forEach(id => {
+      let el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+  });
   document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'none'); document.querySelector('.store-btn').style.display = 'none';
-  if (tab === "STORE_INFO") { document.getElementById('zone-store').style.display = 'block'; document.querySelector('.store-btn').style.display = 'block'; } 
+  
+  if (tab === "STORE_INFO") { 
+      document.getElementById('zone-store').style.display = 'block'; 
+      document.querySelector('.store-btn').style.display = 'block'; 
+  } 
+  else if (tab === "FONT_SETTINGS" || tab === "ตั้งค่าตัวอักษร") {
+      document.getElementById('zone-font-settings').style.display = 'block';
+      loadFontSettingsToForm();
+  }
   else if (tab === "CUSTOM_CARDS") { document.getElementById('zone-custom-cards').style.display = 'block'; document.querySelector('.store-btn').style.display = 'block'; renderAdminCustomCards(); } 
   else if (tab === "MANAGE_TABS") { document.getElementById('zone-tabs').style.display = 'block'; } 
   else if (tab === "STATS") { document.getElementById('zone-stats').style.display = 'block'; fetchStats(document.querySelector('#zone-stats button')); } 
   else if (tab.includes("IOS") || tab.includes("iOS")) { document.getElementById('zone-ios-android').style.display = 'block'; document.getElementById('zone-product-status').style.display = 'block'; document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'block'); } 
   else { document.getElementById('zone-premium-game').style.display = 'block'; document.getElementById('zone-product-status').style.display = 'block'; document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'block'); }
-  if (tab !== "STORE_INFO" && tab !== "MANAGE_TABS" && tab !== "CUSTOM_CARDS" && tab !== "STATS") { document.getElementById('admin-product-list-container').style.display = 'block'; renderAdminProductList(tab); } else { document.getElementById('admin-product-list-container').style.display = 'none'; }
+  
+  if (tab !== "STORE_INFO" && tab !== "MANAGE_TABS" && tab !== "CUSTOM_CARDS" && tab !== "STATS" && tab !== "FONT_SETTINGS" && tab !== "ตั้งค่าตัวอักษร") { document.getElementById('admin-product-list-container').style.display = 'block'; renderAdminProductList(tab); } else { document.getElementById('admin-product-list-container').style.display = 'none'; }
+}
+
+// 🌟 ระบบ Live Preview ตัวอย่างบนเว็บไซต์จริงตามขนาดตัวอักษรและรูปแบบที่กดเลือก
+function loadFontSettingsToForm() {
+    let currentSize = storeInfo.fontSize || '14px';
+    let currentWeight = storeInfo.fontWeight || 'normal';
+    if(document.getElementById('fs_size')) document.getElementById('fs_size').value = currentSize;
+    if(document.getElementById('fs_weight')) document.getElementById('fs_weight').value = currentWeight;
+    updateLivePreview();
+}
+
+function updateLivePreview() {
+    let size = document.getElementById('fs_size') ? document.getElementById('fs_size').value : '14px';
+    let weight = document.getElementById('fs_weight') ? document.getElementById('fs_weight').value : 'normal';
+    
+    if(document.getElementById('store_fontSize')) document.getElementById('store_fontSize').value = size;
+    if(document.getElementById('store_fontWeight')) document.getElementById('store_fontWeight').value = weight;
+
+    let container = document.getElementById('livePreviewContainer');
+    if(container) {
+        container.style.fontSize = size;
+        container.querySelectorAll('.preview-title').forEach(el => {
+            el.style.fontSize = (parseInt(size) + 2) + 'px';
+            el.style.fontWeight = weight === 'bold' ? 'bold' : 'normal';
+        });
+        container.querySelectorAll('.preview-text').forEach(el => {
+            el.style.fontSize = size;
+        });
+    }
+    // อัปเดตการแสดงผลบนเว็บจริงแบบเรียลไทม์ทันที
+    document.documentElement.style.setProperty('--custom-font-size', size);
+    document.documentElement.style.setProperty('--custom-font-weight', weight);
+}
+
+// 🌟 ฟังก์ชันบันทึกการตั้งค่าตัวอักษรเฉพาะแท็บ
+async function saveFontSettings(event) {
+    const btn = event.currentTarget; 
+    const originalText = btn.innerText; 
+    btn.innerText = "⏳ กำลังบันทึก..."; 
+    
+    let size = document.getElementById('fs_size').value;
+    let weight = document.getElementById('fs_weight').value;
+    
+    const payload = { 
+        action: "save_store", 
+        status: 'open', 
+        logo: storeInfo.logo || document.getElementById('store_logo').value || '', 
+        mediaLink: storeInfo.mediaLink || document.getElementById('store_media').value || '', 
+        mediaText: storeInfo.mediaText || document.getElementById('store_mediaText').value || '', 
+        line: storeInfo.line || document.getElementById('store_line').value || '', 
+        hours: storeInfo.hours || document.getElementById('store_hours').value || '', 
+        warranty: storeInfo.warranty || document.getElementById('store_warranty').value || '', 
+        fontSize: size,
+        fontWeight: weight,
+        customCards: localCustomCards 
+    }; 
+    await sendAdminPost(payload, btn, originalText); 
 }
 
 function renderAdminProductList(tabName) {
@@ -1093,7 +1216,6 @@ async function quickDelete(id, tab) {
     } catch(err) { alert("Error"); } 
 }
 
-// 🌟 5. บันทึกข้อมูลการตั้งค่าฟอนต์ส่งไปยังชีต
 async function submitStoreAction(event) { 
     const btn = event.currentTarget; 
     const originalText = btn.innerText; 
