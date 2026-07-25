@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>จัดการระบบ (Admin) - Full System</title>
+    <title>ระบบจัดการ Admin และ หน้าเว็บไซต์จริง (Full Complete Code)</title>
     <!-- Google Fonts: Noto Sans Thai -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,11 +24,11 @@
             --font-step-title: 18px;
             --font-step-desc: 14px;
 
-            /* หมวดที่ 3: กล่องข้อความทั่วไป / รายละเอียดต่างๆ ในเว็บ */
+            /* หมวดที่ 3: กล่องข้อความอื่นๆ / ประกาศในเว็บ */
             --font-box-title: 16px;
             --font-box-desc: 14px;
 
-            /* หมวดที่ 4: หัวข้อหลักเว็บ / เมนูบาร์ */
+            /* หมวดที่ 4: หัวข้อหลักเว็บ / เมนูบาร์ / ข้อความทั่วไป */
             --font-general-title: 20px;
             --font-general-desc: 14px;
         }
@@ -41,29 +41,31 @@
         }
 
         body {
-            background-color: #f3f4f6;
+            background-color: #f0f2f5;
             color: #333333;
             padding: 20px;
         }
 
-        /* Modal Container */
+        /* ==========================================================================
+           2. สไตล์สำหรับหน้า ADMIN MODAL
+           ========================================================================== */
         .admin-modal {
-            max-width: 850px;
-            margin: 0 auto;
+            max-width: 900px;
+            margin: 0 auto 40px auto;
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
             border: 1px solid #e5e7eb;
         }
 
-        /* Modal Header */
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
             border-bottom: 1px solid #f0f0f0;
+            background: #ffffff;
         }
         .modal-title {
             font-size: 24px;
@@ -78,13 +80,11 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .close-btn:hover {
-            transform: scale(1.15);
-        }
+        .close-btn:hover { transform: scale(1.15); }
 
-        /* Tabs Section */
         .tab-section {
             padding: 15px 24px 5px;
+            background: #ffffff;
         }
         .tab-label {
             font-size: 14px;
@@ -99,9 +99,8 @@
             padding-bottom: 8px;
             scrollbar-width: none;
         }
-        .tabs-container::-webkit-scrollbar {
-            display: none;
-        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        
         .tab-btn {
             padding: 8px 18px;
             border-radius: 25px;
@@ -117,9 +116,7 @@
             align-items: center;
             gap: 6px;
         }
-        .tab-btn:hover {
-            background: #eff6ff;
-        }
+        .tab-btn:hover { background: #eff6ff; }
         .tab-btn.active {
             background: #3b82f6;
             color: #ffffff;
@@ -129,16 +126,13 @@
             border-color: #ec4899;
             color: #ec4899;
         }
-        .tab-btn.pink-tab:hover {
-            background: #fdf2f8;
-        }
+        .tab-btn.pink-tab:hover { background: #fdf2f8; }
         .tab-btn.pink-tab.active {
             background: #ec4899;
             color: #ffffff;
             box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
         }
 
-        /* Scrollbar Track Simulation */
         .scroll-track {
             height: 6px;
             background: #e5e7eb;
@@ -155,16 +149,12 @@
             border-radius: 3px;
         }
 
-        /* Content Area */
         .tab-content {
             padding: 10px 24px 24px;
             display: none;
         }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
 
-        /* Form Controls */
         .form-box {
             border: 1px solid #e5e7eb;
             border-radius: 12px;
@@ -178,12 +168,8 @@
             color: #374151;
             font-size: 16px;
         }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group:last-child {
-            margin-bottom: 0;
-        }
+        .input-group { margin-bottom: 15px; }
+        .input-group:last-child { margin-bottom: 0; }
         .form-input, .form-textarea {
             width: 100%;
             padding: 12px 15px;
@@ -191,199 +177,51 @@
             border-radius: 8px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: 0.2s;
         }
         .form-input:focus, .form-textarea:focus {
             border-color: #8b5cf6;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
-        .form-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .form-textarea { resize: vertical; min-height: 80px; }
 
-        /* Buttons */
         .btn-purple {
-            width: 100%;
-            padding: 12px;
-            background: #8b5cf6;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%; padding: 12px; background: #8b5cf6; color: #ffffff;
+            border: none; border-radius: 8px; font-weight: 600; font-size: 16px;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-purple:hover {
-            background: #7c3aed;
-        }
+        .btn-purple:hover { background: #7c3aed; }
 
         .btn-save-font {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            background: #10b981; color: white; border: none; padding: 12px 24px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            width: 100%; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-save-font:hover {
-            background: #059669;
-        }
+        .btn-save-font:hover { background: #059669; }
 
         .btn-reset-font {
-            background: #f3f4f6;
-            color: #4b5563;
-            border: 1px solid #d1d5db;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; padding: 10px 24px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-reset-font:hover {
-            background: #e5e7eb;
-        }
+        .btn-reset-font:hover { background: #e5e7eb; }
 
-        /* Card Items List */
         .item-list-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            background: #f9fafb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
+            border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px;
+            margin-bottom: 12px; background: #f9fafb; display: flex;
+            justify-content: space-between; align-items: center;
         }
-        .item-info h4 {
-            font-size: var(--font-card-title);
-            color: #1f2937;
-            margin-bottom: 4px;
-            font-weight: 600;
+        .item-info h4 { font-size: var(--font-card-title); color: #1f2937; margin-bottom: 4px; font-weight: 600; }
+        .item-info p { font-size: var(--font-card-desc); color: #6b7280; }
+        .item-actions { display: flex; gap: 8px; }
+        .btn-edit, .btn-delete {
+            color: white; border: none; padding: 6px 14px; border-radius: 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;
         }
-        .item-info p {
-            font-size: var(--font-card-desc);
-            color: #6b7280;
-        }
-        .item-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .btn-edit {
-            background: #f97316;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .btn-edit { background: #f97316; }
+        .btn-delete { background: #ef4444; }
 
-        /* ==========================================================================
-           สไตล์เฉพาะสำหรับหน้า "ตั้งค่าตัวอักษร"
-           ========================================================================== */
-        .font-setting-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        @media (max-width: 650px) {
-            .font-setting-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .font-category-box {
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 15px;
-            background: #fafafa;
-        }
-        .font-category-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #374151;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px dashed #d1d5db;
-            padding-bottom: 8px;
-        }
-        .font-input-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .font-input-row:last-child {
-            margin-bottom: 0;
-        }
-        .font-label {
-            font-size: 13px;
-            color: #4b5563;
-            font-weight: 500;
-        }
-        .font-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .font-number-input {
-            width: 70px;
-            padding: 6px 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 600;
-            color: #2563eb;
-            outline: none;
-        }
-        .font-number-input:focus {
-            border-color: #2563eb;
-        }
-        .unit-text {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        /* Live Preview Section */
+        /* หน้าตั้งค่าตัวอักษร: กล่องพรีวิวเล็กภายใน Admin */
         .live-preview-container {
             background: #eff6ff;
             border: 1.5px dashed #3b82f6;
@@ -392,153 +230,252 @@
             margin-bottom: 20px;
         }
         .preview-header {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1d4ed8;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 13px; font-weight: 700; color: #1d4ed8;
+            margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
         }
-        .preview-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        @media (max-width: 650px) {
-            .preview-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (max-width: 650px) { .preview-grid { grid-template-columns: 1fr; } }
+        
         .preview-box-item {
-            background: #ffffff;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #bfdbfe;
+            background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #bfdbfe;
         }
         .preview-tag {
-            font-size: 10px;
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 6px;
+            font-size: 10px; background: #dbeafe; color: #1e40af;
+            padding: 2px 6px; border-radius: 4px; font-weight: 600; display: inline-block; margin-bottom: 6px;
         }
 
-        /* Dummy Box styles for Placeholder Tabs */
+        /* หน้าตั้งค่าตัวอักษร: ตารางอินพุต */
+        .font-setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 650px) { .font-setting-grid { grid-template-columns: 1fr; } }
+        
+        .font-category-box {
+            border: 1px solid #e5e7eb; border-radius: 10px; padding: 15px; background: #fafafa;
+        }
+        .font-category-title {
+            font-size: 15px; font-weight: 700; color: #374151; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed #d1d5db; padding-bottom: 8px;
+        }
+        .font-input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .font-input-row:last-child { margin-bottom: 0; }
+        .font-label { font-size: 13px; color: #4b5563; font-weight: 500; }
+        .font-input-wrapper { display: flex; align-items: center; gap: 5px; }
+        .font-number-input {
+            width: 70px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 6px;
+            text-align: center; font-weight: 600; color: #2563eb; outline: none;
+        }
+        .font-number-input:focus { border-color: #2563eb; }
+        .unit-text { font-size: 12px; color: #6b7280; }
+
         .dummy-content {
-            text-align: center;
-            padding: 50px 20px;
-            background: #f9fafb;
-            border: 2px dashed #d1d5db;
+            text-align: center; padding: 50px 20px; background: #f9fafb;
+            border: 2px dashed #d1d5db; border-radius: 12px; color: #6b7280;
+        }
+
+        /* ==========================================================================
+           3. สไตล์สำหรับ "หน้าเว็บไซต์จริง" (แสดงผลทุกหมวดหมู่ ไม่ตัดออก)
+           ========================================================================== */
+        .website-preview-section {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 2px solid #3b82f6;
+            overflow: hidden;
+        }
+
+        .site-banner {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* หน้าเว็บ: ส่วน Navbar (ผูกหมวดที่ 4) */
+        .site-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .site-logo {
+            font-size: var(--font-general-title);
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .site-menu {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .site-menu li a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: var(--font-general-desc);
+            font-weight: 500;
+        }
+
+        .site-body { padding: 24px; background: #f8fafc; }
+
+        /* หน้าเว็บ: ส่วน ขั้นตอนเลือกสินค้า (ผูกหมวดที่ 2) */
+        .section-header {
+            font-size: var(--font-general-title);
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+            border-left: 4px solid #3b82f6;
+            padding-left: 10px;
+        }
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .step-box {
+            background: white;
+            padding: 18px;
             border-radius: 12px;
-            color: #6b7280;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .step-number {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #eff6ff; color: #3b82f6;
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
+        .step-box h3 {
+            font-size: var(--font-step-title);
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-weight: 600;
+            padding-right: 30px;
+        }
+        .step-box p {
+            font-size: var(--font-step-desc);
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* หน้าเว็บ: ส่วน การ์ดรูปภาพ/สินค้า (ผูกหมวดที่ 1) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .product-img-placeholder {
+            height: 140px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 24px;
+        }
+        .product-info { padding: 16px; }
+        .product-info h4 {
+            font-size: var(--font-card-title);
+            color: #0f172a;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .product-info p {
+            font-size: var(--font-card-desc);
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* หน้าเว็บ: ส่วน กล่องข้อความอื่นๆ / ประกาศ (ผูกหมวดที่ 3) */
+        .notice-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        .notice-icon { font-size: 24px; color: #d97706; margin-top: 2px; }
+        .notice-content h4 {
+            font-size: var(--font-box-title);
+            color: #92400e;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .notice-content p {
+            font-size: var(--font-box-desc);
+            color: #b45309;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
+    <!-- ==========================================================================
+       ส่วนที่ 1: แผงจัดการระบบ ADMIN (ครบถ้วนทุกแท็บ + มีกล่อง Live Preview ในตัว)
+       ========================================================================== -->
     <div class="admin-modal">
-        <!-- Modal Header -->
         <div class="modal-header">
             <h2 class="modal-title">จัดการระบบ (Admin)</h2>
             <button class="close-btn" onclick="alert('ปิดหน้าต่างจัดการระบบ')"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <!-- Category Selector -->
         <div class="tab-section">
             <div class="tab-label">เลือกหมวดหมู่ที่ต้องการจัดการ:</div>
             <div class="tabs-container">
                 <button class="tab-btn" id="tab-btn-android" onclick="switchTab('android')">Android</button>
                 <button class="tab-btn" id="tab-btn-line" onclick="switchTab('line-sticker')"><i class="fa-regular fa-folder-open" style="color:#f59e0b;"></i> สติ๊กเกอร์ไลน์</button>
-                <button class="tab-btn pink-tab" id="tab-btn-font" onclick="switchTab('font-settings')"><i class="fa-solid fa-palette"></i> ตั้งค่าตัวอักษร</button>
-                <button class="tab-btn active" id="tab-btn-image" onclick="switchTab('image-cards')"><i class="fa-regular fa-image" style="color:#10b981;"></i> การ์ดรูปภาพ</button>
+                <button class="tab-btn pink-tab active" id="tab-btn-font" onclick="switchTab('font-settings')"><i class="fa-solid fa-palette"></i> ตั้งค่าตัวอักษร</button>
+                <button class="tab-btn" id="tab-btn-image" onclick="switchTab('image-cards')"><i class="fa-regular fa-image" style="color:#10b981;"></i> การ์ดรูปภาพ</button>
                 <button class="tab-btn" id="tab-btn-add" onclick="switchTab('add-tab')"><i class="fa-solid fa-plus"></i> เพิ่มแท็บ</button>
             </div>
         </div>
 
-        <!-- Scrollbar track simulation -->
-        <div class="scroll-track">
-            <div class="scroll-thumb"></div>
-        </div>
+        <div class="scroll-track"><div class="scroll-thumb"></div></div>
 
-        <!-- ==========================================================================
-           TAB 1: การ์ดรูปภาพ (ตรงตามรูปภาพตัวอย่างของคุณ 100%)
-           ========================================================================== -->
-        <div id="content-image-cards" class="tab-content active">
-            <div class="form-box">
-                <div class="form-title">สร้างการ์ดรูปภาพ/โปรโมชันใหม่</div>
-                <div class="input-group">
-                    <input type="text" id="new-card-title" class="form-input" placeholder="ชื่อการ์ด (เช่น รีวิว, โปรโมชัน)">
-                </div>
-                <div class="input-group">
-                    <textarea id="new-card-desc" class="form-textarea" placeholder="รายละเอียด (ขึ้นบรรทัดใหม่ได้)"></textarea>
-                </div>
-                <div class="input-group">
-                    <textarea id="new-card-img" class="form-textarea" placeholder="ลิงก์รูปภาพ (คั่นด้วยลูกน้ำ , ถ้ามีหลายรูป)" style="min-height: 60px;"></textarea>
-                </div>
-                <button class="btn-purple" onclick="addNewCard()"><i class="fa-solid fa-plus"></i> เพิ่มการ์ดใหม่</button>
-            </div>
-
-            <!-- รายการการ์ด (ผูกตัวแปร CSS เพื่อให้เปลี่ยนขนาดตามที่ตั้งค่าได้ทันที) -->
-            <div id="card-list-container">
-                <div class="item-list-card">
-                    <div class="item-info">
-                        <h4>รายละเอียดแอพ/อื่นๆภายในร้าน</h4>
-                        <p>มีรูปภาพทั้งหมด 0 รูป</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button>
-                        <button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button>
-                    </div>
-                </div>
-
-                <div class="item-list-card">
-                    <div class="item-info">
-                        <h4>ประกาศแอพ IOS พักขายไม่มีกำหนด</h4>
-                        <p>มีรูปภาพทั้งหมด 0 รูป</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button>
-                        <button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================================================
-           TAB 2: ตั้งค่าตัวอักษร (ระบบแยกหัวข้อกับข้อความของทุกกล่องข้อความในเว็บ)
-           ========================================================================== -->
-        <div id="content-font-settings" class="tab-content">
+        <!-- TAB 1: ตั้งค่าตัวอักษร (เปิดเป็นหน้าแรกเพื่อให้ทดสอบการเปลี่ยนอักษรได้ทันที) -->
+        <div id="content-font-settings" class="tab-content active">
             <div class="form-box">
                 <div class="form-title"><i class="fa-solid fa-text-height" style="color:#ec4899;"></i> กำหนดขนาดตัวอักษรบนเว็บไซต์ (Px)</div>
-                <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">ตั้งค่าแยกขนาดหัวข้อใหญ่และข้อความปกติ สำหรับกล่องข้อความทุกประเภทในเว็บไซต์</p>
+                <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">ตั้งค่าแยกขนาดหัวข้อใหญ่และข้อความปกติ โดยระบบจะปรับเปลี่ยนทั้งใน **กล่องตัวอย่างด้านล่าง** และ **หน้าเว็บไซต์จริงด้านล่างสุดของจอ** ทันทีครับ</p>
 
-                <!-- Live Preview ส่วนแสดงผลลัพธ์การเปลี่ยนขนาดอักษรแบบเรียลไทม์ -->
+                <!-- Live Preview ส่วนแสดงผลลัพธ์ภายในกล่อง Admin (ไม่ตัดออก) -->
                 <div class="live-preview-container">
-                    <div class="preview-header"><i class="fa-solid fa-eye"></i> ตัวอย่างการแสดงผลบนเว็บไซต์จริง (Live Preview)</div>
+                    <div class="preview-header"><i class="fa-solid fa-eye"></i> ตัวอย่างการแสดงผลเบื้องต้น (Live Preview Box)</div>
                     <div class="preview-grid">
-                        <!-- Preview 1 -->
                         <div class="preview-box-item">
                             <span class="preview-tag">1. การ์ดรูปภาพ</span>
                             <div style="font-size: var(--font-card-title); font-weight: 700; color: #1f2937;">หัวข้อ: โปรโมชันพิเศษ</div>
                             <div style="font-size: var(--font-card-desc); color: #6b7280; margin-top: 4px;">ข้อความ: รายละเอียดสินค้าและโปรโมชัน</div>
                         </div>
-                        <!-- Preview 2 -->
                         <div class="preview-box-item">
                             <span class="preview-tag">2. ขั้นตอนเลือกสินค้า</span>
                             <div style="font-size: var(--font-step-title); font-weight: 700; color: #1f2937;">ขั้นตอนที่ 1: เลือกสินค้า</div>
                             <div style="font-size: var(--font-step-desc); color: #6b7280; margin-top: 4px;">ข้อความ: กดหยิบสินค้าลงตะกร้าได้เลย</div>
                         </div>
-                        <!-- Preview 3 -->
                         <div class="preview-box-item">
                             <span class="preview-tag">3. กล่องข้อความอื่นๆ</span>
                             <div style="font-size: var(--font-box-title); font-weight: 700; color: #1f2937;">ประกาศสำคัญจากร้าน</div>
                             <div style="font-size: var(--font-box-desc); color: #6b7280; margin-top: 4px;">ข้อความ: วันนี้ร้านปิดปรับปรุงระบบชั่วคราว</div>
                         </div>
-                        <!-- Preview 4 -->
                         <div class="preview-box-item">
                             <span class="preview-tag">4. หัวข้อและเมนูหลัก</span>
                             <div style="font-size: var(--font-general-title); font-weight: 700; color: #1f2937;">ยินดีต้อนรับสู่เว็บของเรา</div>
@@ -547,9 +484,7 @@
                     </div>
                 </div>
 
-                <!-- Grid แยกการตั้งค่า 4 หมวดหมู่หลักครอบคลุมทั้งเว็บ -->
                 <div class="font-setting-grid">
-                    
                     <!-- 1. การ์ดรูปภาพ -->
                     <div class="font-category-box">
                         <div class="font-category-title"><i class="fa-regular fa-image" style="color:#10b981;"></i> 1. การ์ดรูปภาพ / โปรโมชัน</div>
@@ -625,73 +560,128 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div style="margin-top: 20px;">
                     <button class="btn-save-font" onclick="saveFontSettings()"><i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่าตัวอักษรทั้งหมด</button>
-                    <button class="btn-reset-font" onclick="resetFontSettings()"><i class="fa-solid fa-rotate-right"></i> รีเซ็ตเป็นค่าเริ่มต้น</button>
+                    <button class="btn-reset-font" onclick="resetFontSettings()"><i class="fa-solid fa-rotate-right"></i> รีเซ็ตเป็นค่าเริ่มต้น (16px / 14px)</button>
                 </div>
-
             </div>
         </div>
 
-        <!-- ==========================================================================
-           TAB 3: Android (แสดง UI ครบถ้วน ไม่ตัดออก)
-           ========================================================================== -->
-        <div id="content-android" class="tab-content">
-            <div class="dummy-content">
-                <i class="fa-brands fa-android" style="font-size: 48px; color: #3dda84; margin-bottom: 10px;"></i>
-                <h3 style="margin-bottom: 8px; color: #374151;">จัดการระบบแอพพลิเคชัน Android</h3>
-                <p>คุณสามารถเพิ่ม ลบ หรือแก้ไขข้อมูลแอพพลิเคชัน Android ของคุณได้ที่หน้านี้</p>
-            </div>
-        </div>
-
-        <!-- ==========================================================================
-           TAB 4: สติ๊กเกอร์ไลน์ (แสดง UI ครบถ้วน ไม่ตัดออก)
-           ========================================================================== -->
-        <div id="content-line-sticker" class="tab-content">
-            <div class="dummy-content">
-                <i class="fa-brands fa-line" style="font-size: 48px; color: #00b900; margin-bottom: 10px;"></i>
-                <h3 style="margin-bottom: 8px; color: #374151;">จัดการสติ๊กเกอร์ไลน์</h3>
-                <p>เพิ่มรายการสติ๊กเกอร์ไลน์ใหม่ หรือตั้งค่าโปรโมชันสำหรับหมวดหมู่สติ๊กเกอร์</p>
-            </div>
-        </div>
-
-        <!-- ==========================================================================
-           TAB 5: เพิ่มแท็บใหม่ (แสดง UI ครบถ้วน ไม่ตัดออก)
-           ========================================================================== -->
-        <div id="content-add-tab" class="tab-content">
+        <!-- TAB 2: การ์ดรูปภาพ (ไม่ตัดออก) -->
+        <div id="content-image-cards" class="tab-content">
             <div class="form-box">
-                <div class="form-title"><i class="fa-solid fa-plus-circle" style="color:#3b82f6;"></i> สร้างแท็บการจัดการใหม่</div>
-                <div class="input-group">
-                    <input type="text" class="form-input" placeholder="ชื่อแท็บใหม่ (เช่น สินค้าพรีออเดอร์, ข่าวสาร)">
+                <div class="form-title">สร้างการ์ดรูปภาพ/โปรโมชันใหม่</div>
+                <div class="input-group"><input type="text" id="new-card-title" class="form-input" placeholder="ชื่อการ์ด (เช่น รีวิว, โปรโมชัน)"></div>
+                <div class="input-group"><textarea id="new-card-desc" class="form-textarea" placeholder="รายละเอียด (ขึ้นบรรทัดใหม่ได้)"></textarea></div>
+                <div class="input-group"><textarea id="new-card-img" class="form-textarea" placeholder="ลิงก์รูปภาพ (คั่นด้วยลูกน้ำ , ถ้ามีหลายรูป)" style="min-height: 60px;"></textarea></div>
+                <button class="btn-purple" onclick="addNewCard()"><i class="fa-solid fa-plus"></i> เพิ่มการ์ดใหม่</button>
+            </div>
+            <div id="card-list-container">
+                <div class="item-list-card">
+                    <div class="item-info"><h4>รายละเอียดแอพ/อื่นๆภายในร้าน</h4><p>มีรูปภาพทั้งหมด 0 รูป</p></div>
+                    <div class="item-actions"><button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button><button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button></div>
                 </div>
-                <button class="btn-purple" onclick="alert('สร้างแท็บใหม่เรียบร้อย!')"><i class="fa-solid fa-check"></i> ยืนยันการสร้างแท็บ</button>
+                <div class="item-list-card">
+                    <div class="item-info"><h4>ประกาศแอพ IOS พักขายไม่มีกำหนด</h4><p>มีรูปภาพทั้งหมด 0 รูป</p></div>
+                    <div class="item-actions"><button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button><button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button></div>
+                </div>
             </div>
         </div>
 
+        <!-- TAB 3, 4, 5: โครงสร้างแท็บอื่นๆ (ไม่ตัดออก) -->
+        <div id="content-android" class="tab-content"><div class="dummy-content"><i class="fa-brands fa-android" style="font-size: 48px; color: #3dda84; margin-bottom: 10px;"></i><h3 style="color: #374151;">จัดการระบบแอพพลิเคชัน Android</h3><p>คุณสามารถเพิ่ม ลบ หรือแก้ไขข้อมูลแอพพลิเคชัน Android ของคุณได้ที่หน้านี้</p></div></div>
+        <div id="content-line-sticker" class="tab-content"><div class="dummy-content"><i class="fa-brands fa-line" style="font-size: 48px; color: #00b900; margin-bottom: 10px;"></i><h3 style="color: #374151;">จัดการสติ๊กเกอร์ไลน์</h3><p>เพิ่มรายการสติ๊กเกอร์ไลน์ใหม่ หรือตั้งค่าโปรโมชันสำหรับหมวดหมู่สติ๊กเกอร์</p></div></div>
+        <div id="content-add-tab" class="tab-content"><div class="form-box"><div class="form-title"><i class="fa-solid fa-plus-circle" style="color:#3b82f6;"></i> สร้างแท็บการจัดการใหม่</div><div class="input-group"><input type="text" class="form-input" placeholder="ชื่อแท็บใหม่ (เช่น สินค้าพรีออเดอร์, ข่าวสาร)"></div><button class="btn-purple" onclick="alert('สร้างแท็บใหม่เรียบร้อย!')"><i class="fa-solid fa-check"></i> ยืนยันการสร้างแท็บ</button></div></div>
+    </div>
+
+
+    <!-- ==========================================================================
+       ส่วนที่ 2: จำลอง "หน้าเว็บไซต์จริง" ด้านนอก (ครบถ้วนทุกส่วน ห้ามตัดออก)
+       * เมื่อเปลี่ยนตัวเลขในแผง Admin ด้านบน ข้อความในส่วนนี้จะเปลี่ยนขนาดตามแบบเรียลไทม์!
+       ========================================================================== -->
+    <div class="website-preview-section">
+        <div class="site-banner">
+            <span><i class="fa-solid fa-globe"></i> พื้นที่จำลองหน้าเว็บไซต์จริง (ลูกค้ามองเห็นแบบนี้)</span>
+            <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px;">Live Updating ⚡</span>
+        </div>
+
+        <!-- หมวดที่ 4: หัวข้อหลักและเมนูบาร์ -->
+        <nav class="site-navbar">
+            <div class="site-logo">ร้านค้าแอพพลิเคชัน & สติ๊กเกอร์</div>
+            <ul class="site-menu">
+                <li><a href="javascript:void(0)">หน้าแรก</a></li>
+                <li><a href="javascript:void(0)">ขั้นตอนการซื้อ</a></li>
+                <li><a href="javascript:void(0)">โปรโมชัน</a></li>
+                <li><a href="javascript:void(0)">ติดต่อเรา</a></li>
+            </ul>
+        </nav>
+
+        <div class="site-body">
+            <!-- หมวดที่ 2: ขั้นตอนการเลือกสินค้า / วิธีใช้งาน -->
+            <div class="section-header">ขั้นตอนการสั่งซื้อสินค้า (ใช้งานหมวดที่ 2)</div>
+            <div class="step-grid">
+                <div class="step-box">
+                    <div class="step-number">1</div>
+                    <h3>เลือกสินค้าที่ต้องการ</h3>
+                    <p>คลิกเลือกแอพพลิเคชัน Android, iOS หรือสติ๊กเกอร์ไลน์ที่คุณต้องการลงในตะกร้าสินค้า</p>
+                </div>
+                <div class="step-box">
+                    <div class="step-number">2</div>
+                    <h3>ชำระเงินและแจ้งโอน</h3>
+                    <p>โอนเงินผ่านระบบธนาคารหรือ TrueMoney Wallet จากนั้นแนบสลิปยืนยันในหน้าชำระเงิน</p>
+                </div>
+                <div class="step-box">
+                    <div class="step-number">3</div>
+                    <h3>รับสินค้าทันที</h3>
+                    <p>ระบบจะจัดส่งโค้ดดาวน์โหลดหรือส่งสติ๊กเกอร์ไลน์ให้คุณทางบัญชีที่แจ้งไว้ภายใน 5 นาที</p>
+                </div>
+            </div>
+
+            <!-- หมวดที่ 1: การ์ดรูปภาพ / โปรโมชันสินค้า -->
+            <div class="section-header" style="border-color: #10b981;">สินค้าและโปรโมชันแนะนำ (ใช้งานหมวดที่ 1)</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-img-placeholder"><i class="fa-brands fa-android"></i></div>
+                    <div class="product-info">
+                        <h4>แอพ Android พรีเมียม ปลดล็อคทุกฟีเจอร์</h4>
+                        <p>แอพฟังเพลงและดูหนังไม่มีโฆษณาคั่น อัปเดตเวอร์ชันใหม่ล่าสุดตลอดการใช้งาน</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-placeholder" style="background: #dcfce7; color: #16a34a;"><i class="fa-brands fa-line"></i></div>
+                    <div class="product-info">
+                        <h4>สติ๊กเกอร์ไลน์ดุ๊กดิ๊ก น่ารักปุ๊กปิ๊ก</h4>
+                        <p>สติ๊กเกอร์และธีมไลน์แท้ 100% ซื้อครั้งเดียวใช้ได้ตลอดชีพ ไม่มีหมดอายุ รับประกันสินค้า</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- หมวดที่ 3: กล่องข้อความอื่นๆ / ประกาศในเว็บ -->
+            <div class="section-header" style="border-color: #f59e0b;">ประกาศจากทางร้าน (ใช้งานหมวดที่ 3)</div>
+            <div class="notice-box">
+                <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="notice-content">
+                    <h4>ประกาศสำคัญ: ระบบ iOS ปรับปรุงชั่วคราว</h4>
+                    <p>ขณะนี้แอพพลิเคชันในระบบ iOS อยู่ระหว่างการปิดปรับปรุงเพื่ออัปเดตใบรับรองใหม่ ไม่มีกำหนดเปิดจำหน่ายชั่วคราว สำหรับลูกค้าเก่าที่ซื้อไปแล้วยังคงสามารถใช้งานต่อได้ตามปกติ ไม่ส่งผลกระทบใดๆ ครับ</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ==========================================================================
-       JAVASCRIPT: ระบบควบคุมแท็บ การเพิ่ม/ลบการ์ด และระบบบันทึกขนาดตัวอักษร
+       JAVASCRIPT: ระบบควบคุมแท็บ การเพิ่ม/ลบ และ Live Update ตัวอักษร
        ========================================================================== -->
     <script>
         // 1. ระบบสลับแท็บเมนู
         function switchTab(tabId) {
-            // ซ่อนเนื้อหาแท็บทั้งหมด
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            // ลบสถานะ active จากปุ่มทั้งหมด
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            // แสดงเนื้อหาแท็บที่เลือก
             const selectedContent = document.getElementById(`content-${tabId}`);
             if (selectedContent) selectedContent.classList.add('active');
 
-            // ไฮไลท์ปุ่มที่ถูกเลือก
             if (tabId === 'android') document.getElementById('tab-btn-android').classList.add('active');
             if (tabId === 'line-sticker') document.getElementById('tab-btn-line').classList.add('active');
             if (tabId === 'font-settings') document.getElementById('tab-btn-font').classList.add('active');
@@ -699,58 +689,36 @@
             if (tabId === 'add-tab') document.getElementById('tab-btn-add').classList.add('active');
         }
 
-        // 2. ระบบเพิ่มการ์ดรูปภาพใหม่ (ทำให้ใช้งานเพิ่มข้อมูลหน้าเว็บได้จริง)
+        // 2. ระบบเพิ่มการ์ดรูปภาพใหม่
         function addNewCard() {
             const titleInput = document.getElementById('new-card-title');
             const descInput = document.getElementById('new-card-desc');
             const imgInput = document.getElementById('new-card-img');
 
-            if (!titleInput.value.trim()) {
-                alert('กรุณากรอกชื่อการ์ด');
-                return;
-            }
+            if (!titleInput.value.trim()) { alert('กรุณากรอกชื่อการ์ด'); return; }
 
-            // นับจำนวนรูปภาพจากลิงก์ที่คั่นด้วยลูกน้ำ
-            let imgCount = 0;
-            if (imgInput.value.trim()) {
-                imgCount = imgInput.value.split(',').filter(link => link.trim() !== '').length;
-            }
+            let imgCount = imgInput.value.trim() ? imgInput.value.split(',').filter(link => link.trim() !== '').length : 0;
 
-            // สร้าง Element การ์ดใหม่
             const cardContainer = document.getElementById('card-list-container');
             const newCard = document.createElement('div');
             newCard.className = 'item-list-card';
             newCard.innerHTML = `
-                <div class="item-info">
-                    <h4>${titleInput.value.trim()}</h4>
-                    <p>มีรูปภาพทั้งหมด ${imgCount} รูป ${descInput.value ? ' | ' + descInput.value : ''}</p>
-                </div>
-                <div class="item-actions">
-                    <button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button>
-                    <button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button>
-                </div>
+                <div class="item-info"><h4>${titleInput.value.trim()}</h4><p>มีรูปภาพทั้งหมด ${imgCount} รูป ${descInput.value ? ' | ' + descInput.value : ''}</p></div>
+                <div class="item-actions"><button class="btn-edit" onclick="alert('แก้ไขรายการนี้')"><i class="fa-solid fa-pencil"></i> แก้ไข</button><button class="btn-delete" onclick="deleteCard(this)"><i class="fa-solid fa-trash"></i> ลบ</button></div>
             `;
-
-            // เพิ่มการ์ดลงในรายการและล้างค่าในฟอร์ม
             cardContainer.prepend(newCard);
-            titleInput.value = '';
-            descInput.value = '';
-            imgInput.value = '';
+            titleInput.value = ''; descInput.value = ''; imgInput.value = '';
             alert('เพิ่มการ์ดรูปภาพใหม่เรียบร้อยแล้ว!');
         }
 
-        // ระบบลบการ์ด
         function deleteCard(buttonElement) {
-            if (confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
-                buttonElement.closest('.item-list-card').remove();
-            }
+            if (confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) buttonElement.closest('.item-list-card').remove();
         }
 
-        // 3. ระบบอัปเดตขนาดตัวอักษรแบบ Real-time (Live Preview)
+        // 3. ระบบอัปเดตขนาดตัวอักษรแบบ Real-time (Live Update ทั้งใน Admin และหน้าเว็บจริง)
         function liveUpdateFont() {
             const root = document.documentElement;
             
-            // ดึงค่าจาก Input (ถ้าช่องว่างให้ใช้ค่า default)
             const cardTitle = document.getElementById('input-card-title').value || 16;
             const cardDesc = document.getElementById('input-card-desc').value || 14;
             const stepTitle = document.getElementById('input-step-title').value || 18;
@@ -760,7 +728,7 @@
             const genTitle = document.getElementById('input-general-title').value || 20;
             const genDesc = document.getElementById('input-general-desc').value || 14;
 
-            // อัปเดต CSS Variables เพื่อให้มีผลทันทีทั้งเว็บไซต์
+            // อัปเดต CSS Variables ทันที ทำให้ด้านล่าง (เว็บจริง) และพรีวิวในกล่องเปลี่ยนขนาดตามไปด้วย
             root.style.setProperty('--font-card-title', cardTitle + 'px');
             root.style.setProperty('--font-card-desc', cardDesc + 'px');
             root.style.setProperty('--font-step-title', stepTitle + 'px');
@@ -771,7 +739,7 @@
             root.style.setProperty('--font-general-desc', genDesc + 'px');
         }
 
-        // 4. ระบบบันทึกการตั้งค่าตัวอักษรลง LocalStorage
+        // 4. ระบบบันทึกการตั้งค่าลง LocalStorage
         function saveFontSettings() {
             const fontConfig = {
                 cardTitle: document.getElementById('input-card-title').value,
@@ -784,19 +752,16 @@
                 genDesc: document.getElementById('input-general-desc').value
             };
 
-            // บันทึกข้อมูลเข้าเบราว์เซอร์ (สามารถเปลี่ยนไปส่ง API บันทึกลง Database ของคุณได้ที่นี่)
             localStorage.setItem('site_font_settings', JSON.stringify(fontConfig));
-            
             liveUpdateFont();
-            alert('✅ บันทึกขนาดตัวอักษรเรียบร้อยแล้ว!\nระบบได้นำไปปรับใช้กับทุกกล่องข้อความบนเว็บไซต์แล้ว');
+            alert('✅ บันทึกขนาดตัวอักษรเรียบร้อยแล้ว!\nระบบได้นำไปปรับใช้กับทุกกล่องข้อความบนหน้าเว็บไซต์จริงแล้วครับ');
         }
 
-        // 5. ระบบโหลดค่าตัวอักษรที่บันทึกไว้เมื่อเปิดหน้าเว็บ
+        // 5. ระบบโหลดค่าที่เคยบันทึกไว้เมื่อเปิดเว็บ
         function loadFontSettings() {
             const savedFonts = localStorage.getItem('site_font_settings');
             if (savedFonts) {
                 const config = JSON.parse(savedFonts);
-                
                 document.getElementById('input-card-title').value = config.cardTitle || 16;
                 document.getElementById('input-card-desc').value = config.cardDesc || 14;
                 document.getElementById('input-step-title').value = config.stepTitle || 18;
@@ -805,12 +770,11 @@
                 document.getElementById('input-box-desc').value = config.boxDesc || 14;
                 document.getElementById('input-general-title').value = config.genTitle || 20;
                 document.getElementById('input-general-desc').value = config.genDesc || 14;
-
                 liveUpdateFont();
             }
         }
 
-        // 6. ระบบรีเซ็ตค่าตัวอักษรกลับเป็นค่ามาตรฐานเริ่มต้น
+        // 6. ระบบรีเซ็ตค่ากลับเป็นเริ่มต้น
         function resetFontSettings() {
             if (confirm('คุณต้องการรีเซ็ตขนาดตัวอักษรทั้งหมดกลับเป็นค่าเริ่มต้นหรือไม่?')) {
                 document.getElementById('input-card-title').value = 16;
@@ -828,7 +792,6 @@
             }
         }
 
-        // เริ่มต้นโหลดการตั้งค่าตัวอักษรทันทีเมื่อเปิดหน้าเว็บ
         window.addEventListener('DOMContentLoaded', loadFontSettings);
     </script>
 </body>
