@@ -25,7 +25,7 @@
     --text-muted: #555;
     /* 🌟 5. ตัวแปรปรับขนาดและความหนาของตัวอักษรจากแอดมิน */
     --custom-font-size: 14px;
-    --custom-font-weight: normal;
+    --custom-font-weight: 400; /* 400 = ปกติ/ไม่หนา, 500 = หนานิดหน่อย */
 }
 
 body { 
@@ -40,7 +40,7 @@ body {
     font-size: var(--custom-font-size);
 }
 
-/* 🌟 ปรับความหนาของตัวอักษรให้เชื่อมโยงกับระบบแอดมิน */
+/* 🌟 ปรับความหนาของตัวอักษรให้เชื่อมโยงกับระบบแอดมิน (แบบไม่หนาหรือหนานิดหน่อย) */
 .category-title, .card-title, .card-price, .package-title, .package-price, .admin-btn, .checkout-header, .checkout-item-title, strong, b, .tab-btn {
     font-weight: var(--custom-font-weight) !important;
     -webkit-text-stroke: 0.3px currentColor;
@@ -72,7 +72,7 @@ body {
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 11px;
-    font-weight: bold !important;
+    font-weight: 500 !important;
     z-index: 10;
     animation: blinker 0.8s linear infinite;
     -webkit-text-stroke: 0px;
@@ -91,6 +91,25 @@ body {
 .tab-btn { flex: 0 0 auto; padding: 8px 16px; border-radius: 25px; border: none; font-family: inherit; font-size: 16px; cursor: pointer; transition: all 0.3s ease; background: transparent; color: var(--text-muted); white-space: nowrap; }
 .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 2px 10px rgba(255,75,126,0.3); }
 .content { max-width: 800px; margin: 0 auto; padding: 0 20px 50px; position: relative; z-index: 5; }
+
+/* ================== 🌟 กล่องข้อความพรอมต์สำหรับแจ้งแก้ไขข้อมูล ================== */
+.edit-notice-box {
+    background: linear-gradient(135deg, #FFF8E1, #FFECB3);
+    border-left: 5px solid #FFB300;
+    color: #5D4037;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    font-size: 14px;
+    line-height: 1.5;
+    width: 100%;
+}
+.edit-notice-box .notice-icon { font-size: 22px; flex-shrink: 0; }
+.edit-notice-box .notice-text { flex: 1; font-weight: var(--custom-font-weight); }
 
 /* กล่องขั้นตอนการสั่งซื้อ */
 .steps-container { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; }
@@ -152,11 +171,11 @@ body {
 .status-dot-pkg { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 /* 🌟 2. รายละเอียดย่อย ขนาดเท่ากับชื่อแพ็กเกจย่อย (14px) */
-.package-title { font-size: 14px; color: var(--bg-main); font-weight: bold; line-height: 1.2; word-break: break-word; }
+.package-title { font-size: 14px; color: var(--bg-main); font-weight: 500; line-height: 1.2; word-break: break-word; }
 .pkg-mid-col { flex: 1.5; padding: 0 5px; text-align: center; }
 .package-desc { font-size: 14px; color: var(--text-muted); white-space: pre-line; line-height: 1.3; }
 .pkg-right-col { flex: 0.8; display: flex; align-items: center; justify-content: flex-end; }
-.package-price { font-size: 15px; color: var(--secondary); font-weight: bold; white-space: nowrap; }
+.package-price { font-size: 15px; color: var(--secondary); font-weight: 500; white-space: nowrap; }
 
 .package-card .check-circle { 
     width: 22px; height: 22px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; 
@@ -164,7 +183,7 @@ body {
     transition: 0.2s; flex-shrink: 0; margin: 0; 
 }
 .package-card.selected .check-circle { background: var(--primary); border-color: var(--primary); }
-.package-card.selected .check-circle::after { content: '✓'; color: #fff; font-size: 14px; font-weight: bold; }
+.package-card.selected .check-circle::after { content: '✓'; color: #fff; font-size: 14px; font-weight: 500; }
 
 /* ========================================================================================= */
 .info-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.2); color: #000; display: flex !important; flex-direction: column !important; }
@@ -190,7 +209,7 @@ body {
 .btn-confirm-line { background: #00B900; color: #fff; border: none; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 15px; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 185, 0, 0.3); transition: 0.2s; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
 /* Admin CSS */
-#admin-badge { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: #fff; border-radius: 50%; display: none; justify-content: center; align-items: center; color: #000; font-size: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 999; cursor: pointer; border: 2px solid #ddd; }
+#admin-badge { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: #fff; border-radius: 50%; display: none; justify-content: center; align-items: center; color: #000; font-size: 30px; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 999; cursor: pointer; border: 2px solid #ddd; }
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
 .loader { border: 4px solid rgba(255,255,255,0.2); border-top-color: var(--primary); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -260,6 +279,12 @@ body {
 </div>
 
 <div class="content">
+  <!-- 🌟 3. กล่องข้อความพรอมต์สำหรับแจ้งแก้ไขข้อมูล / แจ้งเตือนลูกค้าในหน้าเว็บ -->
+  <div class="edit-notice-box" id="editNoticeBox">
+      <div class="notice-icon">📌</div>
+      <div class="notice-text" id="editNoticeText"></div>
+  </div>
+
   <div class="steps-container" id="stepsBox">
       <h3>🛒 ขั้นตอนเลือกสินค้าในเว็บ</h3>
       <ol>
@@ -393,20 +418,36 @@ body {
         <input type="text" id="store_line" placeholder="ช่องทางติดต่อ ไอดี Line (ใส่ @ ด้วย)">
         <input type="text" id="store_hours" placeholder="เวลาทำการ (เช่น 10:00 - 22:00)">
         <textarea id="store_warranty" placeholder="การรับประกัน (เงื่อนไข, ขึ้นบรรทัดใหม่ได้)" rows="3"></textarea>
+      </div>
+
+      <!-- ==============================================================================
+           🌟 1., 2., 3. แท็บใหม่ในแอดมินสำหรับปรับขนาดตัวอักษร, ความหนา และข้อความแจ้งแก้ไขข้อมูล
+           ============================================================================== -->
+      <div id="zone-font-settings" style="display:none; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fff;">
+        <h4 style="color: var(--primary); margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">🎨 ปรับแต่งขนาดตัวอักษรและข้อความแจ้งเตือน</h4>
         
-        <!-- 🌟 5. ตั้งค่าขนาดและความหนาของตัวอักษรผ่านหน้าแอดมิน -->
-        <label style="font-size: 13px; color: #3B96F5; font-weight:bold; display:block; margin-top:10px;">🎨 ตั้งค่าฟอนต์และตัวอักษรร้านค้า:</label>
-        <div style="display: flex; gap: 10px;">
-          <select id="store_fontSize" style="flex:1;">
-            <option value="14px">ขนาดตัวอักษร: ปกติ (14px)</option>
-            <option value="15px">ขนาดตัวอักษร: กลาง (15px)</option>
-            <option value="16px">ขนาดตัวอักษร: ใหญ่ (16px)</option>
-          </select>
-          <select id="store_fontWeight" style="flex:1;">
-            <option value="normal">ความหนา: ปกติ (Normal)</option>
-            <option value="bold">ความหนา: ตัวหนา (Bold)</option>
-          </select>
+        <label style="font-size: 13px; color: #555; display:block; margin-bottom:5px;">📏 ขนาดตัวอักษรกล่องข้อความขนาดต่างๆ (Font Size):</label>
+        <select id="store_fontSize" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:8px; font-family:inherit;">
+          <option value="13px">ขนาดเล็ก (13px) - สำหรับกล่องข้อความหรือหน้าจอกระทัดรัด</option>
+          <option value="14px">ขนาดมาตรฐานปกติ (14px) - พอดีกับกล่องข้อความทั่วไป</option>
+          <option value="15px">ขนาดกลางอ่านง่าย (15px) - ขยายกล่องข้อความให้เต็มตาขึ้น</option>
+          <option value="16px">ขนาดใหญ่พิเศษ (16px) - เน้นตัวอักษรชัดเจนเต็มกล่อง</option>
+        </select>
+
+        <label style="font-size: 13px; color: #555; display:block; margin-bottom:5px;">✏️ ความหนาของตัวอักษร (Weight - เพิ่มแบบไม่หนาหรือหนานิดหน่อย):</label>
+        <select id="store_fontWeight" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:8px; font-family:inherit;">
+          <option value="400">แบบปกติ / ไม่หนา (Normal - 400)</option>
+          <option value="500">แบบหนานิดหน่อย / กำลังสวย (Medium - 500)</option>
+        </select>
+
+        <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 15px;">
+            <strong style="color: var(--primary); font-size: 12px;">💡 หมายเหตุระบบ:</strong>
+            <p style="font-size: 12px; margin-top: 3px; color: #555;">ขนาดและความหนาที่เลือก จะมีผลกับกล่องข้อความแพ็กเกจ กล่องรายละเอียด และหัวข้อในหน้าเว็บทันที</p>
         </div>
+
+        <label style="font-size: 13px; color: #555; display:block; margin-bottom:5px;">📢 ข้อความพรอมต์สำหรับแจ้งแก้ไขข้อมูล (แสดงเป็นป้ายเตือนสีเหลืองทองในหน้าหลัก):</label>
+        <textarea id="store_noticeText" placeholder="เช่น 📌 แจ้งแก้ไขข้อมูล: หากใส่เมลหรือไอดีผิดตอนสั่งซื้อ กรุณาทักไลน์แอดมินเพื่อแก้ไขข้อมูลทันทีค่ะ" rows="3" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-family:inherit;"></textarea>
+        <span style="font-size:11px; color:#888; display:block; margin-top:-5px; margin-bottom:10px;">*หากไม่ต้องการแสดงป้ายเตือน ให้เว้นว่างช่องนี้ไว้ครับ</span>
       </div>
       
       <div id="zone-custom-cards" style="display:none; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
@@ -513,9 +554,19 @@ function processLoadedData(data) {
   allProducts = data.products.map((p, i) => { if (!p.id) p.id = 'temp_' + i; return p; }) || [];
   storeInfo = data.storeInfo || {}; tabsList = data.tabs || []; localCustomCards = storeInfo.customCards || [];
   
-  // 🌟 5. ปรับขนาดและฟอนต์ตามค่าที่ตั้งจากแอดมิน
+  // 🌟 5. ปรับขนาดและฟอนต์ตามค่าที่ตั้งจากแอดมิน (ความหนา 400 ไม่หนา หรือ 500 หนานิดหน่อย)
   if(storeInfo.fontSize) document.documentElement.style.setProperty('--custom-font-size', storeInfo.fontSize);
   if(storeInfo.fontWeight) document.documentElement.style.setProperty('--custom-font-weight', storeInfo.fontWeight);
+
+  // 🌟 3. ตรวจสอบและแสดงข้อความพรอมต์แจ้งแก้ไขข้อมูล
+  const noticeBox = document.getElementById('editNoticeBox');
+  const noticeTextEl = document.getElementById('editNoticeText');
+  if(storeInfo.noticeText && storeInfo.noticeText.trim() !== '') {
+      if(noticeTextEl) noticeTextEl.innerText = storeInfo.noticeText;
+      if(noticeBox) noticeBox.style.display = 'flex';
+  } else {
+      if(noticeBox) noticeBox.style.display = 'none';
+  }
 
   const welcomeEl = document.getElementById('welcomeText');
   if(storeInfo.welcome) welcomeEl.innerText = storeInfo.welcome;
@@ -832,11 +883,11 @@ function openCheckoutModal() {
     listHtml += `
       <div class="checkout-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f5f5f5; padding-bottom: 8px; margin-bottom: 8px;">
         <div style="flex: 1; text-align: left;">
-            <div class="checkout-item-title" style="color: #111; font-weight: bold; font-size: 13px;">${cleanTitle}</div>
+            <div class="checkout-item-title" style="color: #111; font-weight: 500; font-size: 13px;">${cleanTitle}</div>
             <div class="checkout-item-desc" style="color: #666; font-size: 11px;">${sub}</div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="checkout-item-price" style="color: var(--secondary); font-weight: bold; font-size: 14px; white-space: nowrap;">${item.price} ฿</div>
+            <div class="checkout-item-price" style="color: var(--secondary); font-weight: 500; font-size: 14px; white-space: nowrap;">${item.price} ฿</div>
             <button onclick="removeFromCart(${index})" style="background: #FF4B7E; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-family: inherit;">ลบ</button>
         </div>
       </div>`;
@@ -961,7 +1012,9 @@ function renderAdminTabButtons() {
     tabsList.forEach(t => {
         if(!["แอพพรีเมี่ยม", "เติมเกม", "เติมเหรียญนิยาย", "IOS-ANDROID", "แอพ-เกม iOS/Android", "StoreInfo", "ข้อมูลร้าน", "Reviews", "Orders"].includes(t)) { html += `<button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('${t}', this)">📁 ${t}</button>`; }
     });
-    html += `<button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('CUSTOM_CARDS', this)">🖼️ การ์ดรูปภาพ</button>
+    // 🌟 1. ปุ่มแท็บใหม่ตรงแอดมิน สำหรับตั้งค่าขนาดและรูปแบบตัวอักษรโดยเฉพาะ
+    html += `<button type="button" class="admin-tab-btn" style="background:#fff0f5; border-color:#FF4B7E; color:#FF4B7E;" onclick="switchAdminFormTab('FONT_SETTINGS', this)">🎨 ตั้งค่าตัวอักษร</button>
+             <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('CUSTOM_CARDS', this)">🖼️ การ์ดรูปภาพ</button>
              <button type="button" class="admin-tab-btn" onclick="switchAdminFormTab('MANAGE_TABS', this)">➕ เพิ่มแท็บ</button>
              <button type="button" class="admin-tab-btn" style="background:#fff5f8; border-color:var(--secondary);" onclick="switchAdminFormTab('STATS', this)">📊 สถิติร้าน</button>`;
     document.getElementById('adminTabButtons').innerHTML = html;
@@ -976,9 +1029,10 @@ function openAdmin() {
     document.getElementById('store_hours').value = storeInfo.hours || ''; 
     document.getElementById('store_warranty').value = storeInfo.warranty || ''; 
     
-    // 🌟 5. ดึงค่าตัวอักษรมาโชว์ในแอดมิน
+    // 🌟 1., 2. ดึงค่าตัวอักษร และข้อความแจ้งเตือนมาโชว์ในแท็บตั้งค่าตัวอักษรของแอดมิน
     document.getElementById('store_fontSize').value = storeInfo.fontSize || '14px';
-    document.getElementById('store_fontWeight').value = storeInfo.fontWeight || 'normal';
+    document.getElementById('store_fontWeight').value = storeInfo.fontWeight || '400';
+    document.getElementById('store_noticeText').value = storeInfo.noticeText || '';
 
     switchAdminFormTab('STORE_INFO', document.querySelector('.admin-tab-btn')); 
 }
@@ -998,15 +1052,16 @@ function switchAdminFormTab(tabVal, btnElement) { document.getElementById('a_tab
 
 function toggleAdminFields() {
   const tab = document.getElementById('a_tab').value;
-  ['zone-premium-game', 'zone-ios-android', 'zone-product-status', 'zone-store', 'zone-tabs', 'zone-custom-cards', 'zone-stats'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['zone-premium-game', 'zone-ios-android', 'zone-product-status', 'zone-store', 'zone-tabs', 'zone-custom-cards', 'zone-stats', 'zone-font-settings'].forEach(id => document.getElementById(id).style.display = 'none');
   document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'none'); document.querySelector('.store-btn').style.display = 'none';
   if (tab === "STORE_INFO") { document.getElementById('zone-store').style.display = 'block'; document.querySelector('.store-btn').style.display = 'block'; } 
+  else if (tab === "FONT_SETTINGS") { document.getElementById('zone-font-settings').style.display = 'block'; document.querySelector('.store-btn').style.display = 'block'; } 
   else if (tab === "CUSTOM_CARDS") { document.getElementById('zone-custom-cards').style.display = 'block'; document.querySelector('.store-btn').style.display = 'block'; renderAdminCustomCards(); } 
   else if (tab === "MANAGE_TABS") { document.getElementById('zone-tabs').style.display = 'block'; } 
   else if (tab === "STATS") { document.getElementById('zone-stats').style.display = 'block'; fetchStats(document.querySelector('#zone-stats button')); } 
   else if (tab.includes("IOS") || tab.includes("iOS")) { document.getElementById('zone-ios-android').style.display = 'block'; document.getElementById('zone-product-status').style.display = 'block'; document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'block'); } 
   else { document.getElementById('zone-premium-game').style.display = 'block'; document.getElementById('zone-product-status').style.display = 'block'; document.querySelectorAll('.product-btn').forEach(b => b.style.display = 'block'); }
-  if (tab !== "STORE_INFO" && tab !== "MANAGE_TABS" && tab !== "CUSTOM_CARDS" && tab !== "STATS") { document.getElementById('admin-product-list-container').style.display = 'block'; renderAdminProductList(tab); } else { document.getElementById('admin-product-list-container').style.display = 'none'; }
+  if (tab !== "STORE_INFO" && tab !== "FONT_SETTINGS" && tab !== "MANAGE_TABS" && tab !== "CUSTOM_CARDS" && tab !== "STATS") { document.getElementById('admin-product-list-container').style.display = 'block'; renderAdminProductList(tab); } else { document.getElementById('admin-product-list-container').style.display = 'none'; }
 }
 
 function renderAdminProductList(tabName) {
@@ -1090,8 +1145,9 @@ async function quickDelete(id, tab) {
     } catch(err) { alert("Error"); } 
 }
 
-// 🌟 5. บันทึกข้อมูลการตั้งค่าฟอนต์ส่งไปยังชีต
+// 🌟 1., 2., 3. บันทึกข้อมูลการตั้งค่าฟอนต์ และข้อความแจ้งเตือนส่งไปยังชีต (พร้อมพรอมต์ถามก่อนบันทึก)
 async function submitStoreAction(event) { 
+    if(!confirm("📌 แจ้งเตือน: ยืนยันการบันทึกข้อมูลร้านค้า และการตั้งค่ารูปแบบตัวอักษรใช่หรือไม่?")) return;
     const btn = event.currentTarget; 
     const originalText = btn.innerText; 
     btn.innerText = "⏳..."; 
@@ -1106,6 +1162,7 @@ async function submitStoreAction(event) {
         warranty: document.getElementById('store_warranty').value, 
         fontSize: document.getElementById('store_fontSize').value,
         fontWeight: document.getElementById('store_fontWeight').value,
+        noticeText: document.getElementById('store_noticeText').value,
         customCards: localCustomCards 
     }; 
     await sendAdminPost(payload, btn, originalText); 
@@ -1113,8 +1170,17 @@ async function submitStoreAction(event) {
 
 async function submitTabAction(event, actionType) { const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const payload = { action: actionType, tabName: document.getElementById('new_tab_name').value }; if(!payload.tabName) { alert("กรุณาใส่ชื่อแท็บ"); btn.innerText = originalText; return; } await sendAdminPost(payload, btn, originalText); }
 
+// 🌟 3. เพิ่มข้อความพรอมต์ข้อความสำหรับแจ้งแก้ไขข้อมูล ตอนกดบันทึกแก้ไขสินค้า
 async function submitAdminAction(event, actionType) { 
-    const btn = event.currentTarget; const originalText = btn.innerText; btn.innerText = "⏳..."; const tab = document.getElementById('a_tab').value; let payload = { action: actionType, id: document.getElementById('a_id').value, tab: tab, status: document.getElementById('a_status').value }; 
+    const btn = event.currentTarget; const originalText = btn.innerText; 
+    
+    if (actionType === 'edit_product') {
+        if (!confirm("📌 พรอมต์แจ้งแก้ไขข้อมูล: คุณกำลังบันทึกการปรับปรุงข้อมูลสินค้า ยืนยันการเปลี่ยนแปลงข้อมูลนี้หรือไม่?")) {
+            return;
+        }
+    }
+
+    btn.innerText = "⏳..."; const tab = document.getElementById('a_tab').value; let payload = { action: actionType, id: document.getElementById('a_id').value, tab: tab, status: document.getElementById('a_status').value }; 
     if (tab.includes("IOS") || tab.includes("iOS")) { 
         let osArr = []; 
         if(document.getElementById('os_ios').checked) osArr.push('iOS'); 
