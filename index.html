@@ -184,11 +184,11 @@ strong, b {
 .custom-card-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 5px; scrollbar-width: none; margin-top: 10px;}
 .custom-card-gallery::-webkit-scrollbar { display: none; }
 .custom-card-gallery img { scroll-snap-align: center; flex: 0 0 100%; border-radius: 12px; object-fit: cover; max-height: 250px; border: 1px solid rgba(0,0,0,0.1); }
-.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 29, 58, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 29, 58, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--primary); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10002 !important; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
 .bottom-bar.active { transform: translateY(0); }
 .bb-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; border-radius: 25px; padding: 12px 24px; font-family: inherit; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 75, 126, 0.4); font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor; }
 
-#checkoutOverlay { z-index: 10002 !important; }
+#checkoutOverlay { z-index: 10005 !important; }
 .checkout-modal { background: #ffffff !important; color: #333 !important; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; position: relative; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid var(--primary); }
 .checkout-header { font-size: var(--font-box-h); color: var(--primary); margin-bottom: 15px; text-align: center; border-bottom: 2px dashed #eee; padding-bottom: 10px; font-weight: normal !important; -webkit-text-stroke: 0.3px currentColor;}
 .checkout-list { overflow-y: auto; flex: 1; margin-bottom: 15px; padding-right: 5px; }
@@ -462,7 +462,7 @@ strong, b {
 
 <script>
 // Web App URL จาก Google Apps Script
-const API_URL = "https://script.google.com/macros/s/AKfycbx1h6qqtfZe9XUBzZVtuYvFi7PWADnTYT6eO6GiYg8a02oQYzuhZFyIE1i6XjAMUHXx/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzN955UgmgsgUC7bRvzAq5NUirXFKSZH-vNbq9zxTjQccGmt9CnfRARLES2T7PcOnkU/exec"; 
 
 let allProducts = []; let cart = []; let currentTab = "info"; let storeInfo = {}; let tabsList = []; 
 let viewLevel = 'apps'; let selectedAppName = ''; let localCustomCards = []; let editingCardIndex = -1;
@@ -964,9 +964,9 @@ function renderInfoPage() {
 
 /* 🌟 แก้ไข: เปรียบเทียบ String(x.id) === String(id) ป้องกันปัญหา Type mismatch */
 function toggleItem(id) { 
-    const p = allProducts.find(x => String(x.id) === String(id)); 
+    const p = allProducts.find(x => String(x.id) === String(id) && x.tab === currentTab); 
     if(!p || p.status === 'notready') return;
-    const idx = cart.findIndex(x => String(x.id) === String(id)); 
+    const idx = cart.findIndex(x => String(x.id) === String(id) && x.tab === currentTab); 
     if (idx > -1) cart.splice(idx, 1); else cart.push(p); 
     renderProducts(); 
     updateBottomBar(); 
@@ -978,9 +978,9 @@ function toggleItem(id) {
 /* 🌟 แก้ไข: เปรียบเทียบ String(x.id) === String(id) ในโหมด OS */
 function toggleItemOs(e, id, os) { 
     if(e) e.stopPropagation(); 
-    const p = allProducts.find(x => String(x.id) === String(id)); 
+    const p = allProducts.find(x => String(x.id) === String(id) && x.tab === currentTab); 
     if(!p || p.status === 'notready') return;
-    const idx = cart.findIndex(x => String(x.id) === String(id) && x.selectedOs === os); 
+    const idx = cart.findIndex(x => String(x.id) === String(id) && x.selectedOs === os && x.tab === currentTab); 
     if (idx > -1) { cart.splice(idx, 1); } else { cart.push({...p, selectedOs: os}); } 
     renderProducts(); updateBottomBar(); 
 }
@@ -1019,7 +1019,7 @@ function openCheckoutModal() {
   let listHtml = '';
   cart.forEach((item, index) => {
     let title = isIOSAndroidTab(item.tab) ? item.cat || item.name : [item.cat, item.appDesc].filter(Boolean).join(' ');
-    let cleanTitle = title.replace(/\[iOS\]/i, '').replace(/\[Android\]/i, '').trim();
+    let cleanTitle = title.replace(/[iOS]/i, '').replace(/[Android]/i, '').trim();
     let sub = isIOSAndroidTab(item.tab) ? (item.selectedOs || item.os || 'iOS') : [item.subCat, item.name].filter(Boolean).join(' ');
     
     listHtml += `
@@ -1092,7 +1092,7 @@ function confirmCheckout() {
     } 
     else if (isIOSAndroidTab(itemTab)) {
         hasOS = true;
-        let cleanName = (item.cat || item.name || '').replace(/\[iOS\]/i, '').replace(/\[Android\]/i, '').trim();
+        let cleanName = (item.cat || item.name || '').replace(/[iOS]/i, '').replace(/[Android]/i, '').trim();
         text += `${index + 1}. ${cleanName} [${item.selectedOs || item.os || 'iOS'}]\n   ราคา: ${item.price} บาท\n`;
     } 
     else {
